@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "immersive_insects",
+  "version": "${version}",
+  "name": "Immersive Insects",
+  "description": "Client side, performant insects to give your environment some life!",
+  "authors": [
+    "Luke100000"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/immersiveInsects",
+    "sources": "https://github.com/Luke100000/immersiveInsects",
+    "issues": "https://github.com/Luke100000/immersiveInsects/issues"
+  },
+  "license": "GNU",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "immersive_insects.fabric.Fabric"
+    ]
+  },
+  "mixins": [
+    
+  ],
+  "depends": {
+    "fabricloader": ">=0.11.3",
+    "java": ">=8",
+    "fabric-api-base": ">=0.1.0"
+  }
+}

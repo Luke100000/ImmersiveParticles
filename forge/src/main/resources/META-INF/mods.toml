@@ -1,0 +1,28 @@
+modLoader = "javafml"
+loaderVersion = "[35,)"
+issueTrackerURL = "https://github.com/Luke100000/ImmersiveInsects/issues"
+license = "GNU"
+
+[[mods]]
+modId = "immersive_insects"
+version = "${version}"
+displayName = "Immersive Insects"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/ImmersiveInsects"
+authors = "Luke100000"
+description = '''
+    Client side, performant insects to give your environment some life!
+    '''
+logoFile = "logoFile.png"
+
+[[dependencies.immersive_insects]]
+modId = "forge"
+mandatory = true
+versionRange = "[36,)"
+ordering = "NONE"
+side = "BOTH"
+[[dependencies.immersive_insects]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.18.2]"
+ordering = "NONE"
+side = "BOTH"
