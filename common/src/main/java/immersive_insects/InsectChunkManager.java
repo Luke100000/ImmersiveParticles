@@ -1,8 +1,10 @@
 package immersive_insects;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
@@ -20,6 +22,8 @@ public class InsectChunkManager {
     private static final ChunkSphere chunkSphere = new ChunkSphere(Config.getInstance().particleSpawnDistanceInChunks);
     private static final Map<Long, SpawnLocationList> chunks = new HashMap<>();
     private static final Set<Long> requested = new HashSet<>();
+
+    private static float updates;
 
     public static void tick(MinecraftClient client) {
         if (client.player == null || client.world == null) {
@@ -39,24 +43,47 @@ public class InsectChunkManager {
             return;
         }
 
-        Vec3i chunk = chunkSphere.positions.get(tick).add(client.player.getX() / 16.0, client.player.getY() / 16.0, client.player.getZ() / 16.0);
-        Optional<SpawnLocationList> locations = fetchChunk(client.world, chunk.getX(), chunk.getY(), chunk.getZ());
+        updates += chunkSphere.positions.size() * Config.getInstance().chunkUpdatedPerMinute / 60.0f;
 
-        tick = (tick + 1) % chunkSphere.positions.size();
+        while (updates > 0.0f) {
+            Vec3i chunk = chunkSphere.positions.get(tick).add(client.player.getX() / 16.0, client.player.getY() / 16.0, client.player.getZ() / 16.0);
+            Optional<SpawnLocationList> locations = fetchChunk(client.world, chunk.getX(), chunk.getY(), chunk.getZ());
 
-        locations
-                .filter(l -> !l.getLocations().isEmpty())
-                .ifPresent(l -> {
-                    SpawnLocation location = l.getLocations().get(client.world.random.nextInt(l.getLocations().size()));
+            locations
+                    .filter(l -> !l.getLocations().isEmpty())
+                    .ifPresent(l -> {
+                        double v = client.world.random.nextDouble();
 
-                    client.world.addParticle(Particles.FLY,
-                            location.x,
-                            location.y,
-                            location.z,
-                            0,
-                            0,
-                            0);
-                });
+                        if (v < l.getTotalChance()) {
+                            for (SpawnLocation location : l.getLocations()) {
+                                v -= location.chance;
+
+                                if (v < 0) {
+                                    v++;
+
+                                    client.world.addParticle(Particles.FLY,
+                                            location.x,
+                                            location.y,
+                                            location.z,
+                                            0,
+                                            0,
+                                            0);
+                                }
+                            }
+                        }
+                    });
+
+            tick = (tick + 1) % chunkSphere.positions.size();
+            updates--;
+        }
+    }
+
+    private static BlockState getBlockState(ClientWorld world, ChunkSection chunkSection, int cx, int cy, int cz, int x, int y, int z) {
+        if (x <0 || y < 0 || z < 0 || x > 15 || y > 15 || z > 15) {
+            return world.getBlockState(new BlockPos(cx * 16 + x, cy * 16 + y, cz * 16 + z));
+        } else {
+            return chunkSection.getBlockState(x, y, z);
+        }
     }
 
     private static Optional<SpawnLocationList> fetchChunk(ClientWorld world, int cx, int cy, int cz) {
@@ -77,13 +104,16 @@ public class InsectChunkManager {
                                 for (int x = 0; x < 16; x++) {
                                     for (int y = 0; y < 16; y++) {
                                         for (int z = 0; z < 16; z++) {
-                                            if (chunkSection.getBlockState(x, y - 1, z).getBlock() == Blocks.GRASS_BLOCK && chunkSection.getBlockState(x, y, z).getBlock() == Blocks.AIR) {
-                                                list.add(new SpawnLocation(1.0, cx * 16 + x + 0.5, cy * 16 + y + 0.5, cz * 16 + z + 0.5, 0.0, 0.0, 0.0));
+                                            if (getBlockState(world, chunkSection, cx, cy, cz, x, y - 1, z).getBlock() == Blocks.GRASS_BLOCK && chunkSection.getBlockState(x, y, z).getBlock() == Blocks.AIR) {
+                                                list.add(new SpawnLocation(0.01, cx * 16 + x + 0.5, cy * 16 + y + 0.5, cz * 16 + z + 0.5, 0.0, 0.0, 0.0));
                                             }
                                         }
                                     }
                                 }
                             }
+
+                            //shuffle for extra randomness
+                            Collections.shuffle(list.getLocations());
 
                             // cache
                             chunks.put(id, list);
