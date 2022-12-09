@@ -1,26 +1,26 @@
 modLoader = "javafml"
 loaderVersion = "[35,)"
-issueTrackerURL = "https://github.com/Luke100000/ImmersiveInsects/issues"
+issueTrackerURL = "https://github.com/Luke100000/ImmersiveParticles/issues"
 license = "GNU"
 
 [[mods]]
-modId = "immersive_insects"
+modId = "immersive_particles"
 version = "${version}"
-displayName = "Immersive Insects"
-displayURL = "https://www.curseforge.com/minecraft/mc-mods/ImmersiveInsects"
+displayName = "Immersive Particles"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/ImmersiveParticles"
 authors = "Luke100000"
 description = '''
-    Client side, performant insects to give your environment some life!
+    Client side, performant particles to give your environment some life!
     '''
 logoFile = "logoFile.png"
 
-[[dependencies.immersive_insects]]
+[[dependencies.immersive_particles]]
 modId = "forge"
 mandatory = true
 versionRange = "[36,)"
 ordering = "NONE"
 side = "BOTH"
-[[dependencies.immersive_insects]]
+[[dependencies.immersive_particles]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.18.2]"

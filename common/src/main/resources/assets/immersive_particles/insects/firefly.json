@@ -1,0 +1,40 @@
+{
+  "behavior": {
+    "name": "theParticleType",
+    "anyAdditionalArgs": "carl",
+    "noise": 1,
+    "speed": 1,
+    "collisionLevel": 1,
+    "playerMovementPush": 1
+  },
+  "group": {
+    "min": 3,
+    "max": 5,
+    "spread": 4
+  },
+  "blocksOn": [
+    "#sometags",
+    "orblocks"
+  ],
+  "blocksIn": [
+    "air"
+  ],
+  "liquidsIn": [
+    "none"
+  ],
+  "side": "sides",
+  "chance": 0.01,
+  "biomes": [
+    "some biomes"
+  ],
+  "worlds": [
+    "nether"
+  ],
+  "canSeeSky": 0.0,
+  "temperatureMax": 0.0,
+  "temperatureMin": 0.0,
+  "heightMin": 0.0,
+  "heightMax": 0.0,
+  "sunLight": 0.0,
+  "lightLevel": 0.0
+}

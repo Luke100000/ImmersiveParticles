@@ -1,27 +1,27 @@
 {
   "schemaVersion": 1,
-  "id": "immersive_insects",
+  "id": "immersive_particles",
   "version": "${version}",
-  "name": "Immersive Insects",
-  "description": "Client side, performant insects to give your environment some life!",
+  "name": "Immersive Particles",
+  "description": "Client side, performant particles to give your environment some life!",
   "authors": [
     "Luke100000"
   ],
   "contact": {
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/immersiveInsects",
-    "sources": "https://github.com/Luke100000/immersiveInsects",
-    "issues": "https://github.com/Luke100000/immersiveInsects/issues"
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/immersiveParticles",
+    "sources": "https://github.com/Luke100000/immersiveParticles",
+    "issues": "https://github.com/Luke100000/immersiveParticles/issues"
   },
   "license": "GNU",
   "icon": "icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
-      "immersive_insects.fabric.Fabric"
+      "immersive_particles.fabric.Fabric"
     ]
   },
   "mixins": [
-    "immersive_insects.mixin.json"
+    "immersive_particles.mixin.json"
   ],
   "depends": {
     "fabricloader": ">=0.11.3",
