@@ -1,11 +1,11 @@
 package immersive_particles.fabric;
 
-import dev.architectury.event.events.client.ClientTickEvent;
 import immersive_particles.Main;
 import immersive_particles.Particles;
 import immersive_particles.fabric.cobalt.registration.RegistrationImpl;
 import immersive_particles.particles.FlyParticle;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
@@ -20,9 +20,7 @@ public final class Fabric implements ClientModInitializer {
 
         Particles.bootstrap();
 
-        ClientTickEvent.CLIENT_PRE.register(Main::tick);
-
-
+        ClientTickEvents.START_CLIENT_TICK.register(Main::tick);
 
         ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register(((atlasTexture, registry) -> {
             registry.register(Main.locate("particle/fly"));
