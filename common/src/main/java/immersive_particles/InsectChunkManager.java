@@ -1,13 +1,13 @@
 package immersive_particles;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import immersive_particles.core.ChunkSphere;
+import immersive_particles.core.Searcher;
+import immersive_particles.core.SpawnLocation;
+import immersive_particles.core.SpawnLocationList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.ChunkStatus;
 
 import java.util.*;
@@ -20,7 +20,7 @@ public class InsectChunkManager {
     private static int tick;
     private static int lastWorld;
     private static final ChunkSphere chunkSphere = new ChunkSphere(Config.getInstance().particleSpawnDistanceInChunks);
-    private static final Map<Long, SpawnLocationList> chunks = new HashMap<>();
+    public static final Map<Long, SpawnLocationList> chunks = new HashMap<>();
     private static final Set<Long> requested = new HashSet<>();
 
     private static float updates;
@@ -78,47 +78,13 @@ public class InsectChunkManager {
         }
     }
 
-    private static BlockState getBlockState(ClientWorld world, ChunkSection chunkSection, int cx, int cy, int cz, int x, int y, int z) {
-        if (x <0 || y < 0 || z < 0 || x > 15 || y > 15 || z > 15) {
-            return world.getBlockState(new BlockPos(cx * 16 + x, cy * 16 + y, cz * 16 + z));
-        } else {
-            return chunkSection.getBlockState(x, y, z);
-        }
-    }
-
     private static Optional<SpawnLocationList> fetchChunk(ClientWorld world, int cx, int cy, int cz) {
         long id = toId(cx, cy, cz);
         if (!requested.contains(id)) {
             requested.add(id);
             Chunk chunk = world.getChunk(cx, cz, ChunkStatus.FULL, false);
             if (chunk != null && !world.isDebugWorld()) {
-                executor.execute(
-                        () -> {
-                            // fetch chunk slice
-                            int layer = chunk.sectionCoordToIndex(cy);
-                            ChunkSection chunkSection = chunk.getSectionArray()[layer];
-
-                            // collect spawn locations
-                            SpawnLocationList list = new SpawnLocationList();
-                            if (!chunkSection.isEmpty()) {
-                                for (int x = 0; x < 16; x++) {
-                                    for (int y = 0; y < 16; y++) {
-                                        for (int z = 0; z < 16; z++) {
-                                            if (getBlockState(world, chunkSection, cx, cy, cz, x, y - 1, z).getBlock() == Blocks.GRASS_BLOCK && chunkSection.getBlockState(x, y, z).getBlock() == Blocks.AIR) {
-                                                list.add(new SpawnLocation(0.01, cx * 16 + x + 0.5, cy * 16 + y + 0.5, cz * 16 + z + 0.5, 0.0, 0.0, 0.0));
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            //shuffle for extra randomness
-                            Collections.shuffle(list.getLocations());
-
-                            // cache
-                            chunks.put(id, list);
-                        }
-                );
+                executor.execute(new Searcher(world, chunk, cx, cy, cz, id));
             }
         }
 

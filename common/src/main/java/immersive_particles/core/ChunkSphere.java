@@ -1,4 +1,4 @@
-package immersive_particles;
+package immersive_particles.core;
 
 import net.minecraft.util.math.Vec3i;
 

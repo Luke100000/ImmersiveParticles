@@ -1,4 +1,4 @@
-package immersive_particles;
+package immersive_particles.core;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package immersive_particles;
+package immersive_particles.core;
 
 public class SpawnLocation {
     public final double chance;
