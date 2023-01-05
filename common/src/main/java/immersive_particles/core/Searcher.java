@@ -1,6 +1,5 @@
 package immersive_particles.core;
 
-import immersive_particles.InsectChunkManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.world.ClientWorld;
@@ -43,6 +42,6 @@ public record Searcher(ClientWorld world, Chunk chunk, int cx, int cy, int cz, l
         Collections.shuffle(list.getLocations());
 
         // cache
-        InsectChunkManager.chunks.put(id, list);
+        ParticleChunkManager.chunks.put(id, list);
     }
 }

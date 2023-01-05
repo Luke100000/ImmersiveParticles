@@ -1,5 +1,6 @@
 package immersive_particles;
 
+import immersive_particles.core.ParticleChunkManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
@@ -14,6 +15,6 @@ public final class Main {
     }
 
     public static void tick(MinecraftClient client) {
-        InsectChunkManager.tick(client);
+        ParticleChunkManager.tick(client);
     }
 }

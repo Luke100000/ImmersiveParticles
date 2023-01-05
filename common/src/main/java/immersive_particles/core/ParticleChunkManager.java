@@ -1,9 +1,7 @@
-package immersive_particles;
+package immersive_particles.core;
 
-import immersive_particles.core.ChunkSphere;
-import immersive_particles.core.Searcher;
-import immersive_particles.core.SpawnLocation;
-import immersive_particles.core.SpawnLocationList;
+import immersive_particles.Config;
+import immersive_particles.Particles;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.Vec3i;
@@ -14,7 +12,7 @@ import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class InsectChunkManager {
+public class ParticleChunkManager {
     static Executor executor = Executors.newSingleThreadExecutor();
 
     private static int tick;
@@ -33,13 +31,14 @@ public class InsectChunkManager {
         if (lastWorld != client.world.hashCode()) {
             lastWorld = client.world.hashCode();
             chunks.clear();
+            requested.clear();
         }
 
         spawn(client);
     }
 
     private static void spawn(MinecraftClient client) {
-        if (client.player == null || client.world == null) {
+        if (client.player == null || client.world == null || client.isPaused()) {
             return;
         }
 
@@ -61,7 +60,7 @@ public class InsectChunkManager {
                                 if (v < 0) {
                                     v++;
 
-                                    client.world.addParticle(Particles.FLY,
+                                    client.world.addParticle(Particles.FLY.get(),
                                             location.x,
                                             location.y,
                                             location.z,
@@ -80,11 +79,11 @@ public class InsectChunkManager {
 
     private static Optional<SpawnLocationList> fetchChunk(ClientWorld world, int cx, int cy, int cz) {
         long id = toId(cx, cy, cz);
-        if (!requested.contains(id)) {
-            requested.add(id);
+        if (!requested.contains(id) && !world.isDebugWorld()) {
             Chunk chunk = world.getChunk(cx, cz, ChunkStatus.FULL, false);
-            if (chunk != null && !world.isDebugWorld()) {
+            if (chunk != null) {
                 executor.execute(new Searcher(world, chunk, cx, cy, cz, id));
+                requested.add(id);
             }
         }
 
@@ -92,6 +91,6 @@ public class InsectChunkManager {
     }
 
     private static long toId(int cx, int cy, int cz) {
-        return ((long)cx & 0xffffffffL) << 40 | ((long)cy & 0xffffffffL) << 20 | ((long)cz & 0xffffffffL);
+        return ((long)cx & 0xfffffL) << 40 | ((long)cy & 0xfffffL) << 20 | ((long)cz & 0xfffffL);
     }
 }
