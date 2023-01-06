@@ -1,18 +1,25 @@
 package immersive_particles.particles;
 
+import immersive_particles.Main;
+import immersive_particles.resources.ObjectLoader;
+import immersive_particles.util.obj.Face;
+import immersive_particles.util.obj.FaceVertex;
+import immersive_particles.util.obj.Mesh;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleFactory;
 import net.minecraft.client.particle.ParticleTextureSheet;
 import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import org.joml.*;
 
-public class ImmersiveParticle extends Particle {
+import java.lang.Math;
+
+public abstract class ImmersiveParticle extends Particle {
     private final Sprite sprite;
 
     public ImmersiveParticle(ClientWorld world, SpriteProvider spriteProvider, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
@@ -29,85 +36,6 @@ public class ImmersiveParticle extends Particle {
         this.sprite = spriteProvider.getSprite(world.random);
     }
 
-    private static final double[][][] cubeVertices = new double[][][] {
-            { // front
-                    {-0.5 / 16.0, 0.5 / 16.0, -0.5 / 16.0},
-                    {0.5 / 16.0, 0.5 / 16.0, -0.5 / 16.0},
-                    {0.5 / 16.0, -0.5 / 16.0, -0.5 / 16.0},
-                    {-0.5 / 16.0, -0.5 / 16.0, -0.5 / 16.0},
-            },
-            { // back
-                    {-0.5 / 16.0, -0.5 / 16.0, 0.5 / 16.0},
-                    {0.5 / 16.0, -0.5 / 16.0, 0.5 / 16.0},
-                    {0.5 / 16.0, 0.5 / 16.0, 0.5 / 16.0},
-                    {-0.5 / 16.0, 0.5 / 16.0, 0.5 / 16.0},
-            },
-            { // left
-                    {-0.5 / 16.0, -0.5 / 16.0, -0.5 / 16.0},
-                    {-0.5 / 16.0, -0.5 / 16.0, 0.5 / 16.0},
-                    {-0.5 / 16.0, 0.5 / 16.0, 0.5 / 16.0},
-                    {-0.5 / 16.0, 0.5 / 16.0, -0.5 / 16.0},
-            },
-            { // right
-                    {0.5 / 16.0, 0.5 / 16.0, -0.5 / 16.0},
-                    {0.5 / 16.0, 0.5 / 16.0, 0.5 / 16.0},
-                    {0.5 / 16.0, -0.5 / 16.0, 0.5 / 16.0},
-                    {0.5 / 16.0, -0.5 / 16.0, -0.5 / 16.0},
-            },
-            { // top
-                    {-0.5 / 16.0, 0.5 / 16.0, 0.5 / 16.0},
-                    {0.5 / 16.0, 0.5 / 16.0, 0.5 / 16.0},
-                    {0.5 / 16.0, 0.5 / 16.0, -0.5 / 16.0},
-                    {-0.5 / 16.0, 0.5 / 16.0, -0.5 / 16.0},
-            },
-            { // bottom
-                    {-0.5 / 16.0, -0.5 / 16.0, -0.5 / 16.0},
-                    {0.5 / 16.0, -0.5 / 16.0, -0.5 / 16.0},
-                    {0.5 / 16.0, -0.5 / 16.0, 0.5 / 16.0},
-                    {-0.5 / 16.0, -0.5 / 16.0, 0.5 / 16.0},
-            }
-    };
-
-    public void buildCube(VertexConsumer vertexConsumer, double x, double y, double z, float width, float height, float depth, double rotation, double scale, int light) {
-        buildCube(vertexConsumer, x, y, z, 0.0, 0.0, 0.0, width, height, depth, rotation, scale, light);
-    }
-
-    public void buildCube(VertexConsumer vertexConsumer, double x, double y, double z, double ox, double oy, double oz, float width, float height, float depth, double rotation, double scale, int light) {
-        double cos = Math.cos(rotation);
-        double sin = Math.sin(rotation);
-
-        float[][] cubeUvs = new float[][] {
-                {depth, depth, width, height},         // front
-                {depth + width, depth, width, height}, // back
-                {0, depth, depth, height},             // left
-                {depth + width, depth, depth, height}, // right
-                {depth + width, 0, width, depth},      // top
-                {depth, 0, width, depth},              // bottom
-        };
-
-        for (int side = 0; side < 6; side++) {
-            float[] uv = cubeUvs[side];
-            double[][] vertices = cubeVertices[side];
-            for (int vertex = 0; vertex < 4; vertex++) {
-                double px = ox + vertices[vertex][0] * width;
-                double py = oy + vertices[vertex][1] * height;
-                double pz = oz + vertices[vertex][2] * depth;
-                vertexConsumer
-                        .vertex(
-                                (float)(x + (px * cos - py * sin) * scale),
-                                (float)(y + (py * cos + px * sin) * scale),
-                                (float)(z + pz * scale))
-                        .texture(
-                                sprite.getFrameU(uv[0] + (vertex % 2 == 0 ? 0 : 1) * uv[2]),
-                                sprite.getFrameV(uv[1] + (vertex >= 2 ? 0 : 1) * uv[3])
-                        )
-                        .color(red, green, blue, alpha)
-                        .light(light)
-                        .next();
-            }
-        }
-    }
-
     @Override
     public void buildGeometry(VertexConsumer vertexConsumer, Camera camera, float tickDelta) {
         Vec3d cam = camera.getPos();
@@ -115,8 +43,52 @@ public class ImmersiveParticle extends Particle {
         float y = (float)(MathHelper.lerp(tickDelta, this.prevPosY, this.y) - cam.getY());
         float z = (float)(MathHelper.lerp(tickDelta, this.prevPosZ, this.z) - cam.getZ());
 
+        Matrix4d transform = new Matrix4d();
+        transform.rotationXYZ(0.0f, (age + tickDelta) * 0.25f, 0.0f);
+        transform.scale(Math.min(1.0f, (age + tickDelta) * 0.1));
+        transform.setColumn(3, new Vector4d(x, y, z, 1.0));
+
+        Matrix3d normal = new Matrix3d();
+
         int light = this.getBrightness(tickDelta);
-        buildCube(vertexConsumer, x, y, z, 2, 2, 3, 0, 1, light);
+        Mesh mesh = getMesh(Main.locate("bumblebee"), "Cube");
+        renderObject(mesh, transform, normal, vertexConsumer, light);
+    }
+
+    public Mesh getMesh(Identifier id, String object) {
+        if (!ObjectLoader.objects.containsKey(id)) {
+            throw new RuntimeException(String.format("Object %s does not exist!", id));
+        }
+        Mesh mesh = ObjectLoader.objects.get(id).get(object);
+        if (mesh == null) {
+            throw new RuntimeException(String.format("Mesh %s in %s does not exist!", id, object));
+        }
+        return mesh;
+    }
+
+    void renderObject(Mesh mesh, Matrix4d transform, Matrix3d normal, VertexConsumer vertexConsumer, int light) {
+        renderObject(mesh, transform, normal, vertexConsumer, light, red, green, blue, alpha);
+    }
+
+    void renderObject(Mesh mesh, Matrix4d transform, Matrix3d normal, VertexConsumer vertexConsumer, int light, float r, float g, float b, float a) {
+        for (Face face : mesh.faces) {
+            if (face.vertices.size() == 4) {
+                for (FaceVertex v : face.vertices) {
+                    Vector3d f_t = normal.transform(new Vector3d(v.v.x / 16.0f, v.v.y / 16.0f, v.v.z / 16.0f));
+                    Vector4d f = transform.transform(new Vector4d(f_t.x, f_t.y, f_t.z, 1.0));
+                    //Vector3d n = normal.transform(new Vector3d(v.n.x, v.n.y, v.n.z));
+                    //todo light
+                    float tu = sprite.getMinU() + (sprite.getMaxU() - sprite.getMinU()) * v.t.u;
+                    float tv = sprite.getMinV() + (sprite.getMaxV() - sprite.getMinV()) * v.t.v;
+                    vertexConsumer
+                            .vertex(f.x, f.y, f.z)
+                            .texture(tu, tv)
+                            .color(r, g, b, a)
+                            .light(light)
+                            .next();
+                }
+            }
+        }
     }
 
 
@@ -128,19 +100,6 @@ public class ImmersiveParticle extends Particle {
     @Override
     public void tick() {
         super.tick();
-    }
-
-    public static class Factory implements ParticleFactory<DefaultParticleType> {
-        private final SpriteProvider spriteProvider;
-
-        public Factory(SpriteProvider spriteProvider) {
-            this.spriteProvider = spriteProvider;
-        }
-
-        @Override
-        public Particle createParticle(DefaultParticleType defaultParticleType, ClientWorld clientWorld, double x, double y, double z, double vx, double vy, double vz) {
-            return new ImmersiveParticle(clientWorld, spriteProvider, x, y, z, vx, vy, vz);
-        }
     }
 }
 
