@@ -3,7 +3,6 @@ package immersive_particles.forge;
 import immersive_particles.Main;
 import immersive_particles.Particles;
 import immersive_particles.forge.cobalt.registration.RegistrationImpl;
-import immersive_particles.particles.FlyParticle;
 import immersive_particles.resources.ObjectLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.ReloadableResourceManagerImpl;
@@ -30,6 +29,6 @@ public final class Forge {
 
     @SubscribeEvent
     public static void onRegistryEvent(ParticleFactoryRegisterEvent event) {
-        MinecraftClient.getInstance().particleManager.registerFactory(Particles.FLY.get(), FlyParticle.Factory::new);
+        Particles.init();
     }
 }

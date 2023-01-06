@@ -3,10 +3,10 @@ package immersive_particles.fabric;
 import immersive_particles.Main;
 import immersive_particles.Particles;
 import immersive_particles.fabric.cobalt.registration.RegistrationImpl;
-import immersive_particles.particles.FlyParticle;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.minecraft.resource.ResourceType;
 
 public final class Fabric implements ClientModInitializer {
     @Override
@@ -17,7 +17,9 @@ public final class Fabric implements ClientModInitializer {
 
         ClientTickEvents.START_CLIENT_TICK.register(Main::tick);
 
-        ParticleFactoryRegistry.getInstance().register(Particles.FLY.get(), FlyParticle.Factory::new);
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new FabricObjectLoader());
+
+        Particles.init();
     }
 }
 

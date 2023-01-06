@@ -12,10 +12,10 @@ import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
-public class FlyParticle extends Particle {
+public class ImmersiveParticle extends Particle {
     private final Sprite sprite;
 
-    public FlyParticle(ClientWorld world, SpriteProvider spriteProvider, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+    public ImmersiveParticle(ClientWorld world, SpriteProvider spriteProvider, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
         super(world, x, y, z, velocityX, velocityY, velocityZ);
         this.velocityMultiplier = 0.96f;
         this.field_28787 = true;
@@ -139,7 +139,7 @@ public class FlyParticle extends Particle {
 
         @Override
         public Particle createParticle(DefaultParticleType defaultParticleType, ClientWorld clientWorld, double x, double y, double z, double vx, double vy, double vz) {
-            return new FlyParticle(clientWorld, spriteProvider, x, y, z, vx, vy, vz);
+            return new ImmersiveParticle(clientWorld, spriteProvider, x, y, z, vx, vy, vz);
         }
     }
 }

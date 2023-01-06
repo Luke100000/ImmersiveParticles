@@ -60,13 +60,7 @@ public class ParticleChunkManager {
                                 if (v < 0) {
                                     v++;
 
-                                    client.world.addParticle(Particles.FLY.get(),
-                                            location.x,
-                                            location.y,
-                                            location.z,
-                                            0,
-                                            0,
-                                            0);
+                                    client.particleManager.addParticle(Particles.BUMBLEBEE.get(), location.x, location.y, location.z, 0, 0, 0);
                                 }
                             }
                         }
