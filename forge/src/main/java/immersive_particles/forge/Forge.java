@@ -1,13 +1,11 @@
 package immersive_particles.forge;
 
 import immersive_particles.Main;
-import immersive_particles.Particles;
-import immersive_particles.forge.cobalt.registration.RegistrationImpl;
 import immersive_particles.resources.ObjectLoader;
+import immersive_particles.resources.ParticleManagerLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.ReloadableResourceManagerImpl;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
@@ -19,16 +17,10 @@ public final class Forge {
     @SubscribeEvent
     public static void data(FMLConstructModEvent event) {
         ((ReloadableResourceManagerImpl)MinecraftClient.getInstance().getResourceManager()).registerReloader(new ObjectLoader());
+        ((ReloadableResourceManagerImpl)MinecraftClient.getInstance().getResourceManager()).registerReloader(new ParticleManagerLoader());
     }
 
     public Forge() {
-        RegistrationImpl.bootstrap();
 
-        Particles.bootstrap();
-    }
-
-    @SubscribeEvent
-    public static void onRegistryEvent(ParticleFactoryRegisterEvent event) {
-        Particles.init();
     }
 }

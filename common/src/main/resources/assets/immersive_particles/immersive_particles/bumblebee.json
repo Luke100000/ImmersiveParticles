@@ -1,4 +1,7 @@
 {
+  "textures": [
+    "immersive_particles:immersive_particles/bumblebee"
+  ],
   "behavior": {
     "name": "theParticleType",
     "anyAdditionalArgs": "carl",

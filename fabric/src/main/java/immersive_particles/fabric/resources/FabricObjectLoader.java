@@ -1,4 +1,4 @@
-package immersive_particles.fabric;
+package immersive_particles.fabric.resources;
 
 import immersive_particles.resources.ObjectLoader;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;

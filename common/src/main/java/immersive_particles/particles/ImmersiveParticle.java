@@ -1,43 +1,53 @@
 package immersive_particles.particles;
 
 import immersive_particles.Main;
+import immersive_particles.core.ImmersiveParticleManager;
+import immersive_particles.core.ImmersiveParticleType;
+import immersive_particles.core.SpawnLocation;
 import immersive_particles.resources.ObjectLoader;
 import immersive_particles.util.obj.Face;
 import immersive_particles.util.obj.FaceVertex;
 import immersive_particles.util.obj.Mesh;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleTextureSheet;
-import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import org.joml.*;
+import org.joml.Matrix3d;
+import org.joml.Matrix4d;
+import org.joml.Vector3d;
+import org.joml.Vector4d;
 
-import java.lang.Math;
-
-public abstract class ImmersiveParticle extends Particle {
+public class ImmersiveParticle {
     private final Sprite sprite;
+    private final double x, y, z;
+    private final double prevPosX, prevPosY, prevPosZ;
+    private int age;
+    private final float red, green, blue, alpha;
 
-    public ImmersiveParticle(ClientWorld world, SpriteProvider spriteProvider, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-        super(world, x, y, z, velocityX, velocityY, velocityZ);
-        this.velocityMultiplier = 0.96f;
-        this.field_28787 = true;
-        this.velocityX *= 0.1f;
-        this.velocityY = this.velocityY * (double)0.1f;
-        this.velocityZ *= 0.1f;
+    public ImmersiveParticle(ImmersiveParticleType type, SpawnLocation location) {
+        this.sprite = type.getSprites().get(0); //todo random
+
+        this.x = location.x;
+        this.y = location.y;
+        this.z = location.z;
+
+        this.prevPosX = location.x;
+        this.prevPosY = location.y;
+        this.prevPosZ = location.z;
+
         this.red = 1.0f;
         this.green = 1.0f;
         this.blue = 1.0f;
-        this.maxAge = 20 * 60;
-        this.sprite = spriteProvider.getSprite(world.random);
+        this.alpha = 1.0f;
+
+        this.age = 0;
     }
 
-    @Override
-    public void buildGeometry(VertexConsumer vertexConsumer, Camera camera, float tickDelta) {
+    public void render(VertexConsumer vertexConsumer, Camera camera, float tickDelta) {
         Vec3d cam = camera.getPos();
         float x = (float)(MathHelper.lerp(tickDelta, this.prevPosX, this.x) - cam.getX());
         float y = (float)(MathHelper.lerp(tickDelta, this.prevPosY, this.y) - cam.getY());
@@ -48,9 +58,9 @@ public abstract class ImmersiveParticle extends Particle {
         transform.scale(Math.min(1.0f, (age + tickDelta) * 0.1));
         transform.setColumn(3, new Vector4d(x, y, z, 1.0));
 
-        Matrix3d normal = new Matrix3d();
+        Matrix3d normal = transform.get3x3(new Matrix3d());
 
-        int light = this.getBrightness(tickDelta);
+        int light = this.getBrightness();
         Mesh mesh = getMesh(Main.locate("bumblebee"), "Cube");
         renderObject(mesh, transform, normal, vertexConsumer, light);
     }
@@ -91,15 +101,17 @@ public abstract class ImmersiveParticle extends Particle {
         }
     }
 
-
-    @Override
-    public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.PARTICLE_SHEET_OPAQUE;
+    public boolean tick() {
+        age++;
+        return age > 1000;
     }
 
-    @Override
-    public void tick() {
-        super.tick();
+    protected int getBrightness() {
+        BlockPos blockPos = new BlockPos(this.x, this.y, this.z);
+        if (ImmersiveParticleManager.getWorld().isChunkLoaded(blockPos)) {
+            return WorldRenderer.getLightmapCoordinates(ImmersiveParticleManager.getWorld(), blockPos);
+        }
+        return 0;
     }
 }
 

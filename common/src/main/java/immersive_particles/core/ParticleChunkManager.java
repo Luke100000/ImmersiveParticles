@@ -1,7 +1,8 @@
 package immersive_particles.core;
 
 import immersive_particles.Config;
-import immersive_particles.Particles;
+import immersive_particles.Main;
+import immersive_particles.resources.ParticleManagerLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.Vec3i;
@@ -32,6 +33,8 @@ public class ParticleChunkManager {
             lastWorld = client.world.hashCode();
             chunks.clear();
             requested.clear();
+
+            ImmersiveParticleManager.setWorld(client.world);
         }
 
         spawn(client);
@@ -56,11 +59,9 @@ public class ParticleChunkManager {
                         if (v < l.getTotalChance()) {
                             for (SpawnLocation location : l.getLocations()) {
                                 v -= location.chance;
-
                                 if (v < 0) {
                                     v++;
-
-                                    client.particleManager.addParticle(Particles.BUMBLEBEE.get(), location.x, location.y, location.z, 0, 0, 0);
+                                    ImmersiveParticleManager.addParticle(ParticleManagerLoader.PARTICLES.get(Main.locate("bumblebee")), location);
                                 }
                             }
                         }
