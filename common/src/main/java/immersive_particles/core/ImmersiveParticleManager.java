@@ -12,16 +12,21 @@ import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
-import java.util.Iterator;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ImmersiveParticleManager {
-    public static final AtomicInteger particleCount = new AtomicInteger();
-    private static final ConcurrentLinkedQueue<ImmersiveParticle> particles = new ConcurrentLinkedQueue<>();
     private static final int MAX_PARTICLES = 1024 * 16;
+    private static final int PARALLELIZATION_THRESHOLD = 128;
+
+    public static final AtomicInteger particleCount = new AtomicInteger();
+    public static int updateDrops, renderDrops = 0;
+    private static final ConcurrentLinkedQueue<ImmersiveParticle> particles = new ConcurrentLinkedQueue<>();
 
     public static Frustum frustum;
     private static ClientWorld world;
@@ -37,7 +42,9 @@ public class ImmersiveParticleManager {
     public static void render(MatrixStack matrices, LightmapTextureManager lightmapTextureManager, Camera camera, float tickDelta) {
         lightmapTextureManager.enable();
 
-        if (!rendering) {
+        if (rendering) {
+            renderDrops++;
+        } else {
             rendering = true;
 
             // Swap states
@@ -115,18 +122,19 @@ public class ImmersiveParticleManager {
     }
 
     public void tick() {
-        if (!MinecraftClient.getInstance().isPaused() && !updating) {
-            updating = true;
-            executor.execute(() -> {
-                for (Iterator<ImmersiveParticle> it = particles.iterator(); it.hasNext(); ) {
-                    ImmersiveParticle particle = it.next();
-                    if (particle.tick()) {
-                        it.remove();
-                        particleCount.decrementAndGet();
-                    }
-                }
-                updating = false;
-            });
+        if (!MinecraftClient.getInstance().isPaused()) {
+            if (updating) {
+                updateDrops++;
+            } else if (particleCount.get() > 0) {
+                updating = true;
+                executor.execute(() -> {
+                    Stream<ImmersiveParticle> stream = particleCount.get() > PARALLELIZATION_THRESHOLD ? particles.stream().parallel() : particles.stream().sequential();
+                    Set<ImmersiveParticle> particles2 = stream.filter(ImmersiveParticle::tick).collect(Collectors.toSet());
+                    particleCount.addAndGet(-particles2.size());
+                    particles.removeAll(particles2);
+                    updating = false;
+                });
+            }
         }
     }
 
