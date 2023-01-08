@@ -2,42 +2,45 @@
   "textures": [
     "immersive_particles:immersive_particles/bumblebee"
   ],
+  "spawns": [
+    {
+      "type": "inBlock",
+      "blocks": [
+        "grass",
+        "#dirt"
+      ],
+      "fluids": [
+        "empty"
+      ],
+
+      "daylightMin": 0,
+      "daylightMax": 0,
+      "lightMin": 0,
+      "lightMax": 0,
+      "temperatureMax": 0.0,
+      "temperatureMin": 0.0,
+
+      "chance": 0.01,
+      "normalizeAcrossChunk": false,
+      "denormalizationConstant": 10,
+
+      "biomes": [
+        "some biomes"
+      ],
+      "worlds": [
+        "nether"
+      ]
+    }
+  ],
   "behavior": {
-    "name": "theParticleType",
-    "anyAdditionalArgs": "carl",
-    "noise": 1,
+    "type": "hovering",
+    "reaction": 1,
+    "inertia": 0.5,
     "speed": 1,
-    "collisionLevel": 1,
-    "playerMovementPush": 1
+    "avoidPlayer": 1.0
   },
   "group": {
-    "min": 3,
-    "max": 5,
-    "spread": 4
-  },
-  "blocksOn": [
-    "#sometags",
-    "orblocks"
-  ],
-  "blocksIn": [
-    "air"
-  ],
-  "liquidsIn": [
-    "none"
-  ],
-  "side": "sides",
-  "chance": 0.01,
-  "biomes": [
-    "some biomes"
-  ],
-  "worlds": [
-    "nether"
-  ],
-  "canSeeSky": 0.0,
-  "temperatureMax": 0.0,
-  "temperatureMin": 0.0,
-  "heightMin": 0.0,
-  "heightMax": 0.0,
-  "sunLight": 0.0,
-  "lightLevel": 0.0
+    "min": 1,
+    "max": 3
+  }
 }

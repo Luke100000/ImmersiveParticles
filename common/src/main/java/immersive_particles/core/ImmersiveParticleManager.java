@@ -10,7 +10,6 @@ import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.Vec3d;
-import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
 import java.util.Set;
@@ -142,7 +141,7 @@ public class ImmersiveParticleManager {
         }
     }
 
-    public static void setWorld(@Nullable ClientWorld world) {
+    public static void setWorld(ClientWorld world) {
         ImmersiveParticleManager.world = world;
         particles.clear();
         particleCount.set(0);

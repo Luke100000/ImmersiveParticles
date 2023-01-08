@@ -14,9 +14,16 @@ public class ImmersiveParticleType {
 
     public static ImmersiveParticleType ofJson(JsonObject value) {
         ImmersiveParticleType type = new ImmersiveParticleType();
+
         for (JsonElement e : value.get("textures").getAsJsonArray()) {
             type.textures.add(new Identifier(e.getAsString()));
         }
+
+        // Register types to the spawn types
+        for (JsonElement e : value.get("spawns").getAsJsonArray()) {
+            SpawnTypes.registerParticleType(e.getAsJsonObject(), type);
+        }
+
         return type;
     }
 

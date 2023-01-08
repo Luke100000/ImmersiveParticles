@@ -3,6 +3,7 @@ package immersive_particles.resources;
 import com.google.gson.JsonElement;
 import immersive_particles.Main;
 import immersive_particles.core.ImmersiveParticleType;
+import immersive_particles.core.SpawnTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -34,6 +35,8 @@ public class ParticleManagerLoader extends JsonDataLoader {
 
     @Override
     protected void apply(Map<Identifier, JsonElement> prepared, ResourceManager manager, Profiler profiler) {
+        SpawnTypes.clear();
+
         this.atlasTexture = new SpriteAtlasTexture(ATLAS_TEXTURE);
         MinecraftClient.getInstance().getTextureManager().registerTexture(this.atlasTexture.getId(), this.atlasTexture);
 

@@ -5,7 +5,6 @@ import java.util.List;
 
 public class SpawnLocationList {
     private final List<SpawnLocation> locations = new LinkedList<>();
-    private long lastAccess;
     private double totalChance = 0.0f;
 
     public void add(SpawnLocation location) {
@@ -15,10 +14,6 @@ public class SpawnLocationList {
 
     public List<SpawnLocation> getLocations() {
         return locations;
-    }
-
-    public long getLastAccess() {
-        return lastAccess;
     }
 
     public double getTotalChance() {
