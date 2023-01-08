@@ -1,5 +1,6 @@
 package immersive_particles.core;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
 import immersive_particles.particles.ImmersiveParticle;
@@ -16,6 +17,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -31,7 +33,8 @@ public class ImmersiveParticleManager {
     public static Frustum frustum;
     private static ClientWorld world;
 
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    static ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("immersive-particles-worker-%d").build();
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor(namedThreadFactory);
 
     static State current = new State();
     static State last = new State();
@@ -55,6 +58,7 @@ public class ImmersiveParticleManager {
             // Remember the camera position it has been build with
             current.camera = camera.getPos();
 
+            //todo prepare for multi format and blend mode
             executor.execute(() -> {
                 // Start new tesselation
                 BufferBuilder builder = current.tessellator.getBuffer();
@@ -64,7 +68,8 @@ public class ImmersiveParticleManager {
 
                 // Render all particles
                 for (ImmersiveParticle particle : particles) {
-                    if (frustum == null || frustum.isVisible(particle.getBoundingBox())) {
+                    particle.visible = frustum == null || frustum.isVisible(particle.getBoundingBox());
+                    if (particle.visible) {
                         particle.render(builder, current.camera, tickDelta);
                     }
                 }
@@ -94,7 +99,6 @@ public class ImmersiveParticleManager {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.disableBlend();
         RenderSystem.depthMask(true);
-        RenderSystem.setShader(GameRenderer::getParticleShader);
         RenderSystem.setShaderTexture(0, ParticleManagerLoader.ATLAS_TEXTURE);
 
         // Yeet

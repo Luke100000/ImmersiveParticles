@@ -30,6 +30,9 @@ public class ImmersiveParticle {
     private static final double MAX_SQUARED_COLLISION_CHECK_DISTANCE = MathHelper.square(100.0);
 
     private final Sprite sprite;
+    private final Mesh mesh;
+
+    public boolean visible;
     private double x, y, z;
     private double prevPosX, prevPosY, prevPosZ;
     private double velocityX = 0.0;
@@ -37,6 +40,7 @@ public class ImmersiveParticle {
     private double velocityZ = 0.0;
     private int age;
     private final float red, green, blue, alpha;
+    private int light;
 
     private boolean onGround;
     private boolean sticks;
@@ -62,6 +66,8 @@ public class ImmersiveParticle {
 
         this.setBoundingBoxSpacing(0.2f, 0.2f);
         this.setPos(location.x + (random.nextDouble() - 0.5), location.y + (random.nextDouble() - 0.5), location.z + (random.nextDouble() - 0.5));
+
+        mesh = getMesh(Main.locate("bumblebee"), "Cube");
     }
 
     public void render(VertexConsumer vertexConsumer, Vec3d camera, float tickDelta) {
@@ -76,9 +82,7 @@ public class ImmersiveParticle {
 
         Matrix3d normal = transform.get3x3(new Matrix3d());
 
-        int light = this.getBrightness();
-        Mesh mesh = getMesh(Main.locate("bumblebee"), "Cube");
-        renderObject(mesh, transform, normal, vertexConsumer, light);
+        renderObject(mesh, transform, normal, vertexConsumer);
     }
 
     public Mesh getMesh(Identifier id, String object) {
@@ -92,7 +96,7 @@ public class ImmersiveParticle {
         return mesh;
     }
 
-    void renderObject(Mesh mesh, Matrix4d transform, Matrix3d normal, VertexConsumer vertexConsumer, int light) {
+    void renderObject(Mesh mesh, Matrix4d transform, Matrix3d normal, VertexConsumer vertexConsumer) {
         renderObject(mesh, transform, normal, vertexConsumer, light, red, green, blue, alpha);
     }
 
@@ -103,7 +107,7 @@ public class ImmersiveParticle {
                     Vector3d f_t = normal.transform(new Vector3d(v.v.x / 16.0f, v.v.y / 16.0f, v.v.z / 16.0f));
                     Vector4d f = transform.transform(new Vector4d(f_t.x, f_t.y, f_t.z, 1.0));
                     //Vector3d n = normal.transform(new Vector3d(v.n.x, v.n.y, v.n.z));
-                    //todo light
+                    //todo light, use appropriate shader
                     float tu = sprite.getMinU() + (sprite.getMaxU() - sprite.getMinU()) * v.t.u;
                     float tv = sprite.getMinV() + (sprite.getMaxV() - sprite.getMinV()) * v.t.v;
                     vertexConsumer
@@ -120,17 +124,24 @@ public class ImmersiveParticle {
     public boolean tick() {
         age++;
 
-        this.prevPosX = this.x;
-        this.prevPosY = this.y;
-        this.prevPosZ = this.z;
-        this.velocityY -= 0.04 * getGravity();
-        this.move(this.velocityX, this.velocityY, this.velocityZ);
-        this.velocityX *= this.velocityMultiplier;
-        this.velocityY *= this.velocityMultiplier;
-        this.velocityZ *= this.velocityMultiplier;
-        if (this.onGround) {
-            this.velocityX *= 0.7f;
-            this.velocityZ *= 0.7f;
+        if (visible) {
+            this.prevPosX = this.x;
+            this.prevPosY = this.y;
+            this.prevPosZ = this.z;
+            this.velocityY -= 0.04 * getGravity();
+
+            this.move(this.velocityX, this.velocityY, this.velocityZ);
+
+            this.velocityX *= this.velocityMultiplier;
+            this.velocityY *= this.velocityMultiplier;
+            this.velocityZ *= this.velocityMultiplier;
+
+            if (this.onGround) {
+                this.velocityX *= 0.7f;
+                this.velocityZ *= 0.7f;
+            }
+
+            light = this.getBrightness();
         }
 
         return age > 1000;
@@ -155,6 +166,7 @@ public class ImmersiveParticle {
 
         // Collide
         if ((dx != 0.0 || dy != 0.0 || dz != 0.0) && dx * dx + dy * dy + dz * dz < MAX_SQUARED_COLLISION_CHECK_DISTANCE) {
+            // todo adjustMovement is by far the slowest part, replace by cached solid block check for particles far away
             Vec3d vec3d = Entity.adjustMovementForCollisions(null, new Vec3d(dx, dy, dz), this.getBoundingBox(), ImmersiveParticleManager.getWorld(), List.of());
             dx = vec3d.x;
             dy = vec3d.y;
