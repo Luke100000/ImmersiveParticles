@@ -8,12 +8,13 @@ import immersive_particles.resources.ObjectLoader;
 import immersive_particles.util.obj.Face;
 import immersive_particles.util.obj.FaceVertex;
 import immersive_particles.util.obj.Mesh;
-import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix3d;
@@ -21,23 +22,36 @@ import org.joml.Matrix4d;
 import org.joml.Vector3d;
 import org.joml.Vector4d;
 
+import java.util.List;
+import java.util.Random;
+
 public class ImmersiveParticle {
+    private static final Box EMPTY_BOUNDING_BOX = new Box(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    private static final double MAX_SQUARED_COLLISION_CHECK_DISTANCE = MathHelper.square(100.0);
+
     private final Sprite sprite;
-    private final double x, y, z;
-    private final double prevPosX, prevPosY, prevPosZ;
+    private double x, y, z;
+    private double prevPosX, prevPosY, prevPosZ;
+    private double velocityX = 0.0;
+    private double velocityY = 0.0;
+    private double velocityZ = 0.0;
     private int age;
     private final float red, green, blue, alpha;
 
+    private boolean onGround;
+    private boolean sticks;
+
+    private Box boundingBox = EMPTY_BOUNDING_BOX;
+
+    protected float velocityMultiplier = 0.98f;
+
+    private float spacingXZ;
+    private float spacingY;
+
+    private static final Random random = new Random();
+
     public ImmersiveParticle(ImmersiveParticleType type, SpawnLocation location) {
         this.sprite = type.getSprites().get(0); //todo random
-
-        this.x = location.x;
-        this.y = location.y;
-        this.z = location.z;
-
-        this.prevPosX = location.x;
-        this.prevPosY = location.y;
-        this.prevPosZ = location.z;
 
         this.red = 1.0f;
         this.green = 1.0f;
@@ -45,16 +59,18 @@ public class ImmersiveParticle {
         this.alpha = 1.0f;
 
         this.age = 0;
+
+        this.setBoundingBoxSpacing(0.2f, 0.2f);
+        this.setPos(location.x + (random.nextDouble() - 0.5), location.y + (random.nextDouble() - 0.5), location.z + (random.nextDouble() - 0.5));
     }
 
-    public void render(VertexConsumer vertexConsumer, Camera camera, float tickDelta) {
-        Vec3d cam = camera.getPos();
-        float x = (float)(MathHelper.lerp(tickDelta, this.prevPosX, this.x) - cam.getX());
-        float y = (float)(MathHelper.lerp(tickDelta, this.prevPosY, this.y) - cam.getY());
-        float z = (float)(MathHelper.lerp(tickDelta, this.prevPosZ, this.z) - cam.getZ());
+    public void render(VertexConsumer vertexConsumer, Vec3d camera, float tickDelta) {
+        float x = (float)(MathHelper.lerp(tickDelta, this.prevPosX, this.x) - camera.getX());
+        float y = (float)(MathHelper.lerp(tickDelta, this.prevPosY, this.y) - camera.getY());
+        float z = (float)(MathHelper.lerp(tickDelta, this.prevPosZ, this.z) - camera.getZ());
 
         Matrix4d transform = new Matrix4d();
-        transform.rotationXYZ(0.0f, (age + tickDelta) * 0.25f, 0.0f);
+        transform.rotationXYZ(0.0f, (age + tickDelta) * 0.025f, 0.0f);
         transform.scale(Math.min(1.0f, (age + tickDelta) * 0.1));
         transform.setColumn(3, new Vector4d(x, y, z, 1.0));
 
@@ -103,7 +119,25 @@ public class ImmersiveParticle {
 
     public boolean tick() {
         age++;
+
+        this.prevPosX = this.x;
+        this.prevPosY = this.y;
+        this.prevPosZ = this.z;
+        this.velocityY -= 0.04 * getGravity();
+        this.move(this.velocityX, this.velocityY, this.velocityZ);
+        this.velocityX *= this.velocityMultiplier;
+        this.velocityY *= this.velocityMultiplier;
+        this.velocityZ *= this.velocityMultiplier;
+        if (this.onGround) {
+            this.velocityX *= 0.7f;
+            this.velocityZ *= 0.7f;
+        }
+
         return age > 1000;
+    }
+
+    private double getGravity() {
+        return 0.1;
     }
 
     protected int getBrightness() {
@@ -112,6 +146,71 @@ public class ImmersiveParticle {
             return WorldRenderer.getLightmapCoordinates(ImmersiveParticleManager.getWorld(), blockPos);
         }
         return 0;
+    }
+
+    public void move(double dx, double dy, double dz) {
+        double ox = dx;
+        double oy = dy;
+        double oz = dz;
+
+        // Collide
+        if ((dx != 0.0 || dy != 0.0 || dz != 0.0) && dx * dx + dy * dy + dz * dz < MAX_SQUARED_COLLISION_CHECK_DISTANCE) {
+            Vec3d vec3d = Entity.adjustMovementForCollisions(null, new Vec3d(dx, dy, dz), this.getBoundingBox(), ImmersiveParticleManager.getWorld(), List.of());
+            dx = vec3d.x;
+            dy = vec3d.y;
+            dz = vec3d.z;
+        }
+
+        // Move bounding box
+        if (dx != 0.0 || dy != 0.0 || dz != 0.0) {
+            this.setBoundingBox(this.getBoundingBox().offset(dx, dy, dz));
+        }
+
+        if (Math.abs(oy) >= (double)1.0E-5f && Math.abs(dy) < (double)1.0E-5f) {
+            //this.sticks = true;
+        }
+
+        if (ox != dx) {
+            this.velocityX = 0.0;
+        }
+        if (oy != dy) {
+            this.velocityY = 0.0;
+        }
+        if (oz != dz) {
+            this.velocityZ = 0.0;
+        }
+    }
+
+    public Box getBoundingBox() {
+        return this.boundingBox;
+    }
+
+    public void setBoundingBox(Box box) {
+        this.boundingBox = box;
+
+        this.x = (box.minX + box.maxX) / 2.0;
+        this.y = box.minY;
+        this.z = (box.minZ + box.maxZ) / 2.0;
+    }
+
+    protected void setBoundingBoxSpacing(float spacingXZ, float spacingY) {
+        if (spacingXZ != this.spacingXZ || spacingY != this.spacingY) {
+            this.spacingXZ = spacingXZ;
+            this.spacingY = spacingY;
+            Box box = this.getBoundingBox();
+            double d = (box.minX + box.maxX - (double)spacingXZ) / 2.0;
+            double e = (box.minZ + box.maxZ - (double)spacingXZ) / 2.0;
+            this.setBoundingBox(new Box(d, box.minY, e, d + (double)this.spacingXZ, box.minY + (double)this.spacingY, e + (double)this.spacingXZ));
+        }
+    }
+
+    public void setPos(double x, double y, double z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        float f = this.spacingXZ / 2.0f;
+        float g = this.spacingY;
+        this.setBoundingBox(new Box(x - (double)f, y, z - (double)f, x + (double)f, y + (double)g, z + (double)f));
     }
 }
 

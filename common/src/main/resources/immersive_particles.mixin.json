@@ -6,7 +6,8 @@
   "mixins": [
   ],
   "client": [
-    "ParticleManagerMixin"
+    "ParticleManagerMixin",
+    "WorldRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
