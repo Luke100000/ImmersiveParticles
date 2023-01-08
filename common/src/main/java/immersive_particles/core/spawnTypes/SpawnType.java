@@ -3,7 +3,7 @@ package immersive_particles.core.spawnTypes;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import immersive_particles.core.ImmersiveParticleType;
-import immersive_particles.core.SpawnLocation;
+import immersive_particles.core.Searcher;
 import immersive_particles.core.SpawnLocationList;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.world.ClientWorld;
@@ -19,8 +19,6 @@ import java.util.*;
 
 
 public abstract class SpawnType {
-    public static Map<LookupNode, LookupNode> lookupUpNodes = new HashMap<>();
-
     public SpawnType() {
 
     }
@@ -39,7 +37,7 @@ public abstract class SpawnType {
     }
 
     public void clear() {
-        lookupUpNodes.clear();
+
     }
 
     void readIdentifierSet(JsonElement json, Set<Identifier> identifiers, Set<Identifier> tags) {
@@ -53,44 +51,11 @@ public abstract class SpawnType {
         }
     }
 
-    public void register(JsonObject json, ImmersiveParticleType type) {
-        LookupNode node = new LookupNode();
+    public abstract void register(JsonObject json, ImmersiveParticleType type);
 
-        // block conditions
-        readIdentifierSet(json.get("blocks"), node.blocks, node.blockTags);
-        readIdentifierSet(json.get("fluids"), node.fluids, node.fluidTags);
+    public abstract void scanBlock(SpawnLocationList list, Searcher searcher);
 
-        // avoid duplicates
-        if (lookupUpNodes.containsKey(node)) {
-            node = lookupUpNodes.get(node);
-        } else {
-            lookupUpNodes.put(node, node);
-        }
-
-        // register type
-        node.types.add(type);
-    }
-
-    public void scanBlock(SpawnLocationList list, ClientWorld world, ChunkSection chunkSection, int cx, int cy, int cz) {
-        for (int x = 0; x < 16; x++) {
-            for (int y = 0; y < 16; y++) {
-                for (int z = 0; z < 16; z++) {
-                    //todo and here use a multi dimensional lookup table
-                    BlockState state = getBlockState(world, chunkSection, cx, cy, cz, x, y - 1, z);
-
-                    for (LookupNode node : lookupUpNodes.values()) {
-                        if (node.validate(state)) {
-                            for (ImmersiveParticleType s : node.types) {
-                                list.add(new SpawnLocation(1.0, cx * 16 + x + 0.5, cy * 16 + y + 0.5, cz * 16 + z + 0.5, null, s));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private static class LookupNode {
+    static class LookupNode {
         public Set<Identifier> blocks = new HashSet<>();
         public Set<Identifier> blockTags = new HashSet<>();
 

@@ -46,7 +46,7 @@ public class ParticleChunkManager {
             return;
         }
 
-        updates += chunkSphere.positions.size() * Config.getInstance().chunkUpdatedPerMinute / 60.0f;
+        updates += chunkSphere.positions.size() * Config.getInstance().chunkUpdatedPerMinute / 60.0f * 0.01;
 
         while (updates > 0.0f) {
             Vec3i chunk = chunkSphere.positions.get(tick).add(client.player.getX() / 16.0, client.player.getY() / 16.0, client.player.getZ() / 16.0);
