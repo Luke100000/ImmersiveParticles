@@ -5,12 +5,17 @@ import immersive_particles.core.ImmersiveParticleType;
 import immersive_particles.core.Searcher;
 import immersive_particles.core.SpawnLocation;
 import immersive_particles.core.SpawnLocationList;
+import immersive_particles.core.spawnTypes.descriptors.BiomeDescriptor;
+import immersive_particles.core.spawnTypes.descriptors.BlockDescriptor;
+import immersive_particles.core.spawnTypes.descriptors.Descriptor;
+import immersive_particles.core.spawnTypes.descriptors.LightDescriptor;
+import net.minecraft.util.JsonHelper;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 
 public class InBlockSpawnType extends FullScanSpawnType {
-    public static Map<LookupNode, LookupNode> lookupUpNodes = new HashMap<>();
+    public static List<DescriptorSet> descriptors = new LinkedList<>();
 
     public InBlockSpawnType() {
         super();
@@ -18,32 +23,45 @@ public class InBlockSpawnType extends FullScanSpawnType {
 
     @Override
     public void scanBlock(SpawnLocationList list, Searcher searcher, int x, int y, int z) {
-        for (LookupNode node : lookupUpNodes.values()) {
-            if (node.validate(searcher, x, y, z)) {
-                for (ImmersiveParticleType s : node.types) {
-                    list.add(new SpawnLocation(1.0, searcher.cx * 16 + x + 0.5, searcher.cy * 16 + y + 0.5, searcher.cz * 16 + z + 0.5, null, s));
-                }
+        for (DescriptorSet descriptor : descriptors) {
+            if (descriptor.validate(searcher, x, y, z)) {
+                list.add(new SpawnLocation(descriptor.chanceModifier, searcher.cx * 16 + x + 0.5, searcher.cy * 16 + y + 0.5, searcher.cz * 16 + z + 0.5, null, descriptor.type));
             }
         }
     }
 
     @Override
     public void clear() {
-        lookupUpNodes.clear();
+        descriptors.clear();
+    }
+
+    private static final class DescriptorSet extends Descriptor {
+        final BlockDescriptor block;
+        final BiomeDescriptor biome;
+        final LightDescriptor light;
+
+        final ImmersiveParticleType type;
+
+        float chanceModifier;
+
+        DescriptorSet(JsonObject json, ImmersiveParticleType type) {
+            this.block = new BlockDescriptor(JsonHelper.getObject(json, "block"));
+            this.biome = new BiomeDescriptor(JsonHelper.getObject(json, "biome", new JsonObject()));
+            this.light = new LightDescriptor(JsonHelper.getObject(json, "light", new JsonObject()));
+
+            this.type = type;
+
+            chanceModifier = JsonHelper.getFloat(json, "chanceModifier", 1.0f);
+        }
+
+        @Override
+        protected boolean validate(Searcher searcher, int x, int y, int z) {
+            return block.validate(searcher, x, y, z) && block.validate(searcher, x, y, z) && light.validate(searcher, x, y, z);
+        }
     }
 
     @Override
     public void register(JsonObject json, ImmersiveParticleType type) {
-        LookupNode node = LookupNode.fromJson(json.getAsJsonObject("block"));
-
-        // avoid duplicates
-        if (lookupUpNodes.containsKey(node)) {
-            node = lookupUpNodes.get(node);
-        } else {
-            lookupUpNodes.put(node, node);
-        }
-
-        // register type
-        node.types.add(type);
+        descriptors.add(new DescriptorSet(json, type));
     }
 }

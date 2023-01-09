@@ -17,21 +17,27 @@
         ],
         "fluids": [
           "empty"
-        ],
-        "biomes": [
-          "some biomes"
-        ],
-        "worlds": [
-          "nether"
         ]
       },
-      "daylightMin": 0,
-      "daylightMax": 0,
-      "lightMin": 0,
-      "lightMax": 0,
-      "temperatureMax": 0.0,
-      "temperatureMin": 0.0,
-      "chance": 0.01,
+      "biome": {
+        "biomes": [
+          "#has_structure/village_plains"
+        ],
+        "minTemperature": 0.15,
+        "maxTemperature": 1.5,
+        "minDownfall": 0.0,
+        "maxDownfall": 1.0
+      },
+      "light": {
+        "minDayLight": 7,
+        "maxDayLight": 15,
+        "minBlockLight": 0,
+        "maxBlockLight": 15,
+        "minLight": 0,
+        "maxLight": 15
+      },
+      "side": "top",
+      "chanceModifier": 1.0,
       "normalizeAcrossChunk": false,
       "denormalizationConstant": 10
     }

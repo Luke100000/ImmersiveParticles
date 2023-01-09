@@ -2,6 +2,7 @@ package immersive_particles.core;
 
 import immersive_particles.Config;
 import immersive_particles.Main;
+import immersive_particles.core.spawnTypes.SpawnType;
 import immersive_particles.resources.ParticleManagerLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
@@ -36,6 +37,9 @@ public class ParticleChunkManager {
             requested.clear();
 
             ImmersiveParticleManager.setWorld(client.world);
+
+            // Clear temporary data collected by the spawner
+            SpawnTypes.TYPES.values().forEach(SpawnType::setWorld);
         }
 
         spawn(client);
