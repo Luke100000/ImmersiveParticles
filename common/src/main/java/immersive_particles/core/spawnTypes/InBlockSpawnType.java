@@ -10,6 +10,7 @@ import immersive_particles.core.spawnTypes.descriptors.BlockDescriptor;
 import immersive_particles.core.spawnTypes.descriptors.Descriptor;
 import immersive_particles.core.spawnTypes.descriptors.LightDescriptor;
 import net.minecraft.util.JsonHelper;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class InBlockSpawnType extends FullScanSpawnType {
     public void scanBlock(SpawnLocationList list, Searcher searcher, int x, int y, int z) {
         for (DescriptorSet descriptor : descriptors) {
             if (descriptor.validate(searcher, x, y, z)) {
-                list.add(new SpawnLocation(descriptor.chanceModifier, searcher.cx * 16 + x + 0.5, searcher.cy * 16 + y + 0.5, searcher.cz * 16 + z + 0.5, null, descriptor.type));
+                list.add(new SpawnLocation(descriptor.chanceModifier, searcher.cx * 16 + x + 0.5, searcher.cy * 16 + y + 0.5, searcher.cz * 16 + z + 0.5, BlockPos.ORIGIN));
             }
         }
     }

@@ -3,7 +3,7 @@ package immersive_particles.core;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
-import immersive_particles.particles.ImmersiveParticle;
+import immersive_particles.core.particles.ImmersiveParticle;
 import immersive_particles.resources.ParticleManagerLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
@@ -113,8 +113,8 @@ public class ImmersiveParticleManager {
     }
 
     public static void addParticle(ImmersiveParticleType type, SpawnLocation location) {
-        if (particleCount.get() < MAX_PARTICLES) { //todo constant
-            ImmersiveParticle particle = new ImmersiveParticle(type, location);
+        if (particleCount.get() < MAX_PARTICLES) {
+            ImmersiveParticle particle = ImmersiveParticles.PARTICLES.get(type.behaviorIdentifier).apply(type, location);
             particles.add(particle);
             particleCount.incrementAndGet();
         }

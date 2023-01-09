@@ -1,6 +1,6 @@
 package immersive_particles.forge;
 
-import immersive_particles.core.ParticleChunkManager;
+import immersive_particles.core.ImmersiveParticlesChunkManager;
 import immersive_particles.Main;
 import net.minecraft.client.MinecraftClient;
 import net.minecraftforge.event.TickEvent;
@@ -12,7 +12,7 @@ public class EventBus {
     @SubscribeEvent
     public static void tick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.START) {
-            ParticleChunkManager.tick(MinecraftClient.getInstance());
+            ImmersiveParticlesChunkManager.tick(MinecraftClient.getInstance());
         }
     }
 }

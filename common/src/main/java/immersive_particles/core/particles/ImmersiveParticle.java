@@ -1,4 +1,4 @@
-package immersive_particles.particles;
+package immersive_particles.core.particles;
 
 import immersive_particles.Main;
 import immersive_particles.core.ImmersiveParticleManager;
@@ -13,6 +13,7 @@ import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.JsonHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
@@ -67,7 +68,7 @@ public class ImmersiveParticle {
         this.setBoundingBoxSpacing(0.2f, 0.2f);
         this.setPos(location.x + (random.nextDouble() - 0.5), location.y + (random.nextDouble() - 0.5), location.z + (random.nextDouble() - 0.5));
 
-        mesh = getMesh(Main.locate("bumblebee"), "Cube");
+        mesh = getMesh(Main.locate(JsonHelper.getString(type.behavior, "object")), JsonHelper.getString(type.behavior, "mesh"));
     }
 
     public void render(VertexConsumer vertexConsumer, Vec3d camera, float tickDelta) {

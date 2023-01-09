@@ -11,7 +11,7 @@ import java.util.Map;
 public class SpawnTypes {
     static public final Map<String, SpawnType> TYPES = new HashMap<>();
 
-    static {
+    {
         register("onBlock", new OnBlockSpawnType());
         register("inBlock", new InBlockSpawnType());
     }
@@ -24,7 +24,7 @@ public class SpawnTypes {
         TYPES.values().forEach(SpawnType::clear);
     }
 
-    private static void register(String identifier, SpawnType type) {
+    private void register(String identifier, SpawnType type) {
         TYPES.put(identifier, type);
     }
 }

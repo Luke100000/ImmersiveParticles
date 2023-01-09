@@ -1,7 +1,7 @@
 package immersive_particles;
 
 import immersive_particles.core.ImmersiveParticleManager;
-import immersive_particles.core.ParticleChunkManager;
+import immersive_particles.core.ImmersiveParticlesChunkManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
@@ -18,7 +18,7 @@ public final class Main {
     }
 
     public static void tick(MinecraftClient client) {
-        ParticleChunkManager.tick(client);
+        ImmersiveParticlesChunkManager.tick(client);
 
         // Update the particles
         particleManager.tick();

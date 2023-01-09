@@ -103,7 +103,7 @@ public final class Searcher implements Runnable {
         Collections.shuffle(list.getLocations());
 
         // cache
-        ParticleChunkManager.chunks.put(id, list);
+        ImmersiveParticlesChunkManager.chunks.put(id, list);
 
         //cleanup
         blockCache.clear();

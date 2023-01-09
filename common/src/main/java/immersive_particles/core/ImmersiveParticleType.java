@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.JsonHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,19 +13,21 @@ public class ImmersiveParticleType {
     private final List<Identifier> textures = new ArrayList<>();
     private List<Sprite> sprites;
 
-    public static ImmersiveParticleType ofJson(JsonObject value) {
-        ImmersiveParticleType type = new ImmersiveParticleType();
+    public JsonObject behavior;
+    String behaviorIdentifier;
 
+    public ImmersiveParticleType(JsonObject value) {
         for (JsonElement e : value.get("textures").getAsJsonArray()) {
-            type.textures.add(new Identifier(e.getAsString()));
+            textures.add(new Identifier(e.getAsString()));
         }
+
+        behavior = JsonHelper.getObject(value, "behavior");
+        behaviorIdentifier = JsonHelper.getString(behavior, "behavior");
 
         // Register types to the spawn types
         for (JsonElement e : value.get("spawns").getAsJsonArray()) {
-            SpawnTypes.registerParticleType(e.getAsJsonObject(), type);
+            SpawnTypes.registerParticleType(e.getAsJsonObject(), this);
         }
-
-        return type;
     }
 
     public List<Identifier> getTextures() {

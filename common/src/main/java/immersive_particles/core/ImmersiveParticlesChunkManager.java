@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class ParticleChunkManager {
+public class ImmersiveParticlesChunkManager {
     static Executor executor = Executors.newSingleThreadExecutor();
 
     private static int tick;

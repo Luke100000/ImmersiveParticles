@@ -26,12 +26,12 @@ public class OnBlockSpawnType extends FullScanSpawnType {
     public void scanBlock(SpawnLocationList list, Searcher searcher, int x, int y, int z) {
         for (DescriptorSet descriptor : descriptors) {
             if (descriptor.validate(searcher, x, y, z)) {
-                for (BlockPos pos : descriptor.side.offsets) {
-                    int px = x + pos.getX();
-                    int py = y + pos.getY();
-                    int pz = z + pos.getZ();
+                for (BlockPos offset : descriptor.side.offsets) {
+                    int px = x + offset.getX();
+                    int py = y + offset.getY();
+                    int pz = z + offset.getZ();
                     if (descriptor.validateSecond(searcher, px, py, pz)) {
-                        list.add(new SpawnLocation(descriptor.chanceModifier, searcher.cx * 16 + px + 0.5, searcher.cy * 16 + py + 0.5, searcher.cz * 16 + z + 0.5, null, descriptor.type));
+                        list.add(new SpawnLocation(descriptor.chanceModifier, searcher.cx * 16 + px + 0.5, searcher.cy * 16 + py + 0.5, searcher.cz * 16 + z + 0.5, offset));
                     }
                 }
             }

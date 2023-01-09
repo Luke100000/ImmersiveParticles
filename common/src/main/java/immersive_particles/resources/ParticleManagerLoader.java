@@ -42,7 +42,7 @@ public class ParticleManagerLoader extends JsonDataLoader {
 
         // Parse particle types
         for (Map.Entry<Identifier, JsonElement> entry : prepared.entrySet()) {
-            PARTICLES.put(entry.getKey(), ImmersiveParticleType.ofJson(entry.getValue().getAsJsonObject()));
+            PARTICLES.put(entry.getKey(), new ImmersiveParticleType(entry.getValue().getAsJsonObject()));
         }
 
         // List all textures used
