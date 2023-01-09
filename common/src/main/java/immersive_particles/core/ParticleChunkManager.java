@@ -56,11 +56,9 @@ public class ParticleChunkManager {
                     .filter(l -> !l.getLocations().isEmpty())
                     .ifPresent(l -> {
                         double v = client.world.random.nextDouble();
-
-                        //todo weird and slow
                         if (v < l.getTotalChance()) {
                             for (SpawnLocation location : l.getLocations()) {
-                                v -= location.chance;
+                                v -= location.chance * Config.getInstance().baseChance / Config.getInstance().chunkUpdatedPerMinute;
                                 if (v < 0) {
                                     v++;
                                     //todo

@@ -22,6 +22,7 @@ public final class Config implements Serializable {
 
     public final int particleSpawnDistanceInChunks = 5;
     public final float chunkUpdatedPerMinute = 2.0f;
+    public final float baseChance = 0.2f;
 
     public int version = 0;
 
