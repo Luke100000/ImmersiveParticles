@@ -4,32 +4,36 @@
   ],
   "spawns": [
     {
-      "type": "inBlock",
-      "blocks": [
-        "grass",
-        "#dirt"
-      ],
-      "fluids": [
-        "empty"
-      ],
-
+      "type": "onBlock",
+      "inBlock": {
+        "blocks": [
+          "air"
+        ]
+      },
+      "onBlock": {
+        "blocks": [
+          "grass",
+          "#dirt"
+        ],
+        "fluids": [
+          "empty"
+        ],
+        "biomes": [
+          "some biomes"
+        ],
+        "worlds": [
+          "nether"
+        ]
+      },
       "daylightMin": 0,
       "daylightMax": 0,
       "lightMin": 0,
       "lightMax": 0,
       "temperatureMax": 0.0,
       "temperatureMin": 0.0,
-
       "chance": 0.01,
       "normalizeAcrossChunk": false,
-      "denormalizationConstant": 10,
-
-      "biomes": [
-        "some biomes"
-      ],
-      "worlds": [
-        "nether"
-      ]
+      "denormalizationConstant": 10
     }
   ],
   "behavior": {

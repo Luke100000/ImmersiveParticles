@@ -56,7 +56,7 @@ public final class Searcher implements Runnable {
         SpawnLocationList list = new SpawnLocationList();
 
         // let the spawn types search for blocks
-        SpawnTypes.TYPES.values().forEach(s -> s.scanBlock(list, this));
+        SpawnTypes.TYPES.values().forEach(s -> s.scan(list, this));
 
         // shuffle for extra randomness
         Collections.shuffle(list.getLocations());

@@ -6,14 +6,11 @@ import immersive_particles.core.ImmersiveParticleType;
 import immersive_particles.core.Searcher;
 import immersive_particles.core.SpawnLocationList;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.chunk.ChunkSection;
 
 import java.util.*;
 
@@ -21,15 +18,6 @@ import java.util.*;
 public abstract class SpawnType {
     public SpawnType() {
 
-    }
-
-    // todo move that back to searcher and add caching
-    private static BlockState getBlockState(ClientWorld world, ChunkSection chunkSection, int cx, int cy, int cz, int x, int y, int z) {
-        if (x < 0 || y < 0 || z < 0 || x > 15 || y > 15 || z > 15) {
-            return world.getBlockState(new BlockPos(cx * 16 + x, cy * 16 + y, cz * 16 + z));
-        } else {
-            return chunkSection.getBlockState(x, y, z);
-        }
     }
 
     public void setWorld() {
@@ -40,20 +28,22 @@ public abstract class SpawnType {
 
     }
 
-    void readIdentifierSet(JsonElement json, Set<Identifier> identifiers, Set<Identifier> tags) {
-        for (JsonElement block : json.getAsJsonArray()) {
-            String string = block.getAsString();
-            if (string.startsWith("#")) {
-                tags.add(new Identifier(string.substring(1)));
-            } else {
-                identifiers.add(new Identifier(string));
+    static void readIdentifierSet(JsonElement json, Set<Identifier> identifiers, Set<Identifier> tags) {
+        if (json != null) {
+            for (JsonElement block : json.getAsJsonArray()) {
+                String string = block.getAsString();
+                if (string.startsWith("#")) {
+                    tags.add(new Identifier(string.substring(1)));
+                } else {
+                    identifiers.add(new Identifier(string));
+                }
             }
         }
     }
 
     public abstract void register(JsonObject json, ImmersiveParticleType type);
 
-    public abstract void scanBlock(SpawnLocationList list, Searcher searcher);
+    public abstract void scan(SpawnLocationList list, Searcher searcher);
 
     static class LookupNode {
         public Set<Identifier> blocks = new HashSet<>();
@@ -67,37 +57,55 @@ public abstract class SpawnType {
         public Map<LookupNode, LookupNode> children = new HashMap<>();
         public List<ImmersiveParticleType> types = new LinkedList<>();
 
+        public static LookupNode fromJson(JsonObject json) {
+            LookupNode node = new LookupNode();
+
+            // block conditions
+            readIdentifierSet(json.get("blocks"), node.blocks, node.blockTags);
+            readIdentifierSet(json.get("fluids"), node.fluids, node.fluidTags);
+
+            return node;
+        }
+
         private boolean validateBlock(BlockState state) {
             Identifier id = Registry.BLOCK.getId(state.getBlock());
+            boolean empty = true;
             for (Identifier i : blocks) {
+                empty = false;
                 if (id.equals(i)) {
                     return true;
                 }
             }
             for (Identifier tag : blockTags) {
+                empty = false;
                 if (state.isIn(TagKey.of(Registry.BLOCK_KEY, tag))) {
                     return true;
                 }
             }
-            return false;
+            return empty;
         }
 
         private boolean validateFluid(FluidState state) {
             Identifier id = Registry.FLUID.getId(state.getFluid());
+            boolean empty = true;
             for (Identifier i : fluids) {
+                empty = false;
                 if (id.equals(i)) {
                     return true;
                 }
             }
             for (Identifier tag : fluidTags) {
+                empty = false;
                 if (state.isIn(TagKey.of(Registry.FLUID_KEY, tag))) {
                     return true;
                 }
             }
-            return false;
+            return empty;
         }
 
-        public boolean validate(BlockState state) {
+        public boolean validate(Searcher searcher, int x, int y, int z) {
+            BlockState state = searcher.getBlockState(x, y, z);
+            //todo verify biome, temperature and light
             return validateBlock(state) && validateFluid(state.getFluidState());
         }
 
