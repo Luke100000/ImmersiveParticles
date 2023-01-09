@@ -11,16 +11,12 @@ public final class Main {
     public static final String MOD_ID = "immersive_particles";
     public static final Logger LOGGER = LogManager.getLogger();
 
-    public static final ImmersiveParticleManager particleManager = new ImmersiveParticleManager();
-
     public static Identifier locate(String path) {
         return new Identifier(MOD_ID, path);
     }
 
     public static void tick(MinecraftClient client) {
         ImmersiveParticlesChunkManager.tick(client);
-
-        // Update the particles
-        particleManager.tick();
+        ImmersiveParticleManager.tick(client);
     }
 }

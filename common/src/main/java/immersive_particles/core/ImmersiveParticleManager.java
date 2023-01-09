@@ -124,8 +124,8 @@ public class ImmersiveParticleManager {
         return world;
     }
 
-    public void tick() {
-        if (!MinecraftClient.getInstance().isPaused()) {
+    public static void tick(MinecraftClient client) {
+        if (!client.isPaused()) {
             if (updating) {
                 updateDrops++;
             } else if (particleCount.get() > 0) {
