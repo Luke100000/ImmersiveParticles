@@ -1,6 +1,5 @@
 package immersive_particles.core.particles;
 
-import immersive_particles.Main;
 import immersive_particles.core.ImmersiveParticleManager;
 import immersive_particles.core.ImmersiveParticleType;
 import immersive_particles.core.SpawnLocation;
@@ -13,7 +12,6 @@ import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
@@ -26,12 +24,9 @@ import org.joml.Vector4d;
 import java.util.List;
 import java.util.Random;
 
-public class ImmersiveParticle {
+public abstract class ImmersiveParticle {
     private static final Box EMPTY_BOUNDING_BOX = new Box(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
     private static final double MAX_SQUARED_COLLISION_CHECK_DISTANCE = MathHelper.square(100.0);
-
-    private final Sprite sprite;
-    private final Mesh mesh;
 
     public boolean visible;
     private double x, y, z;
@@ -53,10 +48,9 @@ public class ImmersiveParticle {
     private float spacingXZ;
     private float spacingY;
 
-    private static final Random random = new Random();
+    static final Random random = new Random();
 
     public ImmersiveParticle(ImmersiveParticleType type, SpawnLocation location) {
-        this.sprite = type.getSprites().get(0); //todo random
 
         this.red = 1.0f;
         this.green = 1.0f;
@@ -67,8 +61,6 @@ public class ImmersiveParticle {
 
         this.setBoundingBoxSpacing(0.2f, 0.2f);
         this.setPos(location.x + (random.nextDouble() - 0.5), location.y + (random.nextDouble() - 0.5), location.z + (random.nextDouble() - 0.5));
-
-        mesh = getMesh(Main.locate(JsonHelper.getString(type.behavior, "object")), JsonHelper.getString(type.behavior, "mesh"));
     }
 
     public void render(VertexConsumer vertexConsumer, Vec3d camera, float tickDelta) {
@@ -83,8 +75,12 @@ public class ImmersiveParticle {
 
         Matrix3d normal = transform.get3x3(new Matrix3d());
 
-        renderObject(mesh, transform, normal, vertexConsumer);
+        renderObject(getCurrentMesh(), transform, normal, vertexConsumer);
     }
+
+    abstract Mesh getCurrentMesh();
+    
+    abstract Sprite getCurrentSprite();
 
     public Mesh getMesh(Identifier id, String object) {
         if (!ObjectLoader.objects.containsKey(id)) {
@@ -109,6 +105,7 @@ public class ImmersiveParticle {
                     Vector4d f = transform.transform(new Vector4d(f_t.x, f_t.y, f_t.z, 1.0));
                     //Vector3d n = normal.transform(new Vector3d(v.n.x, v.n.y, v.n.z));
                     //todo light, use appropriate shader
+                    Sprite sprite = getCurrentSprite();
                     float tu = sprite.getMinU() + (sprite.getMaxU() - sprite.getMinU()) * v.t.u;
                     float tv = sprite.getMinV() + (sprite.getMaxV() - sprite.getMinV()) * v.t.v;
                     vertexConsumer
