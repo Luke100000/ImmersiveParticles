@@ -41,8 +41,18 @@ public class ImmersiveParticleManager {
     static private volatile boolean rendering;
     static private volatile boolean updating;
 
+    private static Exception updateException;
+    private static Exception renderException;
+
     public static void render(MatrixStack matrices, LightmapTextureManager lightmapTextureManager, Camera camera, float tickDelta) {
         lightmapTextureManager.enable();
+
+        if (updateException != null) {
+            throw new RuntimeException(updateException);
+        }
+        if (renderException != null) {
+            throw new RuntimeException(renderException);
+        }
 
         if (rendering) {
             renderDrops++;
@@ -59,24 +69,28 @@ public class ImmersiveParticleManager {
 
             //todo prepare for multi format and blend mode
             executor.execute(() -> {
-                // Start new tesselation
-                BufferBuilder builder = current.tessellator.getBuffer();
-                builder.reset();
+                try {
+                    // Start new tesselation
+                    BufferBuilder builder = current.tessellator.getBuffer();
+                    builder.reset();
 
-                builder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR_LIGHT);
+                    builder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR_LIGHT);
 
-                // Render all particles
-                for (ImmersiveParticle particle : particles) {
-                    particle.visible = frustum == null || frustum.isVisible(particle.getBoundingBox());
-                    if (particle.visible) {
-                        particle.render(builder, current.camera, tickDelta);
+                    // Render all particles
+                    for (ImmersiveParticle particle : particles) {
+                        particle.visible = frustum == null || frustum.isVisible(particle.getBoundingBox());
+                        if (particle.visible) {
+                            particle.render(builder, current.camera, tickDelta);
+                        }
                     }
-                }
 
-                // Finish
-                builder.end();
-                current.pair = builder.popData();
-                rendering = false;
+                    // Finish
+                    builder.end();
+                    current.pair = builder.popData();
+                    rendering = false;
+                } catch (Exception e) {
+                    renderException = e;
+                }
             });
         }
 
@@ -131,11 +145,15 @@ public class ImmersiveParticleManager {
             } else if (particleCount.get() > 0) {
                 updating = true;
                 executor.execute(() -> {
-                    Stream<ImmersiveParticle> stream = particleCount.get() > PARALLELIZATION_THRESHOLD ? particles.stream().parallel() : particles.stream().sequential();
-                    Set<ImmersiveParticle> particles2 = stream.filter(ImmersiveParticle::tick).collect(Collectors.toSet());
-                    particleCount.addAndGet(-particles2.size());
-                    particles.removeAll(particles2);
-                    updating = false;
+                    try {
+                        Stream<ImmersiveParticle> stream = particleCount.get() > PARALLELIZATION_THRESHOLD ? particles.stream().parallel() : particles.stream().sequential();
+                        Set<ImmersiveParticle> particles2 = stream.filter(ImmersiveParticle::tick).collect(Collectors.toSet());
+                        particleCount.addAndGet(-particles2.size());
+                        particles.removeAll(particles2);
+                        updating = false;
+                    } catch (Exception e) {
+                        updateException = e;
+                    }
                 });
             }
         }

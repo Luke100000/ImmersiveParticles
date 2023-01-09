@@ -29,29 +29,36 @@ public abstract class ImmersiveParticle {
     private static final double MAX_SQUARED_COLLISION_CHECK_DISTANCE = MathHelper.square(100.0);
 
     public boolean visible;
-    private double x, y, z;
-    private double prevPosX, prevPosY, prevPosZ;
-    private double velocityX = 0.0;
-    private double velocityY = 0.0;
-    private double velocityZ = 0.0;
-    private int age;
-    private final float red, green, blue, alpha;
-    private int light;
+    double x, y, z;
+    double prevPosX, prevPosY, prevPosZ;
+    double velocityX = 0.0;
+    double velocityY = 0.0;
+    double velocityZ = 0.0;
 
-    private boolean onGround;
-    private boolean sticks;
+    double yaw = random.nextDouble() * Math.PI * 2.0;
+    double prevYaw = 0.0;
+    double pitch = 0.0;
+    double prevPitch = 0.0;
+    double roll = 0.0;
+    double prevRoll = 0.0;
+
+    int age;
+    final float red, green, blue, alpha;
+    int light;
+
+    boolean onGround;
+    boolean sticks;
 
     private Box boundingBox = EMPTY_BOUNDING_BOX;
 
     protected float velocityMultiplier = 0.98f;
 
-    private float spacingXZ;
-    private float spacingY;
+    float spacingXZ;
+    float spacingY;
 
     static final Random random = new Random();
 
     public ImmersiveParticle(ImmersiveParticleType type, SpawnLocation location) {
-
         this.red = 1.0f;
         this.green = 1.0f;
         this.blue = 1.0f;
@@ -60,16 +67,24 @@ public abstract class ImmersiveParticle {
         this.age = 0;
 
         this.setBoundingBoxSpacing(0.2f, 0.2f);
-        this.setPos(location.x + (random.nextDouble() - 0.5), location.y + (random.nextDouble() - 0.5), location.z + (random.nextDouble() - 0.5));
+        this.setPos(getRandomPosition(location));
+    }
+
+    Vec3d getRandomPosition(SpawnLocation location) {
+        return location.getRandomPosition(spacingXZ, spacingY, spacingXZ);
     }
 
     public void render(VertexConsumer vertexConsumer, Vec3d camera, float tickDelta) {
-        float x = (float)(MathHelper.lerp(tickDelta, this.prevPosX, this.x) - camera.getX());
-        float y = (float)(MathHelper.lerp(tickDelta, this.prevPosY, this.y) - camera.getY());
-        float z = (float)(MathHelper.lerp(tickDelta, this.prevPosZ, this.z) - camera.getZ());
+        double x = MathHelper.lerp(tickDelta, this.prevPosX, this.x) - camera.getX();
+        double y = MathHelper.lerp(tickDelta, this.prevPosY, this.y) - camera.getY();
+        double z = MathHelper.lerp(tickDelta, this.prevPosZ, this.z) - camera.getZ();
+
+        double yaw = MathHelper.lerp(tickDelta, this.prevYaw, this.yaw);
+        double pitch = MathHelper.lerp(tickDelta, this.prevPitch, this.pitch);
+        double roll = MathHelper.lerp(tickDelta, this.prevRoll, this.roll);
 
         Matrix4d transform = new Matrix4d();
-        transform.rotationXYZ(0.0f, (age + tickDelta) * 0.025f, 0.0f);
+        transform.rotationXYZ(pitch, yaw, roll);
         transform.scale(Math.min(1.0f, (age + tickDelta) * 0.1));
         transform.setColumn(3, new Vector4d(x, y, z, 1.0));
 
@@ -79,7 +94,7 @@ public abstract class ImmersiveParticle {
     }
 
     abstract Mesh getCurrentMesh();
-    
+
     abstract Sprite getCurrentSprite();
 
     public Mesh getMesh(Identifier id, String object) {
@@ -101,8 +116,7 @@ public abstract class ImmersiveParticle {
         for (Face face : mesh.faces) {
             if (face.vertices.size() == 4) {
                 for (FaceVertex v : face.vertices) {
-                    Vector3d f_t = normal.transform(new Vector3d(v.v.x / 16.0f, v.v.y / 16.0f, v.v.z / 16.0f));
-                    Vector4d f = transform.transform(new Vector4d(f_t.x, f_t.y, f_t.z, 1.0));
+                    Vector4d f = transform.transform(new Vector4d(v.v.x / 16.0f, v.v.y / 16.0f, v.v.z / 16.0f, 1.0f));
                     //Vector3d n = normal.transform(new Vector3d(v.n.x, v.n.y, v.n.z));
                     //todo light, use appropriate shader
                     Sprite sprite = getCurrentSprite();
@@ -146,7 +160,7 @@ public abstract class ImmersiveParticle {
     }
 
     private double getGravity() {
-        return 0.1;
+        return 0.0;
     }
 
     protected int getBrightness() {
@@ -214,10 +228,10 @@ public abstract class ImmersiveParticle {
         }
     }
 
-    public void setPos(double x, double y, double z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+    public void setPos(Vec3d pos) {
+        this.x = pos.x;
+        this.y = pos.y;
+        this.z = pos.z;
         float f = this.spacingXZ / 2.0f;
         float g = this.spacingY;
         this.setBoundingBox(new Box(x - (double)f, y, z - (double)f, x + (double)f, y + (double)g, z + (double)f));

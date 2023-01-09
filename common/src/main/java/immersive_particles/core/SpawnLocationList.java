@@ -1,22 +1,29 @@
 package immersive_particles.core;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class SpawnLocationList {
-    private final List<SpawnLocation> locations = new LinkedList<>();
+    private final Map<ImmersiveParticleType, List<SpawnLocation>> locations = new HashMap<>();
     private double totalChance = 0.0f;
 
-    public void add(SpawnLocation location) {
-        locations.add(location);
+    public void add(ImmersiveParticleType type, SpawnLocation location) {
+        getLocations(type).add(location);
         totalChance += location.chance;
     }
 
-    public List<SpawnLocation> getLocations() {
+    public List<SpawnLocation> getLocations(ImmersiveParticleType type) {
+        return locations.computeIfAbsent(type, (k) -> new LinkedList<>());
+    }
+
+    public Map<ImmersiveParticleType, List<SpawnLocation>> getAllLocations() {
         return locations;
     }
 
     public double getTotalChance() {
         return totalChance;
+    }
+
+    public void shuffle() {
+        locations.values().forEach(Collections::shuffle);
     }
 }

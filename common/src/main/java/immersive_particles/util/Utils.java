@@ -1,8 +1,10 @@
 package immersive_particles.util;
 
-import net.minecraft.util.Identifier;
-
 public class Utils {
+    public static double squaredDistance(double x1, double x2, double y1, double y2, double z1, double z2) {
+        return Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2) + Math.pow((z1 - z2), 2);
+    }
+
     public static double cosNoise(double time) {
         return cosNoise(time, 5);
     }
@@ -27,9 +29,5 @@ public class Utils {
         } else {
             return string.substring(0, i);
         }
-    }
-
-    public static String identifierToTranslation(Identifier identifier) {
-        return firstSplit(lastSplit(identifier.getPath(), "/"), ".");
     }
 }

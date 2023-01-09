@@ -31,7 +31,7 @@ public class OnBlockSpawnType extends FullScanSpawnType {
                     int py = y + offset.getY();
                     int pz = z + offset.getZ();
                     if (descriptor.validateSecond(searcher, px, py, pz)) {
-                        list.add(new SpawnLocation(descriptor.chanceModifier, searcher.cx * 16 + px + 0.5, searcher.cy * 16 + py + 0.5, searcher.cz * 16 + z + 0.5, offset));
+                        list.add(descriptor.type, new SpawnLocation(descriptor.chanceModifier, searcher.cx * 16 + px + 0.5, searcher.cy * 16 + py + 0.5, searcher.cz * 16 + z + 0.5, offset));
                     }
                 }
             }

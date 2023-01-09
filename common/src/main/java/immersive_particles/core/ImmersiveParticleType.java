@@ -22,7 +22,7 @@ public class ImmersiveParticleType {
         }
 
         behavior = JsonHelper.getObject(value, "behavior");
-        behaviorIdentifier = JsonHelper.getString(behavior, "behavior");
+        behaviorIdentifier = JsonHelper.getString(behavior, "type");
 
         // Register types to the spawn types
         for (JsonElement e : value.get("spawns").getAsJsonArray()) {

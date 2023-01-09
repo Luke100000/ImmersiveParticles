@@ -9,7 +9,6 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,11 +59,7 @@ public final class Searcher implements Runnable {
     public RegistryEntry<Biome> getBiome(int x, int y, int z) {
         long id = getId(x, y, z);
         if (!biomeCache.containsKey(id)) {
-            if (x < 0 || y < 0 || z < 0 || x > 15 || y > 15 || z > 15) {
-                biomeCache.put(id, world.getBiome(getPos(x, y, z)));
-            } else {
-                biomeCache.put(id, chunkSection.getBiome(x, y, z));
-            }
+            biomeCache.put(id, world.getBiome(getPos(x, y, z)));
         }
         return biomeCache.get(id);
     }
@@ -100,7 +95,7 @@ public final class Searcher implements Runnable {
         SpawnTypes.TYPES.values().forEach(s -> s.scan(list, this));
 
         // shuffle for extra randomness
-        Collections.shuffle(list.getLocations());
+        list.shuffle();
 
         // cache
         ImmersiveParticlesChunkManager.chunks.put(id, list);
