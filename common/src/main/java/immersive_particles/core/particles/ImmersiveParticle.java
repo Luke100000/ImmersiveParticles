@@ -117,14 +117,15 @@ public abstract class ImmersiveParticle {
         renderObject(mesh, transform, normal, vertexConsumer, light, red, green, blue, alpha, tickDelta);
     }
 
+    Vector4d transformVertex(FaceVertex v, float tickDelta) {
+        return new Vector4d(v.v.x / 16.0f, v.v.y / 16.0f, v.v.z / 16.0f, 1.0f);
+    }
+
     void renderObject(Mesh mesh, Matrix4d transform, Matrix3f normal, VertexConsumer vertexConsumer, int light, float r, float g, float b, float a, float tickDelta) {
-        double flap = org.joml.Math.cos((age + tickDelta) * 2.0) * 0.5;
         for (Face face : mesh.faces) {
             if (face.vertices.size() == 4) {
                 for (FaceVertex v : face.vertices) {
-                    double ox = v.c.r > 0 ? v.c.r * (org.joml.Math.cos(flap) - 1) * v.v.x : 0;
-                    double oy = v.c.r > 0 ? v.c.r * org.joml.Math.sin(flap) * Math.abs(v.v.x) : 0;
-                    Vector4d f = transform.transform(new Vector4d((v.v.x + ox) / 16.0f, (v.v.y + oy) / 16.0f, v.v.z / 16.0f, 1.0f));
+                    Vector4d f = transform.transform(transformVertex(v, tickDelta));
                     Vector3f n = normal.transform(new Vector3f(v.n.x, v.n.y, v.n.z));
                     Sprite sprite = getCurrentSprite();
                     float tu = sprite.getMinU() + (sprite.getMaxU() - sprite.getMinU()) * v.t.u;

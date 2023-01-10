@@ -20,6 +20,7 @@ public class SpawnLocation {
     }
 
     public Vec3d getRandomPosition(float w, float h, float d) {
-        return new Vec3d(x + (random.nextDouble() - 0.5) * w, y + (random.nextDouble() - 0.5) * h, z + (random.nextDouble() - 0.5) * d);
+        //todo depends on the offset
+        return new Vec3d(x + (random.nextDouble() - 0.5) * (1.0 - w), y + (random.nextDouble() - 0.5) * (1.0 - h), z + (random.nextDouble() - 0.5) * (1.0 - d));
     }
 }

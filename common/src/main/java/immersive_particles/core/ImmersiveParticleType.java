@@ -25,6 +25,7 @@ public class ImmersiveParticleType {
         behaviorIdentifier = JsonHelper.getString(behavior, "type");
 
         // Register types to the spawn types
+        // todo often its helpful to merge the first object, and then only modify in other spawns
         for (JsonElement e : value.get("spawns").getAsJsonArray()) {
             SpawnTypes.registerParticleType(e.getAsJsonObject(), this);
         }

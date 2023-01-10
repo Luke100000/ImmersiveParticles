@@ -43,6 +43,7 @@ public class InBlockSpawnType extends FullScanSpawnType {
 
         final ImmersiveParticleType type;
 
+        //todo weird name as it is the chance
         float chanceModifier;
 
         DescriptorSet(JsonObject json, ImmersiveParticleType type) {

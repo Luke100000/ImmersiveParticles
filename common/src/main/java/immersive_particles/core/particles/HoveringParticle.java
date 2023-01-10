@@ -4,9 +4,11 @@ import immersive_particles.core.ImmersiveParticleType;
 import immersive_particles.core.ImmersiveParticlesChunkManager;
 import immersive_particles.core.SpawnLocation;
 import immersive_particles.util.Utils;
+import immersive_particles.util.obj.FaceVertex;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.Vec3d;
+import org.joml.Vector4d;
 
 import java.util.List;
 
@@ -22,6 +24,18 @@ public class HoveringParticle extends SimpleParticle {
 
         targets = ImmersiveParticlesChunkManager.getClose(type, location.x, location.y, location.z);
         target = getRandomPosition(location);
+    }
+
+    double getFlap(float tickDelta) {
+        return org.joml.Math.cos((age + tickDelta) * 2.0) * 0.5;
+    }
+
+    @Override
+    Vector4d transformVertex(FaceVertex v, float tickDelta) {
+        double flap = getFlap(tickDelta);
+        double ox = v.c.r > 0 ? v.c.r * (org.joml.Math.cos(flap) - 1) * v.v.x : 0;
+        double oy = v.c.r > 0 ? v.c.r * org.joml.Math.sin(flap) * Math.abs(v.v.x) : 0;
+        return new Vector4d((v.v.x + ox) / 16.0f, (v.v.y + oy) / 16.0f, v.v.z / 16.0f, 1.0f);
     }
 
     @Override

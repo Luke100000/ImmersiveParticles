@@ -2,7 +2,6 @@
 
 ## Particles
 
-* Bumblebees
 * Wasps
 * Bugs
 * Butterflies
@@ -21,7 +20,6 @@
 
 ## Player interaction
 
-* Avoid player
 * Step on Player
 
 ## Particle Fields
