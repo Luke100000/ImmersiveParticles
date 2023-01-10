@@ -4,6 +4,8 @@ import immersive_particles.core.ImmersiveParticleType;
 import immersive_particles.core.ImmersiveParticlesChunkManager;
 import immersive_particles.core.SpawnLocation;
 import immersive_particles.util.Utils;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.List;
@@ -25,8 +27,8 @@ public class HoveringParticle extends SimpleParticle {
     @Override
     public boolean tick() {
         double dist = Math.sqrt(Utils.squaredDistance(x, target.x, y, target.y, z, target.z)) - 0.1;
-        if (dist < 0.0f) {
-            hovering--;
+        if (dist < 0.0f || collided) {
+            hovering -= (collided ? 10 : 1);
             if (hovering < 0 && targets.size() > 0) {
                 target = getRandomPosition(targets.get(random.nextInt(targets.size())));
                 hovering = (int)(HOVER_TIME * (random.nextFloat() + 0.75f));
@@ -49,7 +51,7 @@ public class HoveringParticle extends SimpleParticle {
         // Rotate
         float rotReact = 0.1f;
         yaw = yaw * (1 - rotReact) + Math.atan2(target.x - x, target.z - z) * rotReact;
-        pitch = pitch * (1 - rotReact) + Math.atan((target.y - y) / Math.sqrt(Math.pow(target.x - x, 2.0) + Math.pow(target.z - z, 2.0))) * rotReact;
+        pitch = pitch * (1 - rotReact) - Math.atan((target.y - y) / Math.sqrt(Math.pow(target.x - x, 2.0) + Math.pow(target.z - z, 2.0))) * rotReact;
         roll = roll * (1 - rotReact) + Math.cos(age * 0.25) * 0.5 * rotReact;
 
         // Wobble
@@ -60,6 +62,20 @@ public class HoveringParticle extends SimpleParticle {
         double up = dist * 0.01;
         if (velocityY < up) {
             velocityY += up * 0.05;
+        }
+
+        // Panic
+        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        if (player != null) {
+            Vec3d pos = player.getPos();
+            double v = Utils.squaredDistance(pos.x, x, pos.y, y, pos.z, z) + 0.01;
+            double panicDistance = 1.0 + player.getVelocity().length() * 20.0;
+            if (v < panicDistance) {
+                double speed = 0.1 / v;
+                velocityX += (x - pos.x) * speed;
+                velocityY += (y - pos.y) * speed;
+                velocityZ += 0.02 * speed;
+            }
         }
 
         return super.tick();

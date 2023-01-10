@@ -13,19 +13,11 @@
   },
   "spawns": [
     {
-      "type": "onBlock",
-      "inBlock": {
+      "type": "inBlock",
+      "block": {
         "blocks": [
-          "air"
-        ]
-      },
-      "onBlock": {
-        "blocks": [
-          "grass",
-          "#dirt"
-        ],
-        "fluids": [
-          "empty"
+          "#flowers",
+          "grass"
         ]
       },
       "biome": {

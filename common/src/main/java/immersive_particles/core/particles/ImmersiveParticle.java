@@ -18,7 +18,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix3d;
 import org.joml.Matrix4d;
-import org.joml.Vector3d;
 import org.joml.Vector4d;
 
 import java.util.List;
@@ -42,11 +41,12 @@ public abstract class ImmersiveParticle {
     double roll = 0.0;
     double prevRoll = 0.0;
 
-    int age;
+    int age, maxAge;
     final float red, green, blue, alpha;
     int light;
 
     boolean onGround;
+    boolean collided;
     boolean sticks;
 
     private Box boundingBox = EMPTY_BOUNDING_BOX;
@@ -65,6 +65,7 @@ public abstract class ImmersiveParticle {
         this.alpha = 1.0f;
 
         this.age = 0;
+        this.maxAge = 1000; //todo
 
         this.setBoundingBoxSpacing(0.2f, 0.2f);
         this.setPos(getRandomPosition(location));
@@ -84,13 +85,15 @@ public abstract class ImmersiveParticle {
         double roll = MathHelper.lerp(tickDelta, this.prevRoll, this.roll);
 
         Matrix4d transform = new Matrix4d();
-        transform.rotationXYZ(pitch, yaw, roll);
-        transform.scale(Math.min(1.0f, (age + tickDelta) * 0.1));
+        transform.rotationZYX(roll, yaw, pitch);
+        float a = Math.min(maxAge, age + tickDelta);
+        float transition = 0.1f;
+        transform.scale(Math.min(1.0f, Math.min(a * transition, (maxAge - a) * transition)));
         transform.setColumn(3, new Vector4d(x, y, z, 1.0));
 
         Matrix3d normal = transform.get3x3(new Matrix3d());
 
-        renderObject(getCurrentMesh(), transform, normal, vertexConsumer);
+        renderObject(getCurrentMesh(), transform, normal, vertexConsumer, tickDelta);
     }
 
     abstract Mesh getCurrentMesh();
@@ -108,15 +111,18 @@ public abstract class ImmersiveParticle {
         return mesh;
     }
 
-    void renderObject(Mesh mesh, Matrix4d transform, Matrix3d normal, VertexConsumer vertexConsumer) {
-        renderObject(mesh, transform, normal, vertexConsumer, light, red, green, blue, alpha);
+    void renderObject(Mesh mesh, Matrix4d transform, Matrix3d normal, VertexConsumer vertexConsumer, float tickDelta) {
+        renderObject(mesh, transform, normal, vertexConsumer, light, red, green, blue, alpha, tickDelta);
     }
 
-    void renderObject(Mesh mesh, Matrix4d transform, Matrix3d normal, VertexConsumer vertexConsumer, int light, float r, float g, float b, float a) {
+    void renderObject(Mesh mesh, Matrix4d transform, Matrix3d normal, VertexConsumer vertexConsumer, int light, float r, float g, float b, float a, float tickDelta) {
+        double flap = Math.cos((age + tickDelta) * 2.0) * 0.5;
         for (Face face : mesh.faces) {
             if (face.vertices.size() == 4) {
                 for (FaceVertex v : face.vertices) {
-                    Vector4d f = transform.transform(new Vector4d(v.v.x / 16.0f, v.v.y / 16.0f, v.v.z / 16.0f, 1.0f));
+                    double ox = v.c.r * (Math.cos(flap) - 1) * v.v.x;
+                    double oy = v.c.r * Math.sin(flap) * Math.abs(v.v.x);
+                    Vector4d f = transform.transform(new Vector4d((v.v.x + ox) / 16.0f, (v.v.y + oy) / 16.0f, v.v.z / 16.0f, 1.0f));
                     //Vector3d n = normal.transform(new Vector3d(v.n.x, v.n.y, v.n.z));
                     //todo light, use appropriate shader
                     Sprite sprite = getCurrentSprite();
@@ -156,7 +162,7 @@ public abstract class ImmersiveParticle {
             light = this.getBrightness();
         }
 
-        return age > 1000;
+        return age > maxAge;
     }
 
     private double getGravity() {
@@ -194,14 +200,20 @@ public abstract class ImmersiveParticle {
             //this.sticks = true;
         }
 
+        this.onGround = oy != dy && dy < 0;
+        this.collided = false;
+
         if (ox != dx) {
             this.velocityX = 0.0;
+            this.collided = true;
         }
         if (oy != dy) {
             this.velocityY = 0.0;
+            this.collided = true;
         }
         if (oz != dz) {
             this.velocityZ = 0.0;
+            this.collided = true;
         }
     }
 
