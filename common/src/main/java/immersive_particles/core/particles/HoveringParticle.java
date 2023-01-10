@@ -61,7 +61,7 @@ public class HoveringParticle extends SimpleParticle {
         // Fly higher
         double up = dist * 0.01;
         if (velocityY < up) {
-            velocityY += up * 0.05;
+            velocityY += up * 0.0025;
         }
 
         // Panic

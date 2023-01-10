@@ -3,6 +3,7 @@ package immersive_particles.core;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
+import immersive_particles.Shaders;
 import immersive_particles.core.particles.ImmersiveParticle;
 import immersive_particles.resources.ParticleManagerLoader;
 import net.minecraft.client.MinecraftClient;
@@ -74,7 +75,7 @@ public class ImmersiveParticleManager {
                     BufferBuilder builder = current.tessellator.getBuffer();
                     builder.reset();
 
-                    builder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR_LIGHT);
+                    builder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL);
 
                     // Render all particles
                     for (ImmersiveParticle particle : particles) {
@@ -108,11 +109,11 @@ public class ImmersiveParticleManager {
 
         // Prepare shader
         RenderSystem.enableDepthTest();
-        RenderSystem.setShader(GameRenderer::getParticleShader);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.setShader(() -> Shaders.IMMERSIVE_PARTICLE_CUTOUT);
         RenderSystem.disableBlend();
         RenderSystem.depthMask(true);
         RenderSystem.setShaderTexture(0, ParticleManagerLoader.ATLAS_TEXTURE);
+        MinecraftClient.getInstance().gameRenderer.getLightmapTextureManager().enable();
 
         // Yeet
         BufferBuilder.DrawArrayParameters drawArrayParameters = last.pair.getFirst();
@@ -121,8 +122,7 @@ public class ImmersiveParticleManager {
         // Restore
         matrixStack.pop();
         RenderSystem.applyModelViewMatrix();
-        RenderSystem.depthMask(true);
-        RenderSystem.disableBlend();
+        MinecraftClient.getInstance().gameRenderer.getLightmapTextureManager().disable();
         lightmapTextureManager.disable();
     }
 

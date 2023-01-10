@@ -16,8 +16,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import org.joml.Matrix3d;
+import org.joml.Matrix3f;
 import org.joml.Matrix4d;
+import org.joml.Vector3f;
 import org.joml.Vector4d;
 
 import java.util.List;
@@ -91,7 +92,8 @@ public abstract class ImmersiveParticle {
         transform.scale(Math.min(1.0f, Math.min(a * transition, (maxAge - a) * transition)));
         transform.setColumn(3, new Vector4d(x, y, z, 1.0));
 
-        Matrix3d normal = transform.get3x3(new Matrix3d());
+        Matrix3f normal = new Matrix3f();
+        normal.rotationZYX((float)roll, (float)yaw, (float)pitch);
 
         renderObject(getCurrentMesh(), transform, normal, vertexConsumer, tickDelta);
     }
@@ -111,28 +113,28 @@ public abstract class ImmersiveParticle {
         return mesh;
     }
 
-    void renderObject(Mesh mesh, Matrix4d transform, Matrix3d normal, VertexConsumer vertexConsumer, float tickDelta) {
+    void renderObject(Mesh mesh, Matrix4d transform, Matrix3f normal, VertexConsumer vertexConsumer, float tickDelta) {
         renderObject(mesh, transform, normal, vertexConsumer, light, red, green, blue, alpha, tickDelta);
     }
 
-    void renderObject(Mesh mesh, Matrix4d transform, Matrix3d normal, VertexConsumer vertexConsumer, int light, float r, float g, float b, float a, float tickDelta) {
-        double flap = Math.cos((age + tickDelta) * 2.0) * 0.5;
+    void renderObject(Mesh mesh, Matrix4d transform, Matrix3f normal, VertexConsumer vertexConsumer, int light, float r, float g, float b, float a, float tickDelta) {
+        double flap = org.joml.Math.cos((age + tickDelta) * 2.0) * 0.5;
         for (Face face : mesh.faces) {
             if (face.vertices.size() == 4) {
                 for (FaceVertex v : face.vertices) {
-                    double ox = v.c.r * (Math.cos(flap) - 1) * v.v.x;
-                    double oy = v.c.r * Math.sin(flap) * Math.abs(v.v.x);
+                    double ox = v.c.r > 0 ? v.c.r * (org.joml.Math.cos(flap) - 1) * v.v.x : 0;
+                    double oy = v.c.r > 0 ? v.c.r * org.joml.Math.sin(flap) * Math.abs(v.v.x) : 0;
                     Vector4d f = transform.transform(new Vector4d((v.v.x + ox) / 16.0f, (v.v.y + oy) / 16.0f, v.v.z / 16.0f, 1.0f));
-                    //Vector3d n = normal.transform(new Vector3d(v.n.x, v.n.y, v.n.z));
-                    //todo light, use appropriate shader
+                    Vector3f n = normal.transform(new Vector3f(v.n.x, v.n.y, v.n.z));
                     Sprite sprite = getCurrentSprite();
                     float tu = sprite.getMinU() + (sprite.getMaxU() - sprite.getMinU()) * v.t.u;
                     float tv = sprite.getMinV() + (sprite.getMaxV() - sprite.getMinV()) * v.t.v;
                     vertexConsumer
                             .vertex(f.x, f.y, f.z)
-                            .texture(tu, tv)
                             .color(r, g, b, a)
+                            .texture(tu, tv)
                             .light(light)
+                            .normal(n.x, n.y, n.z)
                             .next();
                 }
             }
