@@ -4,8 +4,11 @@ import immersive_particles.Main;
 import immersive_particles.core.ImmersiveParticleType;
 import immersive_particles.core.SpawnLocation;
 import immersive_particles.util.obj.Mesh;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.JsonHelper;
+import org.joml.Matrix3f;
+import org.joml.Matrix4d;
 
 public class SimpleParticle extends ImmersiveParticle {
     private final Sprite sprite;
@@ -20,14 +23,15 @@ public class SimpleParticle extends ImmersiveParticle {
     }
 
     @Override
+    void render(VertexConsumer vertexConsumer, float tickDelta, Matrix4d transform, Matrix3f normal) {
+        renderObject(getCurrentMesh(), getCurrentSprite(), transform, normal, vertexConsumer, tickDelta);
+    }
+
     Mesh getCurrentMesh() {
         return mesh;
     }
 
-    @Override
     Sprite getCurrentSprite() {
         return sprite;
     }
-
-
 }

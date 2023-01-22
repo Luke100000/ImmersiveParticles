@@ -51,7 +51,7 @@ public class ImmersiveParticlesChunkManager {
 
         //todo multithread and add catch up, requires particle target life time and last visit timestamp per chunk to determine whether it requires a boost
 
-        updates += chunkSphere.positions.size() * Config.getInstance().chunkUpdatedPerMinute / 60.0f / 20.0f * 100.0f; //todo
+        updates += chunkSphere.positions.size() * Config.getInstance().chunkUpdatesPerMinute / 60.0f / 20.0f; //todo
 
         while (updates > 0.0f) {
             Vec3i chunk = chunkSphere.positions.get(tick).add(client.player.getX() / 16.0, client.player.getY() / 16.0, client.player.getZ() / 16.0);
@@ -64,7 +64,7 @@ public class ImmersiveParticlesChunkManager {
                         if (v < l.getTotalChance()) {
                             for (Map.Entry<ImmersiveParticleType, List<SpawnLocation>> list : l.getAllLocations().entrySet()) {
                                 for (SpawnLocation location : list.getValue()) {
-                                    v -= location.chance * Config.getInstance().baseChance / Config.getInstance().chunkUpdatedPerMinute;
+                                    v -= location.chance * Config.getInstance().baseChance / Config.getInstance().chunkUpdatesPerMinute;
                                     if (v < 0) {
                                         v++;
                                         ImmersiveParticleManager.addParticle(list.getKey(), location);

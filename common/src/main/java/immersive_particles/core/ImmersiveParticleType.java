@@ -16,6 +16,9 @@ public class ImmersiveParticleType {
     public JsonObject behavior;
     String behaviorIdentifier;
 
+    int minCount;
+    int maxCount;
+
     public ImmersiveParticleType(JsonObject value) {
         for (JsonElement e : value.get("textures").getAsJsonArray()) {
             textures.add(new Identifier(e.getAsString()));
@@ -23,6 +26,9 @@ public class ImmersiveParticleType {
 
         behavior = JsonHelper.getObject(value, "behavior");
         behaviorIdentifier = JsonHelper.getString(behavior, "type");
+
+        minCount = JsonHelper.getInt(value, "minCount", 1);
+        maxCount = JsonHelper.getInt(value, "maxCount", 1);
 
         // Register types to the spawn types
         // todo often its helpful to merge the first object, and then only modify in other spawns
@@ -41,5 +47,13 @@ public class ImmersiveParticleType {
 
     public List<Sprite> getSprites() {
         return sprites;
+    }
+
+    public int getMinCount() {
+        return minCount;
+    }
+
+    public int getMaxCount() {
+        return maxCount;
     }
 }

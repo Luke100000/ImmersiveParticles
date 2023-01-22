@@ -2,6 +2,7 @@ package immersive_particles.core;
 
 import immersive_particles.core.particles.HoveringParticle;
 import immersive_particles.core.particles.ImmersiveParticle;
+import immersive_particles.core.particles.SwimmingSwarmParticle;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,7 @@ public class ImmersiveParticles {
 
     static {
         register("hovering", HoveringParticle::new);
+        register("swimmingSwarm", SwimmingSwarmParticle::new);
     }
 
     private static void register(String identifier, BiFunction<ImmersiveParticleType, SpawnLocation, ImmersiveParticle> type) {

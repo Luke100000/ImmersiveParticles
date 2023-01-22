@@ -4,23 +4,25 @@ import immersive_particles.core.ImmersiveParticleManager;
 import immersive_particles.core.ImmersiveParticleType;
 import immersive_particles.core.SpawnLocation;
 import immersive_particles.resources.ObjectLoader;
+import immersive_particles.util.Utils;
 import immersive_particles.util.obj.Face;
 import immersive_particles.util.obj.FaceVertex;
 import immersive_particles.util.obj.Mesh;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.JsonHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import org.joml.Matrix3f;
-import org.joml.Matrix4d;
-import org.joml.Vector3f;
-import org.joml.Vector4d;
+import org.joml.*;
 
+import java.lang.Math;
 import java.util.List;
 import java.util.Random;
 
@@ -57,7 +59,11 @@ public abstract class ImmersiveParticle {
     float spacingXZ;
     float spacingY;
 
+    float avoidPlayerDistance;
+
     static final Random random = new Random();
+
+    ImmersiveParticle leader;
 
     public ImmersiveParticle(ImmersiveParticleType type, SpawnLocation location) {
         this.red = 1.0f;
@@ -70,9 +76,11 @@ public abstract class ImmersiveParticle {
 
         this.setBoundingBoxSpacing(0.2f, 0.2f);
         this.setPos(getRandomPosition(location));
+
+        avoidPlayerDistance = JsonHelper.getFloat(type.behavior, "avoidPlayer", 1.0f);
     }
 
-    Vec3d getRandomPosition(SpawnLocation location) {
+    Vector3d getRandomPosition(SpawnLocation location) {
         return location.getRandomPosition(spacingXZ, spacingY, spacingXZ);
     }
 
@@ -95,12 +103,10 @@ public abstract class ImmersiveParticle {
         Matrix3f normal = new Matrix3f();
         normal.rotationZYX((float)roll, (float)yaw, (float)pitch);
 
-        renderObject(getCurrentMesh(), transform, normal, vertexConsumer, tickDelta);
+        render(vertexConsumer, tickDelta, transform, normal);
     }
 
-    abstract Mesh getCurrentMesh();
-
-    abstract Sprite getCurrentSprite();
+    abstract void render(VertexConsumer vertexConsumer, float tickDelta, Matrix4d transform, Matrix3f normal);
 
     public Mesh getMesh(Identifier id, String object) {
         if (!ObjectLoader.objects.containsKey(id)) {
@@ -113,21 +119,20 @@ public abstract class ImmersiveParticle {
         return mesh;
     }
 
-    void renderObject(Mesh mesh, Matrix4d transform, Matrix3f normal, VertexConsumer vertexConsumer, float tickDelta) {
-        renderObject(mesh, transform, normal, vertexConsumer, light, red, green, blue, alpha, tickDelta);
+    void renderObject(Mesh mesh, Sprite sprite, Matrix4d transform, Matrix3f normal, VertexConsumer vertexConsumer, float tickDelta) {
+        renderObject(mesh, sprite, transform, normal, vertexConsumer, light, red, green, blue, alpha, tickDelta);
     }
 
     Vector4d transformVertex(FaceVertex v, float tickDelta) {
         return new Vector4d(v.v.x / 16.0f, v.v.y / 16.0f, v.v.z / 16.0f, 1.0f);
     }
 
-    void renderObject(Mesh mesh, Matrix4d transform, Matrix3f normal, VertexConsumer vertexConsumer, int light, float r, float g, float b, float a, float tickDelta) {
+    void renderObject(Mesh mesh, Sprite sprite, Matrix4d transform, Matrix3f normal, VertexConsumer vertexConsumer, int light, float r, float g, float b, float a, float tickDelta) {
         for (Face face : mesh.faces) {
             if (face.vertices.size() == 4) {
                 for (FaceVertex v : face.vertices) {
                     Vector4d f = transform.transform(transformVertex(v, tickDelta));
                     Vector3f n = normal.transform(new Vector3f(v.n.x, v.n.y, v.n.z));
-                    Sprite sprite = getCurrentSprite();
                     float tu = sprite.getMinU() + (sprite.getMaxU() - sprite.getMinU()) * v.t.u;
                     float tv = sprite.getMinV() + (sprite.getMaxV() - sprite.getMinV()) * v.t.v;
                     vertexConsumer
@@ -168,7 +173,7 @@ public abstract class ImmersiveParticle {
         return age > maxAge;
     }
 
-    private double getGravity() {
+    double getGravity() {
         return 0.0;
     }
 
@@ -243,13 +248,65 @@ public abstract class ImmersiveParticle {
         }
     }
 
-    public void setPos(Vec3d pos) {
+    public void setPos(Vector3d pos) {
         this.x = pos.x;
         this.y = pos.y;
         this.z = pos.z;
         float f = this.spacingXZ / 2.0f;
         float g = this.spacingY;
         this.setBoundingBox(new Box(x - (double)f, y, z - (double)f, x + (double)f, y + (double)g, z + (double)f));
+    }
+
+    public void setLeader(ImmersiveParticle leader) {
+        this.leader = leader;
+    }
+
+    protected double getSquaredDistanceTo(ImmersiveParticle particle) {
+        return Utils.squaredDistance(x, particle.x, y, particle.y, z, particle.z);
+    }
+
+    protected double getSquaredDistanceTo(Vector3d pos) {
+        return Utils.squaredDistance(x, pos.x, y, pos.y, z, pos.z);
+    }
+
+    protected void moveTo(Vector3d target, float speed) {
+        moveTo(target, Math.sqrt(getSquaredDistanceTo(target)), speed);
+    }
+
+    protected void moveTo(Vector3d target, double distance, float speed) {
+        // Move to the target
+        double minDistance = 0.0625;
+        if (distance > minDistance) {
+            double f = Math.min(1.0, distance - minDistance) * speed / distance;
+            velocityX = velocityX + (target.x - x) * f;
+            velocityY = velocityY + (target.y - y) * f;
+            velocityZ = velocityZ + (target.z - z) * f;
+        }
+    }
+
+    protected void rotateToTarget(Vector3d target, float rotReact) {
+        this.prevYaw = this.yaw;
+        this.prevPitch = this.pitch;
+        this.prevRoll = this.roll;
+
+        // Rotate
+        yaw = yaw * (1 - rotReact) + Math.atan2(target.x - x, target.z - z) * rotReact;
+        pitch = pitch * (1 - rotReact) - Math.atan((target.y - y) / Math.sqrt(Math.pow(target.x - x, 2.0) + Math.pow(target.z - z, 2.0))) * rotReact;
+        roll = roll * (1 - rotReact) + Math.cos(age * 0.25) * 0.5 * rotReact;
+    }
+
+    protected void avoidPlayer() {
+        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        if (player != null) {
+            Vec3d pos = player.getPos();
+            double v = Utils.squaredDistance(pos.x, x, pos.y, y, pos.z, z) + 0.01;
+            if (v < avoidPlayerDistance * (1.0 + player.getVelocity().length() * 20.0)) {
+                double speed = 0.1 / v;
+                velocityX += (x - pos.x) * speed;
+                velocityY += (y - pos.y) * speed;
+                velocityZ += 0.02 * speed;
+            }
+        }
     }
 }
 

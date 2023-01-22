@@ -13,6 +13,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.Vec3d;
 
 import java.nio.ByteBuffer;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
@@ -44,6 +45,8 @@ public class ImmersiveParticleManager {
 
     private static Exception updateException;
     private static Exception renderException;
+
+    private static final Random random = new Random();
 
     public static void render(MatrixStack matrices, LightmapTextureManager lightmapTextureManager, Camera camera, float tickDelta) {
         lightmapTextureManager.enable();
@@ -110,6 +113,7 @@ public class ImmersiveParticleManager {
         // Prepare shader
         RenderSystem.enableDepthTest();
         RenderSystem.setShader(() -> Shaders.IMMERSIVE_PARTICLE_CUTOUT);
+        RenderSystem.disableCull();
         RenderSystem.disableBlend();
         RenderSystem.depthMask(true);
         RenderSystem.setShaderTexture(0, ParticleManagerLoader.ATLAS_TEXTURE);
@@ -128,9 +132,18 @@ public class ImmersiveParticleManager {
 
     public static void addParticle(ImmersiveParticleType type, SpawnLocation location) {
         if (particleCount.get() < MAX_PARTICLES) {
-            ImmersiveParticle particle = ImmersiveParticles.PARTICLES.get(type.behaviorIdentifier).apply(type, location);
-            particles.add(particle);
-            particleCount.incrementAndGet();
+            int count = type.getMinCount() + random.nextInt(type.getMaxCount() - type.getMinCount() + 1);
+            ImmersiveParticle leader = null;
+            for (int i = 0; i < count; i++) {
+                ImmersiveParticle particle = ImmersiveParticles.PARTICLES.get(type.behaviorIdentifier).apply(type, location);
+                particle.setLeader(leader);
+                particles.add(particle);
+                particleCount.incrementAndGet();
+
+                if (i == 0) {
+                    leader = particle;
+                }
+            }
         }
     }
 

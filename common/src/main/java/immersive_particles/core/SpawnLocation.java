@@ -1,7 +1,7 @@
 package immersive_particles.core;
 
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import org.joml.Vector3d;
 
 import java.util.Random;
 
@@ -19,8 +19,8 @@ public class SpawnLocation {
         this.offset = offset;
     }
 
-    public Vec3d getRandomPosition(float w, float h, float d) {
+    public Vector3d getRandomPosition(float w, float h, float d) {
         //todo depends on the offset
-        return new Vec3d(x + (random.nextDouble() - 0.5) * (1.0 - w), y + (random.nextDouble() - 0.5) * (1.0 - h), z + (random.nextDouble() - 0.5) * (1.0 - d));
+        return new Vector3d(x + (random.nextDouble() - 0.5) * (1.0 - w), y + (random.nextDouble() - 0.5) * (1.0 - h), z + (random.nextDouble() - 0.5) * (1.0 - d));
     }
 }
