@@ -16,31 +16,35 @@
       "type": "inBlock",
       "block": {
         "blocks": [
-          "#flowers",
           "grass"
         ]
       },
       "biome": {
-        "biomes": [
-          "#has_structure/village_plains"
-        ],
         "minTemperature": 0.15,
-        "maxTemperature": 1.5,
-        "minDownfall": 0.0,
-        "maxDownfall": 1.0
+        "maxTemperature": 1.5
       },
       "light": {
         "minDayLight": 7,
-        "maxDayLight": 15,
-        "minBlockLight": 0,
-        "maxBlockLight": 15,
-        "minLight": 0,
-        "maxLight": 15
+        "maxDayLight": 15
       },
-      "side": "top",
-      "chanceModifier": 1.0,
-      "normalizeAcrossChunk": false,
-      "denormalizationConstant": 10
+      "chanceModifier": 0.1
+    },
+    {
+      "type": "inBlock",
+      "block": {
+        "blocks": [
+          "#flowers"
+        ]
+      },
+      "biome": {
+        "minTemperature": 0.15,
+        "maxTemperature": 1.5
+      },
+      "light": {
+        "minDayLight": 7,
+        "maxDayLight": 15
+      },
+      "chanceModifier": 1.0
     }
   ]
 }
