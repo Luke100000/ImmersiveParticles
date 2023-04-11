@@ -12,6 +12,7 @@ import net.minecraft.world.chunk.ChunkStatus;
 import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ImmersiveParticlesChunkManager {
     static Executor executor = Executors.newSingleThreadExecutor();
@@ -23,6 +24,7 @@ public class ImmersiveParticlesChunkManager {
     private static final Set<Long> requested = new HashSet<>();
 
     private static float updates;
+    private static final AtomicInteger processing = new AtomicInteger();
 
     public static void tick(MinecraftClient client) {
         if (client.player == null || client.world == null) {
@@ -86,6 +88,7 @@ public class ImmersiveParticlesChunkManager {
             if (chunk != null) {
                 executor.execute(new Searcher(world, chunk, cx, cy, cz, id));
                 requested.add(id);
+                processing.incrementAndGet();
             }
         }
 
@@ -114,5 +117,14 @@ public class ImmersiveParticlesChunkManager {
             }
         }
         return found;
+    }
+
+    public static void addChunk(long id, SpawnLocationList list) {
+        chunks.put(id, list);
+        processing.decrementAndGet();
+    }
+
+    public static int getProcessing() {
+        return processing.get();
     }
 }

@@ -1,6 +1,7 @@
 package immersive_particles.mixin;
 
 import immersive_particles.core.ImmersiveParticleManager;
+import immersive_particles.core.ImmersiveParticlesChunkManager;
 import net.minecraft.client.gui.hud.DebugHud;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,6 +15,10 @@ public class DebugHudMixin {
     @Inject(method = "getLeftText()Ljava/util/List;", at = @At("TAIL"))
     protected void immersiveParticles$injectGetLeftText(CallbackInfoReturnable<List<String>> cir) {
         List<String> value = cir.getReturnValue();
-        value.add("Immersive Particles: %d (%d render drops, %d update drops)".formatted(ImmersiveParticleManager.particleCount.get(), ImmersiveParticleManager.renderDrops, ImmersiveParticleManager.updateDrops));
+        value.add("Immersive Particles: %d, %d render drops, %d update drops, %d chunks queued".formatted(
+                ImmersiveParticleManager.particleCount.get(),
+                ImmersiveParticleManager.renderDrops,
+                ImmersiveParticleManager.updateDrops,
+                ImmersiveParticlesChunkManager.getProcessing()));
     }
 }
