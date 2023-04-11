@@ -23,7 +23,7 @@
       "type": "inBlock",
       "block": {
         "blocks": [
-          "water"
+          "minecraft:water"
         ]
       },
       "biome": {

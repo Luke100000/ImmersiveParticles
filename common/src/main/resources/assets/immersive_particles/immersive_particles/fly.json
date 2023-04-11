@@ -33,6 +33,44 @@
         "minTemperature": 0.0,
         "maxTemperature": 1.5
       }
+    },
+    {
+      "type": "onBlock",
+      "inBlock": {
+        "blocks": [
+          "minecraft:air"
+        ]
+      },
+      "onBlock": {
+        "blocks": [
+          "minecraft:composter"
+        ]
+      },
+      "biome": {
+        "minTemperature": 0.0,
+        "maxTemperature": 1.5
+      },
+      "chanceModifier": 5.0
+    },
+    {
+      "type": "onBlock",
+      "inBlock": {
+        "blocks": [
+          "minecraft:air"
+        ]
+      },
+      "side": "top",
+      "onBlock": {
+        "blocks": [
+          "minecraft:water"
+        ]
+      },
+      "biome": {
+        "biomes": [
+          "#minecraft:swamp"
+        ]
+      },
+      "chanceModifier": 0.1
     }
   ]
 }

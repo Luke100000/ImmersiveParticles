@@ -1,0 +1,46 @@
+{
+  "textures": [
+    "immersive_particles:immersive_particles/fly"
+  ],
+  "behavior": {
+    "type": "randomFly",
+    "meshes": {
+      "default": [
+        "fly.Cube"
+      ]
+    },
+    "inertia": 0.9,
+    "speed": 0.25,
+    "acceleration": 0.2,
+    "range": 0.25,
+    "flyingTime": 8,
+    "avoidPlayer": 0.0
+  },
+  "spawns": [
+    {
+      "type": "onBlock",
+      "inBlock": {
+        "blocks": [
+          "minecraft:air"
+        ]
+      },
+      "side": "top",
+      "onBlock": {
+        "blocks": [
+          "#minecraft:dirt"
+        ]
+      },
+      "biome": {
+        "biomes": [
+          "#minecraft:swamp",
+          "#minecraft:jungle"
+        ]
+      },
+      "light": {
+        "minDayLight": 7,
+        "maxDayLight": 15
+      },
+      "chanceModifier": 0.1
+    }
+  ]
+}

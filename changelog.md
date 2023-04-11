@@ -2,25 +2,14 @@
 
 ## Particles
 
-* Wasps
 * Bugs
 * Butterflies
-* Dragonfly swamps and water
-* Flies compost, animals and swamps
-* Fireflies in night everywhere warm basically
-* Mots from light sources
-* Spiders from cowwebs, leaves, especially dark oak
-* Ants from logs, grass with random operator, compost
+* Spiders from cobwebs, leaves, especially dark oak
 * Grasshopper
 * Snails grass and dark stone
 * Crabs on sand
-* Small fishes
 * Birds
     * They approach their spawn and leave it after a while, using bouncy movement
-
-## Player interaction
-
-* Step on Player
 
 ## Particle Fields
 
@@ -29,11 +18,6 @@
 * Sandstorm
 * Ash
     * Maybe replace vanilla spores to showcase performance
-
-## Particle spawning particles
-
-* bee nest
-* ant heap
 
 ## Config
 

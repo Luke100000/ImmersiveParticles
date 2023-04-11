@@ -30,7 +30,7 @@
         ]
       },
       "biome": {
-        "minTemperature": 0.0,
+        "minTemperature": 0.5,
         "maxTemperature": 1.5
       },
       "chanceModifier": 0.01
