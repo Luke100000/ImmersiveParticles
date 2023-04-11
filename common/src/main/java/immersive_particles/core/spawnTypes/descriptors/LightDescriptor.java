@@ -1,7 +1,7 @@
 package immersive_particles.core.spawnTypes.descriptors;
 
 import com.google.gson.JsonObject;
-import immersive_particles.core.Searcher;
+import immersive_particles.core.searcher.Searcher;
 import net.minecraft.util.JsonHelper;
 
 public class LightDescriptor extends Descriptor {

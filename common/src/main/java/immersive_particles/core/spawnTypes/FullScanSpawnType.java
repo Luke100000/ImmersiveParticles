@@ -1,7 +1,7 @@
 package immersive_particles.core.spawnTypes;
 
-import immersive_particles.core.Searcher;
-import immersive_particles.core.SpawnLocationList;
+import immersive_particles.core.searcher.Searcher;
+import immersive_particles.core.searcher.SpawnLocationList;
 
 public abstract class FullScanSpawnType extends SpawnType {
     abstract void scanBlock(SpawnLocationList list, Searcher searcher, int x, int y, int z);

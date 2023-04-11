@@ -1,7 +1,7 @@
 package immersive_particles.core.spawnTypes.descriptors;
 
 import com.google.gson.JsonElement;
-import immersive_particles.core.Searcher;
+import immersive_particles.core.searcher.Searcher;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 

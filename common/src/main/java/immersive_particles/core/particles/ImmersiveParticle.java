@@ -2,7 +2,7 @@ package immersive_particles.core.particles;
 
 import immersive_particles.core.ImmersiveParticleManager;
 import immersive_particles.core.ImmersiveParticleType;
-import immersive_particles.core.SpawnLocation;
+import immersive_particles.core.searcher.SpawnLocation;
 import immersive_particles.resources.ObjectLoader;
 import immersive_particles.util.Utils;
 import immersive_particles.util.obj.Face;

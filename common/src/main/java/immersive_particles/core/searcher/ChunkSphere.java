@@ -1,4 +1,4 @@
-package immersive_particles.core;
+package immersive_particles.core.searcher;
 
 import net.minecraft.util.math.Vec3i;
 

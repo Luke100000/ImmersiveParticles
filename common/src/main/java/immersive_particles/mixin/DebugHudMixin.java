@@ -1,7 +1,7 @@
 package immersive_particles.mixin;
 
 import immersive_particles.core.ImmersiveParticleManager;
-import immersive_particles.core.ImmersiveParticlesChunkManager;
+import immersive_particles.core.searcher.ParticleChunkManager;
 import net.minecraft.client.gui.hud.DebugHud;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,6 +19,6 @@ public class DebugHudMixin {
                 ImmersiveParticleManager.particleCount.get(),
                 ImmersiveParticleManager.renderDrops,
                 ImmersiveParticleManager.updateDrops,
-                ImmersiveParticlesChunkManager.getProcessing()));
+                ParticleChunkManager.getProcessing()));
     }
 }

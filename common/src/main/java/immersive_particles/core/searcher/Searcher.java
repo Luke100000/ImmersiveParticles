@@ -1,5 +1,6 @@
-package immersive_particles.core;
+package immersive_particles.core.searcher;
 
+import immersive_particles.core.registries.SpawnTypes;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.BlockPos;
@@ -98,7 +99,7 @@ public final class Searcher implements Runnable {
         list.shuffle();
 
         // cache
-        ImmersiveParticlesChunkManager.addChunk(id, list);
+        ParticleChunkManager.addChunk(id, list);
 
         //cleanup
         blockCache.clear();

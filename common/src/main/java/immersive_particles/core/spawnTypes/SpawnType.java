@@ -2,8 +2,8 @@ package immersive_particles.core.spawnTypes;
 
 import com.google.gson.JsonObject;
 import immersive_particles.core.ImmersiveParticleType;
-import immersive_particles.core.Searcher;
-import immersive_particles.core.SpawnLocationList;
+import immersive_particles.core.searcher.Searcher;
+import immersive_particles.core.searcher.SpawnLocationList;
 
 
 public abstract class SpawnType {

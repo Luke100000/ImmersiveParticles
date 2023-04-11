@@ -1,4 +1,6 @@
-package immersive_particles.core;
+package immersive_particles.core.searcher;
+
+import immersive_particles.core.ImmersiveParticleType;
 
 import java.util.*;
 

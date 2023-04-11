@@ -1,8 +1,8 @@
 package immersive_particles.core.particles;
 
 import immersive_particles.core.ImmersiveParticleType;
-import immersive_particles.core.ImmersiveParticlesChunkManager;
-import immersive_particles.core.SpawnLocation;
+import immersive_particles.core.searcher.ParticleChunkManager;
+import immersive_particles.core.searcher.SpawnLocation;
 import net.minecraft.util.JsonHelper;
 import org.joml.Vector3d;
 
@@ -26,7 +26,7 @@ public class HoveringParticle extends FlyingParticle {
     public HoveringParticle(ImmersiveParticleType type, SpawnLocation location, ImmersiveParticle leader) {
         super(type, location, leader);
 
-        targets = ImmersiveParticlesChunkManager.getClose(type, location.x, location.y, location.z);
+        targets = ParticleChunkManager.getClose(type, location.x, location.y, location.z);
         target = getRandomPosition(location);
 
         hoveringTime = JsonHelper.getInt(type.behavior, "hoveringTime", 20);

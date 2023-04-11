@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import immersive_particles.Main;
 import immersive_particles.core.ImmersiveParticleType;
-import immersive_particles.core.SpawnLocation;
+import immersive_particles.core.searcher.SpawnLocation;
 import immersive_particles.util.obj.Mesh;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.texture.Sprite;

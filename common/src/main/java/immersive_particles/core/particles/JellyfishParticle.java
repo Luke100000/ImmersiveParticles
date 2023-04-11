@@ -1,7 +1,7 @@
 package immersive_particles.core.particles;
 
 import immersive_particles.core.ImmersiveParticleType;
-import immersive_particles.core.SpawnLocation;
+import immersive_particles.core.searcher.SpawnLocation;
 import net.minecraft.client.render.VertexConsumer;
 import org.joml.Matrix3f;
 import org.joml.Matrix4d;

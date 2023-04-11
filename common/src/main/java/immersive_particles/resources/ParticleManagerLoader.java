@@ -3,7 +3,7 @@ package immersive_particles.resources;
 import com.google.gson.JsonElement;
 import immersive_particles.Main;
 import immersive_particles.core.ImmersiveParticleType;
-import immersive_particles.core.SpawnTypes;
+import immersive_particles.core.registries.SpawnTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;

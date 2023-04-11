@@ -1,6 +1,7 @@
-package immersive_particles.core;
+package immersive_particles.core.registries;
 
 import com.google.gson.JsonObject;
+import immersive_particles.core.ImmersiveParticleType;
 import immersive_particles.core.spawnTypes.InBlockSpawnType;
 import immersive_particles.core.spawnTypes.OnBlockSpawnType;
 import immersive_particles.core.spawnTypes.SpawnType;

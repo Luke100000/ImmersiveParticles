@@ -1,6 +1,9 @@
-package immersive_particles.core;
+package immersive_particles.core.searcher;
 
 import immersive_particles.Config;
+import immersive_particles.core.ImmersiveParticleManager;
+import immersive_particles.core.ImmersiveParticleType;
+import immersive_particles.core.registries.SpawnTypes;
 import immersive_particles.core.spawnTypes.SpawnType;
 import immersive_particles.util.Utils;
 import net.minecraft.client.MinecraftClient;
@@ -14,7 +17,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ImmersiveParticlesChunkManager {
+public class ParticleChunkManager {
     static Executor executor = Executors.newSingleThreadExecutor();
 
     private static int tick;
@@ -108,7 +111,7 @@ public class ImmersiveParticlesChunkManager {
         for (int x = (int)((px - distance) / 16.0); x <= (int)((px + distance) / 16.0); x++) {
             for (int y = (int)((py - distance) / 16.0); y <= (int)((py + distance) / 16.0); y++) {
                 for (int z = (int)((pz - distance) / 16.0); z <= (int)((pz + distance) / 16.0); z++) {
-                    Optional<SpawnLocationList> chunk = ImmersiveParticlesChunkManager.getChunk(MinecraftClient.getInstance().world, x, y, z);
+                    Optional<SpawnLocationList> chunk = ParticleChunkManager.getChunk(MinecraftClient.getInstance().world, x, y, z);
                     chunk.ifPresent(c -> c.getLocations(type).stream()
                             .filter(p -> Utils.squaredDistance(px, p.x, py, p.y, pz, p.z) < distance * distance)
                             .limit(max)

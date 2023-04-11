@@ -2,6 +2,7 @@ package immersive_particles.core;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import immersive_particles.core.registries.SpawnTypes;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;

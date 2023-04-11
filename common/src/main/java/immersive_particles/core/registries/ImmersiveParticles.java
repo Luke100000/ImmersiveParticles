@@ -1,5 +1,7 @@
-package immersive_particles.core;
+package immersive_particles.core.registries;
 
+import immersive_particles.core.ImmersiveParticleType;
+import immersive_particles.core.searcher.SpawnLocation;
 import immersive_particles.core.particles.*;
 import org.apache.commons.lang3.function.TriFunction;
 
