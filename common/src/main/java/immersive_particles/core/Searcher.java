@@ -75,12 +75,12 @@ public final class Searcher implements Runnable {
     public int getBlockLight(int x, int y, int z) {
         long id = getId(x, y, z);
         if (!blockLightCache.containsKey(id)) {
-            blockLightCache.put(id, world.getLightLevel(LightType.SKY, getPos(x, y, z)));
+            blockLightCache.put(id, world.getLightLevel(LightType.BLOCK, getPos(x, y, z)));
         }
         return blockLightCache.get(id);
     }
 
-    //todo verify usefulness of cache
+    //todo verify usefulness of cache and make it expire
 
     @Override
     public void run() {
@@ -98,7 +98,7 @@ public final class Searcher implements Runnable {
         list.shuffle();
 
         // cache
-        ImmersiveParticlesChunkManager.chunks.put(id, list);
+        ImmersiveParticlesChunkManager.addChunk(id, list);
 
         //cleanup
         blockCache.clear();

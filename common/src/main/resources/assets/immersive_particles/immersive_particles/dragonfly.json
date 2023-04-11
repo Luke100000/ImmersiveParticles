@@ -1,0 +1,37 @@
+{
+  "textures": [
+    "immersive_particles:immersive_particles/dragonfly"
+  ],
+  "behavior": {
+    "type": "hovering",
+    "meshes": {
+      "default": [
+        "dragonfly.Cube"
+      ]
+    },
+    "inertia": 0.8,
+    "speed": 0.3,
+    "hoveringTime": 20,
+    "landingTime": 100,
+    "avoidPlayer": 0.0
+  },
+  "spawns": [
+    {
+      "type": "onBlock",
+      "inBlock": {
+        "blocks": [
+          "minecraft:air"
+        ]
+      },
+      "onBlock": {
+        "blocks": [
+          "minecraft:lily_pad"
+        ]
+      },
+      "biome": {
+        "minTemperature": 0.0,
+        "maxTemperature": 1.5
+      }
+    }
+  ]
+}

@@ -113,8 +113,8 @@ public class ImmersiveParticleManager {
         // Prepare shader
         RenderSystem.enableDepthTest();
         RenderSystem.setShader(() -> Shaders.IMMERSIVE_PARTICLE_CUTOUT);
-        RenderSystem.disableCull();
-        RenderSystem.disableBlend();
+        RenderSystem.enableCull();
+        RenderSystem.enableBlend();
         RenderSystem.depthMask(true);
         RenderSystem.setShaderTexture(0, ParticleManagerLoader.ATLAS_TEXTURE);
         MinecraftClient.getInstance().gameRenderer.getLightmapTextureManager().enable();
@@ -135,8 +135,7 @@ public class ImmersiveParticleManager {
             int count = type.getMinCount() + random.nextInt(type.getMaxCount() - type.getMinCount() + 1);
             ImmersiveParticle leader = null;
             for (int i = 0; i < count; i++) {
-                ImmersiveParticle particle = ImmersiveParticles.PARTICLES.get(type.behaviorIdentifier).apply(type, location);
-                particle.setLeader(leader);
+                ImmersiveParticle particle = ImmersiveParticles.PARTICLES.get(type.behaviorIdentifier).apply(type, location, leader);
                 particles.add(particle);
                 particleCount.incrementAndGet();
 

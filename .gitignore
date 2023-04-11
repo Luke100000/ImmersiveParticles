@@ -38,7 +38,6 @@ forge*changelog.txt
 *.kra
 *.kra~
 *.png~
-*.blend
 *.blend1
 *.mtl
 /models/custom_model.java

@@ -1,0 +1,40 @@
+{
+  "textures": [
+    "immersive_particles:immersive_particles/moth"
+  ],
+  "behavior": {
+    "type": "randomFly",
+    "meshes": {
+      "default": [
+        "moth.Cube"
+      ]
+    },
+    "inertia": 0.9,
+    "speed": 0.4,
+    "acceleration": 0.3,
+    "range": 1.0,
+    "flyingTime": 4,
+    "avoidPlayer": 0.0
+  },
+  "spawns": [
+    {
+      "type": "inBlock",
+      "block": {
+        "blocks": [
+          "minecraft:air"
+        ]
+      },
+      "biome": {
+        "minTemperature": 0.0,
+        "maxTemperature": 1.5
+      },
+      "light": {
+        "minDayLight": 15,
+        "maxDayLight": 15,
+        "minBlockLight": 12,
+        "maxBlockLight": 15
+      },
+      "chanceModifier": 0.5
+    }
+  ]
+}

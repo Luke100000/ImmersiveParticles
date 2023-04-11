@@ -1,0 +1,34 @@
+{
+  "textures": [
+    "immersive_particles:immersive_particles/jellyfish_0"
+  ],
+  "behavior": {
+    "type": "jellyfish",
+    "meshes": {
+      "default": [
+        "jellyfish.Cube"
+      ]
+    },
+    "avoidPlayer": 1.0
+  },
+  "spawns": [
+    {
+      "type": "inBlock",
+      "block": {
+        "blocks": [
+          "water"
+        ]
+      },
+      "biome": {
+        "biomes": [
+          "lukewarm_ocean",
+          "deep_lukewarm_ocean",
+          "lukewarm_ocean"
+        ]
+      },
+      "chanceModifier": 0.01
+    }
+  ],
+  "minCount": 1,
+  "maxCount": 3
+}

@@ -1,0 +1,51 @@
+{
+  "textures": [
+    "immersive_particles:immersive_particles/ant"
+  ],
+  "behavior": {
+    "type": "crawling",
+    "meshes": {
+      "default": [
+        "ant.normal"
+      ],
+      "dead": [
+        "ant.dead"
+      ]
+    },
+    "speed": 0.5,
+    "avoidPlayer": 0.0,
+    "wobble": 0.25,
+    "wobbleSpeed": 1.0,
+    "walkingTime": 80,
+    "randomizerRange": 3.0,
+    "initialRange": 10.0,
+    "roadLength": 32
+  },
+  "spawns": [
+    {
+      "type": "onBlock",
+      "inBlock": {
+        "blocks": [
+          "air"
+        ]
+      },
+      "onBlock": {
+        "blocks": [
+          "#minecraft:dirt"
+        ]
+      },
+      "side": "top",
+      "biome": {
+        "minTemperature": 0.15,
+        "maxTemperature": 1.5
+      },
+      "light": {
+        "minDayLight": 1,
+        "maxDayLight": 14
+      },
+      "chanceModifier": 0.01
+    }
+  ],
+  "minCount": 5,
+  "maxCount": 20
+}

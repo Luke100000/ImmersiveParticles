@@ -4,12 +4,19 @@
   ],
   "behavior": {
     "type": "hovering",
-    "object": "bumblebee",
-    "mesh": "Cube",
-    "reaction": 1,
-    "inertia": 0.5,
-    "speed": 1,
-    "avoidPlayer": 1.0
+    "meshes": {
+      "default": [
+        "bumblebee.Cube"
+      ]
+    },
+    "inertia": 0.1,
+    "speed": 0.05,
+    "acceleration": 0.02,
+    "hoveringTime": 20,
+    "landingTime": 0,
+    "avoidPlayer": 1.0,
+    "wobble": 1.0,
+    "wobbleSpeed": 0.25
   },
   "spawns": [
     {

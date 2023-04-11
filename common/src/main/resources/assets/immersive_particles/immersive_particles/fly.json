@@ -1,0 +1,38 @@
+{
+  "textures": [
+    "immersive_particles:immersive_particles/fly"
+  ],
+  "behavior": {
+    "type": "randomFly",
+    "meshes": {
+      "default": [
+        "fly.Cube"
+      ]
+    },
+    "inertia": 0.9,
+    "speed": 0.25,
+    "acceleration": 0.2,
+    "range": 2.0,
+    "flyingTime": 8,
+    "avoidPlayer": 0.0
+  },
+  "spawns": [
+    {
+      "type": "onBlock",
+      "inBlock": {
+        "blocks": [
+          "minecraft:air"
+        ]
+      },
+      "onBlock": {
+        "blocks": [
+          "minecraft:hay_block"
+        ]
+      },
+      "biome": {
+        "minTemperature": 0.0,
+        "maxTemperature": 1.5
+      }
+    }
+  ]
+}

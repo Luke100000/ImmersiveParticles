@@ -1,22 +1,24 @@
 package immersive_particles.core;
 
-import immersive_particles.core.particles.HoveringParticle;
-import immersive_particles.core.particles.ImmersiveParticle;
-import immersive_particles.core.particles.SwimmingSwarmParticle;
+import immersive_particles.core.particles.*;
+import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiFunction;
 
 public class ImmersiveParticles {
-    static public final Map<String, BiFunction<ImmersiveParticleType, SpawnLocation, ImmersiveParticle>> PARTICLES = new HashMap<>();
+    static public final Map<String, TriFunction<ImmersiveParticleType, SpawnLocation, ImmersiveParticle, ImmersiveParticle>> PARTICLES = new HashMap<>();
 
     static {
         register("hovering", HoveringParticle::new);
         register("swimmingSwarm", SwimmingSwarmParticle::new);
+        register("crawling", CrawlingParticle::new);
+        register("jellyfish", JellyfishParticle::new);
+        register("randomFly", RandomFly::new);
+        register("fireFly", FireFlyParticle::new);
     }
 
-    private static void register(String identifier, BiFunction<ImmersiveParticleType, SpawnLocation, ImmersiveParticle> type) {
+    private static void register(String identifier, TriFunction<ImmersiveParticleType, SpawnLocation, ImmersiveParticle, ImmersiveParticle> type) {
         PARTICLES.put(identifier, type);
     }
 }

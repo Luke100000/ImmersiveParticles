@@ -1,0 +1,39 @@
+{
+  "textures": [
+    "immersive_particles:immersive_particles/firefly"
+  ],
+  "behavior": {
+    "type": "fireFly",
+    "meshes": {
+      "default": [
+        "firefly.Cube"
+      ]
+    },
+    "inertia": 0.25,
+    "speed": 0.2,
+    "acceleration": 0.1,
+    "range": 10.0,
+    "flyingTime": 15,
+    "avoidPlayer": 1.0
+  },
+  "spawns": [
+    {
+      "type": "onBlock",
+      "inBlock": {
+        "blocks": [
+          "minecraft:air"
+        ]
+      },
+      "onBlock": {
+        "blocks": [
+          "#minecraft:dirt"
+        ]
+      },
+      "biome": {
+        "minTemperature": 0.0,
+        "maxTemperature": 1.5
+      },
+      "chanceModifier": 0.01
+    }
+  ]
+}

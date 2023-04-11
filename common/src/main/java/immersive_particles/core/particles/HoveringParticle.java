@@ -3,70 +3,95 @@ package immersive_particles.core.particles;
 import immersive_particles.core.ImmersiveParticleType;
 import immersive_particles.core.ImmersiveParticlesChunkManager;
 import immersive_particles.core.SpawnLocation;
-import immersive_particles.util.obj.FaceVertex;
+import net.minecraft.util.JsonHelper;
 import org.joml.Vector3d;
-import org.joml.Vector4d;
 
 import java.util.List;
 
-public class HoveringParticle extends SimpleParticle {
-    private static final int HOVER_TIME = 20;
-
+public class HoveringParticle extends FlyingParticle {
     private final List<SpawnLocation> targets;
     private Vector3d target;
-    private int hovering = (int)(HOVER_TIME * (random.nextFloat() + 0.75f));
 
-    public HoveringParticle(ImmersiveParticleType type, SpawnLocation location) {
-        super(type, location);
+    private final int hoveringTime;
+    private final int landingTime;
+    private final float speed;
+    private final float acceleration;
+    private final float inertia;
+    private final float wobble;
+    private final float wobbleSpeed;
+
+    private int hovering;
+    private int landing;
+
+    public HoveringParticle(ImmersiveParticleType type, SpawnLocation location, ImmersiveParticle leader) {
+        super(type, location, leader);
 
         targets = ImmersiveParticlesChunkManager.getClose(type, location.x, location.y, location.z);
         target = getRandomPosition(location);
-    }
 
-    double getFlap(float tickDelta) {
-        return org.joml.Math.cos((age + tickDelta) * 2.0) * 0.5;
-    }
+        hoveringTime = JsonHelper.getInt(type.behavior, "hoveringTime", 20);
+        landingTime = JsonHelper.getInt(type.behavior, "landingTime", 20);
+        speed = JsonHelper.getFloat(type.behavior, "speed", 0.01f);
+        acceleration = JsonHelper.getFloat(type.behavior, "acceleration", 0.01f);
+        inertia = JsonHelper.getFloat(type.behavior, "inertia", 0.01f);
+        wobble = JsonHelper.getFloat(type.behavior, "wobble", 0.0f);
+        wobbleSpeed = JsonHelper.getFloat(type.behavior, "wobbleSpeed", 0.0f);
 
-    @Override
-    Vector4d transformVertex(FaceVertex v, float tickDelta) {
-        double flap = getFlap(tickDelta);
-        double ox = v.c.r > 0 ? v.c.r * (org.joml.Math.cos(flap) - 1) * v.v.x : 0;
-        double oy = v.c.r > 0 ? v.c.r * org.joml.Math.sin(flap) * Math.abs(v.v.x) : 0;
-        return new Vector4d((v.v.x + ox) / 16.0f, (v.v.y + oy) / 16.0f, v.v.z / 16.0f, 1.0f);
+        unrest();
     }
 
     @Override
     public boolean tick() {
-        if (visible) {
+        if (shouldUpdate()) {
             double dist = Math.sqrt(getSquaredDistanceTo(target));
             if (dist < 0.125f || collided) {
                 hovering -= (collided ? 10 : 1);
-                if (hovering < 0 && targets.size() > 0) {
-                    target = getRandomPosition(targets.get(random.nextInt(targets.size())));
-                    hovering = (int)(HOVER_TIME * (random.nextFloat() + 0.75f));
+                if (hovering < 0) {
+                    landing -= 1;
+                    setCurrentMesh("sit");
+                    if (landing < 0 && targets.size() > 0) {
+                        target = getRandomPosition(targets.get(random.nextInt(targets.size())));
+                        unrest();
+
+                        //todo sometimes, choose an air target and don't land
+                    }
                 }
             }
 
-            // Move to the target
-            moveTo(target, dist, 0.01f);
+            if (hovering > 0) {
+                // Move to the target
+                moveTo(target, dist, speed, acceleration);
 
-            // Look to target
-            rotateToTarget(target, 0.1f);
+                // Look to target
+                rotateToTarget(target, inertia);
 
-            // Wobble
-            velocityX += Math.cos(yaw) * roll * 0.025;
-            velocityZ += Math.sin(yaw) * roll * 0.025;
+                if (wobble > 0.0) {
+                    // roll side to side
+                    setRoll(Math.cos(age * wobbleSpeed) * wobble);
 
-            // Fly higher
-            double up = dist * 0.01;
-            if (velocityY < up) {
-                velocityY += up * 0.0025;
+                    // Wobble
+                    velocityX += Math.cos(getYaw()) * getRoll() * wobble * 0.025;
+                    velocityZ += Math.sin(getYaw()) * getRoll() * wobble * 0.025;
+                }
+
+                // Fly higher
+                double up = dist * 0.01;
+                if (velocityY < up) {
+                    velocityY += up * 0.0025;
+                }
             }
 
             // Panic
-            avoidPlayer();
+            if (avoidPlayer()) {
+                unrest();
+            }
         }
 
         return super.tick();
+    }
+
+    private void unrest() {
+        landing = (int)(landingTime * (random.nextFloat() + 0.75f));
+        hovering = (int)(hoveringTime * (random.nextFloat() + 0.75f));
     }
 }

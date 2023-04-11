@@ -4,14 +4,19 @@
   ],
   "behavior": {
     "type": "swimmingSwarm",
-    "object": "cod",
-    "bodyMesh": "body",
-    "finMesh": "fin",
+    "meshes": {
+      "body": [
+        "cod.body"
+      ],
+      "fin": [
+        "cod.fin"
+      ]
+    },
     "reaction": 1,
     "inertia": 0.5,
     "speed": 1,
-    "avoidPlayer": 2.0,
-    "swarmSize": 1.0
+    "avoidPlayer": 1.5,
+    "swarmSize": 0.75
   },
   "spawns": [
     {
