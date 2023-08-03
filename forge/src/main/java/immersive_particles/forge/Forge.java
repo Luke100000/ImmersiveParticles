@@ -19,8 +19,4 @@ public final class Forge {
         ((ReloadableResourceManagerImpl)MinecraftClient.getInstance().getResourceManager()).registerReloader(new ObjectLoader());
         ((ReloadableResourceManagerImpl)MinecraftClient.getInstance().getResourceManager()).registerReloader(new ParticleManagerLoader());
     }
-
-    public Forge() {
-
-    }
 }

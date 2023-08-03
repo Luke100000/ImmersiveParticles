@@ -7,10 +7,10 @@ import net.minecraft.resource.ResourceFactory;
 import net.minecraft.resource.ResourceManager;
 
 public class Shaders {
-    public static Shader IMMERSIVE_PARTICLE_CUTOUT;
+    static Shader immersiveParticleCutout;
 
     public static void LoadShaders(ResourceManager manager) {
-        IMMERSIVE_PARTICLE_CUTOUT = loadShader(manager, "immersive_particle_cutout", VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL);
+        immersiveParticleCutout = loadShader(manager, "immersive_particle_cutout", VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL);
     }
 
     private static Shader loadShader(ResourceFactory factory, String name, VertexFormat vertexFormat) {
@@ -20,5 +20,9 @@ public class Shaders {
         catch (Exception exception) {
             throw new IllegalStateException("Could not load immersive particles shader " + name, exception);
         }
+    }
+
+    public static Shader getImmersiveParticleCutout() {
+        return immersiveParticleCutout;
     }
 }

@@ -14,7 +14,7 @@ public class SpawnLocationList {
     }
 
     public List<SpawnLocation> getLocations(ImmersiveParticleType type) {
-        return locations.computeIfAbsent(type, (k) -> new LinkedList<>());
+        return locations.computeIfAbsent(type, k -> new LinkedList<>());
     }
 
     public Map<ImmersiveParticleType, List<SpawnLocation>> getAllLocations() {

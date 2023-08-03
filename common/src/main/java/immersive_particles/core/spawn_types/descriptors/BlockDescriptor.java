@@ -1,4 +1,4 @@
-package immersive_particles.core.spawnTypes.descriptors;
+package immersive_particles.core.spawn_types.descriptors;
 
 import com.google.gson.JsonObject;
 import immersive_particles.core.searcher.Searcher;
@@ -24,11 +24,11 @@ public class BlockDescriptor extends Descriptor {
     }
 
     private boolean validateBlock(BlockState state) {
-        return validateIdentifiers(blocks, blockTags, () -> Registry.BLOCK.getId(state.getBlock()), (tag) -> state.isIn(TagKey.of(Registry.BLOCK_KEY, tag)));
+        return validateIdentifiers(blocks, blockTags, () -> Registry.BLOCK.getId(state.getBlock()), tag -> state.isIn(TagKey.of(Registry.BLOCK_KEY, tag)));
     }
 
     private boolean validateFluid(FluidState state) {
-        return validateIdentifiers(fluids, fluidTags, () -> Registry.FLUID.getId(state.getFluid()), (tag) -> state.isIn(TagKey.of(Registry.FLUID_KEY, tag)));
+        return validateIdentifiers(fluids, fluidTags, () -> Registry.FLUID.getId(state.getFluid()), tag -> state.isIn(TagKey.of(Registry.FLUID_KEY, tag)));
     }
 
     @Override

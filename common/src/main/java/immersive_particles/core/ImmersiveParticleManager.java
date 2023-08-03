@@ -30,10 +30,10 @@ public class ImmersiveParticleManager {
     private static final int PARALLELIZATION_THRESHOLD = 128;
 
     public static final AtomicInteger particleCount = new AtomicInteger();
-    public static int updateDrops, renderDrops = 0;
+    private static int updateDrops, renderDrops = 0;
     private static final ConcurrentLinkedQueue<ImmersiveParticle> particles = new ConcurrentLinkedQueue<>();
 
-    public static Frustum frustum;
+    private static Frustum frustum;
     private static ClientWorld world;
 
     static ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("immersive-particles-worker-%d").build();
@@ -42,8 +42,8 @@ public class ImmersiveParticleManager {
     static State current = new State();
     static State last = new State();
 
-    static private volatile boolean rendering;
-    static private volatile boolean updating;
+    private static volatile boolean rendering;
+    private static volatile boolean updating;
 
     private static Exception updateException;
     private static Exception renderException;
@@ -114,7 +114,7 @@ public class ImmersiveParticleManager {
 
         // Prepare shader
         RenderSystem.enableDepthTest();
-        RenderSystem.setShader(() -> Shaders.IMMERSIVE_PARTICLE_CUTOUT);
+        RenderSystem.setShader(Shaders::getImmersiveParticleCutout);
         RenderSystem.enableCull();
         RenderSystem.enableBlend();
         RenderSystem.depthMask(true);
@@ -189,5 +189,17 @@ public class ImmersiveParticleManager {
             this.camera = null;
             this.pair = null;
         }
+    }
+
+    public static void setFrustum(Frustum frustum) {
+        ImmersiveParticleManager.frustum = frustum;
+    }
+
+    public static int getUpdateDrops() {
+        return updateDrops;
+    }
+
+    public static int getRenderDrops() {
+        return renderDrops;
     }
 }

@@ -26,7 +26,6 @@ public class ParticleManagerLoader extends JsonDataLoader {
     public static final Map<Identifier, ImmersiveParticleType> PARTICLES = new HashMap<>();
 
     public static final Identifier ATLAS_TEXTURE = Main.locate("textures/atlas/immersive_particles.png");
-    private SpriteAtlasTexture atlasTexture;
 
     public ParticleManagerLoader() {
         super(new GsonBuilder().create(), ID.getPath());
@@ -36,8 +35,8 @@ public class ParticleManagerLoader extends JsonDataLoader {
     protected void apply(Map<Identifier, JsonElement> prepared, ResourceManager manager, Profiler profiler) {
         SpawnTypes.clear();
 
-        this.atlasTexture = new SpriteAtlasTexture(ATLAS_TEXTURE);
-        MinecraftClient.getInstance().getTextureManager().registerTexture(this.atlasTexture.getId(), this.atlasTexture);
+        SpriteAtlasTexture atlasTexture = new SpriteAtlasTexture(ATLAS_TEXTURE);
+        MinecraftClient.getInstance().getTextureManager().registerTexture(atlasTexture.getId(), atlasTexture);
 
         // Parse particle types
         for (Map.Entry<Identifier, JsonElement> entry : prepared.entrySet()) {
@@ -56,14 +55,14 @@ public class ParticleManagerLoader extends JsonDataLoader {
             ProfilerSystem profilerSystem = new ProfilerSystem(Util.nanoTimeSupplier, () -> 0, false);
 
             profilerSystem.startTick();
-            SpriteAtlasTexture.Data data = this.atlasTexture.stitch(manager, textures.stream(), profilerSystem, 0);
+            SpriteAtlasTexture.Data data = atlasTexture.stitch(manager, textures.stream(), profilerSystem, 0);
             profilerSystem.endTick();
 
-            this.atlasTexture.upload(data);
+            atlasTexture.upload(data);
 
             // Give particle types their sprites
             for (ImmersiveParticleType type : PARTICLES.values()) {
-                List<Sprite> sprites = type.getTextures().stream().map(this.atlasTexture::getSprite).toList();
+                List<Sprite> sprites = type.getTextures().stream().map(atlasTexture::getSprite).toList();
                 type.setSprites(sprites);
             }
         });

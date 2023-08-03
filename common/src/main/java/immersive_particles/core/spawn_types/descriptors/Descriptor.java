@@ -1,4 +1,4 @@
-package immersive_particles.core.spawnTypes.descriptors;
+package immersive_particles.core.spawn_types.descriptors;
 
 import com.google.gson.JsonElement;
 import immersive_particles.core.searcher.Searcher;
@@ -50,10 +50,14 @@ public abstract class Descriptor {
         TOP(List.of(new BlockPos(0, -1, 0))),
         BOTTOM(List.of(new BlockPos(0, 1, 0)));
 
-        public final List<BlockPos> offsets;
+        final List<BlockPos> offsets;
 
         Side(List<BlockPos> offsets) {
             this.offsets = offsets;
+        }
+
+        public List<BlockPos> getOffsets() {
+            return offsets;
         }
     }
 }

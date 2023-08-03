@@ -6,6 +6,7 @@ public class Mesh {
     public final ArrayList<Face> faces = new ArrayList<>();
 
     public Mesh() {
+        // nop
     }
 
     public void add(Face face) {

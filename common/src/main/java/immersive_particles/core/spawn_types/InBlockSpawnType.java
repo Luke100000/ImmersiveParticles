@@ -1,14 +1,14 @@
-package immersive_particles.core.spawnTypes;
+package immersive_particles.core.spawn_types;
 
 import com.google.gson.JsonObject;
 import immersive_particles.core.ImmersiveParticleType;
 import immersive_particles.core.searcher.Searcher;
 import immersive_particles.core.searcher.SpawnLocation;
 import immersive_particles.core.searcher.SpawnLocationList;
-import immersive_particles.core.spawnTypes.descriptors.BiomeDescriptor;
-import immersive_particles.core.spawnTypes.descriptors.BlockDescriptor;
-import immersive_particles.core.spawnTypes.descriptors.Descriptor;
-import immersive_particles.core.spawnTypes.descriptors.LightDescriptor;
+import immersive_particles.core.spawn_types.descriptors.BiomeDescriptor;
+import immersive_particles.core.spawn_types.descriptors.BlockDescriptor;
+import immersive_particles.core.spawn_types.descriptors.Descriptor;
+import immersive_particles.core.spawn_types.descriptors.LightDescriptor;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.math.BlockPos;
 
@@ -16,7 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class InBlockSpawnType extends FullScanSpawnType {
-    public static List<DescriptorSet> descriptors = new LinkedList<>();
+    static final List<DescriptorSet> descriptors = new LinkedList<>();
 
     public InBlockSpawnType() {
         super();
@@ -58,7 +58,7 @@ public class InBlockSpawnType extends FullScanSpawnType {
 
         @Override
         protected boolean validate(Searcher searcher, int x, int y, int z) {
-            return block.validate(searcher, x, y, z) && block.validate(searcher, x, y, z) && light.validate(searcher, x, y, z);
+            return block.validate(searcher, x, y, z) && biome.validate(searcher, x, y, z) && light.validate(searcher, x, y, z);
         }
     }
 

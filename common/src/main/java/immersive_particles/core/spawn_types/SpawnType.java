@@ -1,4 +1,4 @@
-package immersive_particles.core.spawnTypes;
+package immersive_particles.core.spawn_types;
 
 import com.google.gson.JsonObject;
 import immersive_particles.core.ImmersiveParticleType;

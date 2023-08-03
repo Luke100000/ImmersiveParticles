@@ -1,4 +1,4 @@
-package immersive_particles.core.spawnTypes;
+package immersive_particles.core.spawn_types;
 
 import immersive_particles.core.searcher.Searcher;
 import immersive_particles.core.searcher.SpawnLocationList;

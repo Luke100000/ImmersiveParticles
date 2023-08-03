@@ -4,7 +4,7 @@ import immersive_particles.Config;
 import immersive_particles.core.ImmersiveParticleManager;
 import immersive_particles.core.ImmersiveParticleType;
 import immersive_particles.core.registries.SpawnTypes;
-import immersive_particles.core.spawnTypes.SpawnType;
+import immersive_particles.core.spawn_types.SpawnType;
 import immersive_particles.util.Utils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;

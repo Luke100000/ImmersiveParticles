@@ -15,6 +15,7 @@ public class Face {
     public final ArrayList<FaceVertex> vertices = new ArrayList<>();
 
     public Face() {
+        // nop
     }
 
     public void add(FaceVertex vertex) {

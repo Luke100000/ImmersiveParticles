@@ -1,4 +1,4 @@
-package immersive_particles.core.spawnTypes.descriptors;
+package immersive_particles.core.spawn_types.descriptors;
 
 import com.google.gson.JsonObject;
 import immersive_particles.core.searcher.Searcher;

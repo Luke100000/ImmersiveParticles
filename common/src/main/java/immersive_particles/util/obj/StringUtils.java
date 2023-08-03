@@ -24,21 +24,16 @@ public class StringUtils {
                 break;
             }
         }
-        if (errMsg != null) {
-            if (mCount >= messageChars.length) {
-                return -1;
-            }
+        if (errMsg != null && (mCount >= messageChars.length)) {
+            return -1;
+
         }
         return mCount;
     }
 
     public static float[] parseFloatList(int numFloats, String list, int startIndex) {
-        if (list == null) {
-            return null;
-        }
-        if (list.equals("")) {
-            return null;
-        }
+        assert list != null;
+        assert !list.equals("");
 
         float[] returnArray = new float[numFloats];
         int returnArrayCount = 0;
@@ -132,12 +127,8 @@ public class StringUtils {
     // least my first version of this will assume that there are no
     // spaces between slashes and numbers.
     public static int[] parseListVerticeNTuples(String list, int expectedValuesPerTuple) {
-        if (list == null) {
-            return null;
-        }
-        if (list.equals("")) {
-            return null;
-        }
+        assert list != null;
+        assert !list.equals("");
 
         //	log.log(INFO, "list=|"+list+"|");
 
@@ -188,12 +179,8 @@ public class StringUtils {
     }
 
     public static String[] parseList(char delim, String list) {
-        if (list == null) {
-            return null;
-        }
-        if (list.equals("")) {
-            return null;
-        }
+        assert list != null;
+        assert !list.equals("");
 
         ArrayList<String> returnVec = new ArrayList<>();
         String[] returnArray;
@@ -225,17 +212,13 @@ public class StringUtils {
         }
         // Convert from vector to array, and return it.
         returnArray = new String[1];
-        returnArray = (String[])returnVec.toArray((Object[])returnArray);
+        returnArray = (String[]) returnVec.toArray((Object[]) returnArray);
         return returnArray;
     }
 
     public static String[] parseWhitespaceList(String list) {
-        if (list == null) {
-            return null;
-        }
-        if (list.equals("")) {
-            return null;
-        }
+        assert list != null;
+        assert !list.equals("");
 
         ArrayList<String> returnVec = new ArrayList<>();
         String[] returnArray;
@@ -272,7 +255,7 @@ public class StringUtils {
         }
         // Convert from vector to array, and return it.
         returnArray = new String[1];
-        returnArray = (String[])returnVec.toArray((Object[])returnArray);
+        returnArray = (String[]) returnVec.toArray((Object[]) returnArray);
         return returnArray;
     }
 }

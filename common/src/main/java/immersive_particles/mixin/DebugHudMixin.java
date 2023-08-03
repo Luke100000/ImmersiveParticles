@@ -17,8 +17,8 @@ public class DebugHudMixin {
         List<String> value = cir.getReturnValue();
         value.add("Immersive Particles: %d, %d render drops, %d update drops, %d chunks queued".formatted(
                 ImmersiveParticleManager.particleCount.get(),
-                ImmersiveParticleManager.renderDrops,
-                ImmersiveParticleManager.updateDrops,
+                ImmersiveParticleManager.getRenderDrops(),
+                ImmersiveParticleManager.getUpdateDrops(),
                 ParticleChunkManager.getProcessing()));
     }
 }

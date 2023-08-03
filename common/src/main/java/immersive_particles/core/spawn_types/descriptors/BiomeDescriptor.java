@@ -1,4 +1,4 @@
-package immersive_particles.core.spawnTypes.descriptors;
+package immersive_particles.core.spawn_types.descriptors;
 
 import com.google.gson.JsonObject;
 import immersive_particles.core.searcher.Searcher;
@@ -43,6 +43,6 @@ public class BiomeDescriptor extends Descriptor {
             return false;
         }
 
-        return validateIdentifiers(biomes, biomeTags, () -> biome.getKey().map(RegistryKey::getValue).orElse(EMPTY), (tag) -> biome.isIn(TagKey.of(Registry.BIOME_KEY, tag)));
+        return validateIdentifiers(biomes, biomeTags, () -> biome.getKey().map(RegistryKey::getValue).orElse(EMPTY), tag -> biome.isIn(TagKey.of(Registry.BIOME_KEY, tag)));
     }
 }

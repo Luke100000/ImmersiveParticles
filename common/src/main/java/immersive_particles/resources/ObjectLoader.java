@@ -20,7 +20,7 @@ import java.util.Map;
 public class ObjectLoader extends SinglePreparationResourceReloader<List<Identifier>> {
     protected static final Identifier ID = Main.locate("objects");
 
-    public final static Map<Identifier, Map<String, Mesh>> objects = new HashMap<>();
+    public static final Map<Identifier, Map<String, Mesh>> objects = new HashMap<>();
 
     @Override
     protected List<Identifier> prepare(ResourceManager manager, Profiler profiler) {
@@ -30,7 +30,7 @@ public class ObjectLoader extends SinglePreparationResourceReloader<List<Identif
     @Override
     protected void apply(List<Identifier> o, ResourceManager manager, Profiler profiler) {
         objects.clear();
-        o.forEach((id) -> {
+        o.forEach(id -> {
             try {
                 InputStream stream = manager.getResource(id).getInputStream();
                 Map<String, Mesh> faces = new Builder(new BufferedReader(new InputStreamReader(stream))).objects;

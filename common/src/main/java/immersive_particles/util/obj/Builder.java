@@ -33,16 +33,13 @@ public class Builder {
 
     public final Map<String, Mesh> objects = new HashMap<>();
     public String objectName = null;
-    public int faceTriCount = 0;
-    public int faceQuadCount = 0;
-    public int facePolyCount = 0;
     public int faceErrorCount = 0;
 
-    private final static String OBJ_VERTEX_TEXTURE = "vt";
-    private final static String OBJ_VERTEX_NORMAL = "vn";
-    private final static String OBJ_VERTEX = "v";
-    private final static String OBJ_FACE = "f";
-    private final static String OBJ_OBJECT_NAME = "o";
+    private static final String OBJ_VERTEX_TEXTURE = "vt";
+    private static final String OBJ_VERTEX_NORMAL = "vn";
+    private static final String OBJ_VERTEX = "v";
+    private static final String OBJ_FACE = "f";
+    private static final String OBJ_OBJECT_NAME = "o";
 
     public Builder(BufferedReader stream) throws IOException {
         String line;
@@ -55,20 +52,18 @@ public class Builder {
 
             line = line.trim();
 
-            if (line.length() == 0) {
-                continue;
-            }
-
-            if (line.startsWith(OBJ_VERTEX_TEXTURE)) {
-                processVertexTexture(line);
-            } else if (line.startsWith(OBJ_VERTEX_NORMAL)) {
-                processVertexNormal(line);
-            } else if (line.startsWith(OBJ_VERTEX)) {
-                processVertex(line);
-            } else if (line.startsWith(OBJ_FACE)) {
-                processFace(line);
-            } else if (line.startsWith(OBJ_OBJECT_NAME)) {
-                processObjectName(line);
+            if (line.length() > 0) {
+                if (line.startsWith(OBJ_VERTEX_TEXTURE)) {
+                    processVertexTexture(line);
+                } else if (line.startsWith(OBJ_VERTEX_NORMAL)) {
+                    processVertexNormal(line);
+                } else if (line.startsWith(OBJ_VERTEX)) {
+                    processVertex(line);
+                } else if (line.startsWith(OBJ_FACE)) {
+                    processFace(line);
+                } else if (line.startsWith(OBJ_OBJECT_NAME)) {
+                    processObjectName(line);
+                }
             }
         }
     }
@@ -126,9 +121,9 @@ public class Builder {
             // >     vertex numbers. Negative values indicate relative vertex numbers.
 
             FaceVertex fv = new FaceVertex();
-            //            log.log(INFO,"Adding vertex g=" + vertexIndices[i] + " t=" + vertexIndices[i + 1] + " n=" + vertexIndices[i + 2]);
             int vertexIndex;
             vertexIndex = vertexIndices[i++];
+
             // Note that we can use negative references to denote vertices in manner relative to the current point in the file, i.e.
             // rather than "the 5th vertex in the file" we can say "the 5th vertex before now"
             if (vertexIndex < 0) {
@@ -176,7 +171,7 @@ public class Builder {
             }
 
             if (fv.v == null) {
-                log.log(SEVERE, "Can't add vertex to face with missing vertex!  Throwing away face.");
+                log.log(SEVERE, "Can't add vertex to face with missing vertex! Throwing away face.");
                 faceErrorCount++;
                 return;
             }
@@ -203,15 +198,6 @@ public class Builder {
         }
 
         objects.get(objectName).add(face);
-
-        // collect some stats for laughs
-        if (face.vertices.size() == 3) {
-            faceTriCount++;
-        } else if (face.vertices.size() == 4) {
-            faceQuadCount++;
-        } else {
-            facePolyCount++;
-        }
     }
 
     public void addObjectName(String name) {

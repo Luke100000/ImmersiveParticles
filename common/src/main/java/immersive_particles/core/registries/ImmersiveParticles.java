@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ImmersiveParticles {
-    static public final Map<String, TriFunction<ImmersiveParticleType, SpawnLocation, ImmersiveParticle, ImmersiveParticle>> PARTICLES = new HashMap<>();
+    public static final Map<String, TriFunction<ImmersiveParticleType, SpawnLocation, ImmersiveParticle, ImmersiveParticle>> PARTICLES = new HashMap<>();
 
     static {
         register("hovering", HoveringParticle::new);

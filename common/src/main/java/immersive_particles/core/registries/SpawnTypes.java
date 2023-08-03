@@ -2,15 +2,15 @@ package immersive_particles.core.registries;
 
 import com.google.gson.JsonObject;
 import immersive_particles.core.ImmersiveParticleType;
-import immersive_particles.core.spawnTypes.InBlockSpawnType;
-import immersive_particles.core.spawnTypes.OnBlockSpawnType;
-import immersive_particles.core.spawnTypes.SpawnType;
+import immersive_particles.core.spawn_types.InBlockSpawnType;
+import immersive_particles.core.spawn_types.OnBlockSpawnType;
+import immersive_particles.core.spawn_types.SpawnType;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class SpawnTypes {
-    static public final Map<String, SpawnType> TYPES = new HashMap<>();
+    public static final Map<String, SpawnType> TYPES = new HashMap<>();
 
     static {
         register("onBlock", new OnBlockSpawnType());
