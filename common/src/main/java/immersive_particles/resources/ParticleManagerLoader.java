@@ -1,5 +1,6 @@
 package immersive_particles.resources;
 
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import immersive_particles.Main;
 import immersive_particles.core.ImmersiveParticleType;
@@ -18,8 +19,6 @@ import net.minecraft.util.profiler.ProfilerSystem;
 
 import java.util.*;
 
-import static immersive_particles.resources.Resources.GSON;
-
 @Environment(value = EnvType.CLIENT)
 public class ParticleManagerLoader extends JsonDataLoader {
     protected static final Identifier ID = Main.locate("immersive_particles");
@@ -30,7 +29,7 @@ public class ParticleManagerLoader extends JsonDataLoader {
     private SpriteAtlasTexture atlasTexture;
 
     public ParticleManagerLoader() {
-        super(GSON, ID.getPath());
+        super(new GsonBuilder().create(), ID.getPath());
     }
 
     @Override

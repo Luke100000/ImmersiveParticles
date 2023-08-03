@@ -77,7 +77,7 @@ public class SwimmingSwarmParticle extends SimpleParticle {
             }
 
             // Move to the target
-            moveTo(target, 0.015f);
+            moveTo(target, 0.15f);
 
             // Look to target
             //todo not fully correct when panicking, instead of pushing, a new target outside the player range should be used
