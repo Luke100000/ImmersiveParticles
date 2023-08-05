@@ -15,7 +15,7 @@
     "reaction": 1,
     "inertia": 0.5,
     "speed": 1,
-    "avoidPlayer": 1.5,
+    "avoidPlayer": 1.0,
     "swarmSize": 0.75
   },
   "spawns": [

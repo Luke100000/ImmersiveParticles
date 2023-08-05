@@ -2,21 +2,38 @@
   "textures": [
     "immersive_particles:immersive_particles/bumblebee"
   ],
-  "behavior": {
-    "type": "hovering",
+  "tasks": [
+    {
+      "type": "target",
+      "target": "spawn",
+      "minDistance": 1.0,
+      "maxDistance": 10.0,
+      "minCooldown": 1.5,
+      "maxCooldown": 2.5,
+      "reachDistance": 0.25
+    },
+    {
+      "type": "move",
+      "inertia": 0.1,
+      "speed": 0.05,
+      "acceleration": 0.02
+    },
+    {
+      "type": "lookTowardsTarget",
+      "inertia": 0.1
+    },
+    {
+      "type": "avoidPlayer",
+      "distance": 1.0
+    }
+  ],
+  "renderer": {
+    "type": "flapping",
     "meshes": {
       "default": [
         "bumblebee.Cube"
       ]
-    },
-    "inertia": 0.1,
-    "speed": 0.05,
-    "acceleration": 0.02,
-    "hoveringTime": 20,
-    "landingTime": 0,
-    "avoidPlayer": 1.0,
-    "wobble": 1.0,
-    "wobbleSpeed": 0.25
+    }
   },
   "spawns": [
     {

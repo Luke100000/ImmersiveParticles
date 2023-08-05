@@ -2,6 +2,7 @@ package immersive_particles.resources;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonSyntaxException;
 import immersive_particles.Main;
 import immersive_particles.core.ImmersiveParticleType;
 import immersive_particles.core.registries.SpawnTypes;
@@ -40,7 +41,11 @@ public class ParticleManagerLoader extends JsonDataLoader {
 
         // Parse particle types
         for (Map.Entry<Identifier, JsonElement> entry : prepared.entrySet()) {
-            PARTICLES.put(entry.getKey(), new ImmersiveParticleType(entry.getValue().getAsJsonObject()));
+            try {
+                PARTICLES.put(entry.getKey(), new ImmersiveParticleType(entry.getValue().getAsJsonObject()));
+            } catch (JsonSyntaxException exception) {
+                Main.LOGGER.error("Failed to parse particle " + entry.getKey() + ": " + exception.getMessage());
+            }
         }
 
         // List all textures used

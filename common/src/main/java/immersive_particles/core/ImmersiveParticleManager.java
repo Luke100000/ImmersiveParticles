@@ -4,8 +4,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
 import immersive_particles.Shaders;
-import immersive_particles.core.particles.ImmersiveParticle;
-import immersive_particles.core.registries.ImmersiveParticles;
+import immersive_particles.core.registries.Renderers;
 import immersive_particles.core.searcher.SpawnLocation;
 import immersive_particles.resources.ParticleManagerLoader;
 import net.minecraft.client.MinecraftClient;
@@ -137,7 +136,7 @@ public class ImmersiveParticleManager {
             int count = type.getMinCount() + random.nextInt(type.getMaxCount() - type.getMinCount() + 1);
             ImmersiveParticle leader = null;
             for (int i = 0; i < count; i++) {
-                ImmersiveParticle particle = ImmersiveParticles.PARTICLES.get(type.behaviorIdentifier).apply(type, location, leader);
+                ImmersiveParticle particle = new ImmersiveParticle(type, location, leader);
                 particles.add(particle);
                 particleCount.incrementAndGet();
 
