@@ -17,25 +17,29 @@ public class AvoidPlayerTask extends Task {
     }
 
     @Override
-    public void tick(ImmersiveParticle particle) {
+    public void tick() {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         if (player != null) {
             Vec3d pos = player.getPos();
             double v = Math.sqrt(Utils.squaredDistance(pos.x, particle.getX(), pos.y, particle.getY(), pos.z, particle.getZ()));
-            if (v < settings.avoidPlayerDistance * (1.0 + player.getVelocity().length() * 20.0)) {
-                double speed = 0.1 / (v + 0.01);
+            if (v < settings.avoidPlayerDistance * (1.0 + player.getVelocity().length() * settings.playerSpeedPanic)) {
+                double speed = settings.strength / (v + 0.01);
                 particle.velocityX += (particle.x - pos.x) * speed;
-                particle.velocityY += (particle.y - pos.y) * speed;
-                particle.velocityZ += 0.02 * speed;
+                particle.velocityY += 0.02 * speed;
+                particle.velocityZ += (particle.y - pos.y) * speed;
             }
         }
     }
 
     public static class Settings extends Task.Settings {
         double avoidPlayerDistance;
+        double playerSpeedPanic;
+        double strength;
 
         public Settings(JsonObject settings) {
             avoidPlayerDistance = JsonHelper.getDouble(settings, "avoidPlayerDistance", 1.0);
+            playerSpeedPanic = JsonHelper.getDouble(settings, "playerSpeedPanic", 1.0);
+            strength = JsonHelper.getDouble(settings, "strength", 0.1);
         }
 
         @Override

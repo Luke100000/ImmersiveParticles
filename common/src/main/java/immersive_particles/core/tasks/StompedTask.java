@@ -12,7 +12,7 @@ public class StompedTask extends Task {
     }
 
     @Override
-    public void tick(ImmersiveParticle particle) {
+    public void tick() {
         if (particle.isTouchingPlayer()) {
             particle.setState(ImmersiveParticle.State.DEAD);
         }

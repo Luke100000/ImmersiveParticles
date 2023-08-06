@@ -14,24 +14,26 @@ public class BounceTask extends Task {
     }
 
     @Override
-    public void tick(ImmersiveParticle particle) {
+    public void tick() {
         if (particle.hasCollided()) {
             Vector3d target = particle.getTarget();
             if (target != null) {
                 particle.setTarget(target.sub(particle.x, particle.y, particle.z).mul(-1).add(particle.x, particle.y, particle.z));
             }
 
-            particle.velocityX *= -1;
-            particle.velocityY *= -1;
-            particle.velocityZ *= -1;
+            particle.velocityX *= -settings.bounce;
+            particle.velocityY *= -settings.bounce;
+            particle.velocityZ *= -settings.bounce;
         }
     }
 
     public static class Settings extends Task.Settings {
         double avoidPlayerDistance;
+        double bounce;
 
         public Settings(JsonObject settings) {
             avoidPlayerDistance = JsonHelper.getDouble(settings, "avoidPlayerDistance", 1.0);
+            bounce = JsonHelper.getDouble(settings, "bounce", 1.0);
         }
 
         @Override

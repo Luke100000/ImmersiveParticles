@@ -14,7 +14,7 @@ public class LookTowardsTargetTask extends Task {
     }
 
     @Override
-    public void tick(ImmersiveParticle particle) {
+    public void tick() {
         Vector3d target = particle.getTarget();
         if (target != null) {
             particle.rotateToTarget(target, settings.inertia);

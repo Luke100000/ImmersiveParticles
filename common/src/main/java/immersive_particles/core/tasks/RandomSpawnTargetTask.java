@@ -33,10 +33,10 @@ public class RandomSpawnTargetTask extends Task {
     }
 
     @Override
-    public void tick(ImmersiveParticle particle) {
-        if (settings.interruptible || particle.hasTarget()) {
+    public void tick() {
+        if (settings.interruptible || particle.getTarget() == null || (particle.getSquaredDistanceTo(particle.getTarget()) < settings.reachDistance * settings.reachDistance) || particle.hasCollided()) {
             cooldown--;
-            if (cooldown < 0) {
+            if (cooldown < 0 && !targets.isEmpty()) {
                 cooldown = settings.minCooldown + (int) ((settings.maxCooldown - settings.minCooldown) * (particle.getRandom().nextFloat() + 0.75f));
 
                 particle.setTarget(getRandomPosition(targets.get(particle.getRandom().nextInt(targets.size()))));
@@ -50,13 +50,15 @@ public class RandomSpawnTargetTask extends Task {
         boolean interruptible;
         double distance;
         int maxTargets;
+        double reachDistance;
 
         public Settings(JsonObject settings) {
             minCooldown = JsonHelper.getInt(settings, "minCooldown", 10);
             maxCooldown = JsonHelper.getInt(settings, "maxCooldown", 20);
             interruptible = JsonHelper.getBoolean(settings, "incorruptible", false);
-            distance = JsonHelper.getDouble(settings, "distance", 10.0);
-            maxTargets = JsonHelper.getInt(settings, "maxTargets", 10);
+            distance = JsonHelper.getDouble(settings, "distance", 10);
+            maxTargets = JsonHelper.getInt(settings, "maxTargets", 5);
+            reachDistance = JsonHelper.getDouble(settings, "reachDistance", 0.25);
         }
 
         @Override

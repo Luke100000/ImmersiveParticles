@@ -4,30 +4,31 @@ import com.google.gson.JsonObject;
 import immersive_particles.core.ImmersiveParticle;
 import net.minecraft.util.JsonHelper;
 
-public class GlowTask  extends  Task {
-    private final GlowTask.Settings settings;
+public class BatterTask extends Task {
+    private final BatterTask.Settings settings;
 
-    public GlowTask(ImmersiveParticle particle, GlowTask.Settings settings) {
+    public BatterTask(ImmersiveParticle particle, BatterTask.Settings settings) {
         super(particle);
         this.settings = settings;
     }
 
     @Override
     public void tick() {
-        double glow = Math.max(0, Math.cos(particle.getAge() * 0.33) + Math.cos(particle.getAge() * 0.17) + 0.5);
-        particle.setGlow(glow);
+        if (particle.getImpactY() > settings.fatalHeight) {
+            particle.setState(ImmersiveParticle.State.DEAD);
+        }
     }
 
     public static class Settings extends Task.Settings {
-        double avoidPlayerDistance;
+        final double fatalHeight;
 
         public Settings(JsonObject settings) {
-            avoidPlayerDistance = JsonHelper.getDouble(settings, "avoidPlayerDistance", 1.0);
+            fatalHeight = JsonHelper.getDouble(settings, "fatalHeight", 0.0);
         }
 
         @Override
         public Task createTask(ImmersiveParticle particle) {
-            return new GlowTask(particle, this);
+            return new BatterTask(particle, this);
         }
     }
 }

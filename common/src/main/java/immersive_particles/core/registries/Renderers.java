@@ -1,6 +1,7 @@
 package immersive_particles.core.registries;
 
 import com.google.gson.JsonObject;
+import immersive_particles.core.renderers.FishRenderer;
 import immersive_particles.core.renderers.FlappingRenderer;
 import immersive_particles.core.renderers.MeshRenderer;
 import immersive_particles.core.renderers.ParticleRenderer;
@@ -13,8 +14,9 @@ public class Renderers {
     public static final Map<String, Function<JsonObject, ParticleRenderer>> RENDERER = new HashMap<>();
 
     static {
-        register("simple", MeshRenderer::new);
+        register("fish", FishRenderer::new);
         register("flapping", FlappingRenderer::new);
+        register("simple", MeshRenderer::new);
     }
 
     private static void register(String identifier, Function<JsonObject, ParticleRenderer> renderer) {

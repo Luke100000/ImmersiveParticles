@@ -2,8 +2,39 @@
   "textures": [
     "immersive_particles:immersive_particles/cod"
   ],
-  "behavior": {
-    "type": "swimmingSwarm",
+  "tasks": [
+    {
+      "type": "randomTarget",
+      "minCooldown": 60,
+      "maxCooldown": 160,
+      "interruptible": true,
+      "rangeXZ": 5,
+      "rangeY": 3
+    },
+    {
+      "type": "followLeader",
+      "minDistance": 1.0,
+      "maxDistance": 3.0
+    },
+    {
+      "type": "move",
+      "speed": 0.75,
+      "acceleration": 1.0
+    },
+    {
+      "type": "bounce",
+      "factor": 0.25
+    },
+    {
+      "type": "avoidAir"
+    },
+    {
+      "type": "lookTowardsTarget",
+      "inertia": 0.75
+    }
+  ],
+  "renderer": {
+    "type": "fish",
     "meshes": {
       "body": [
         "cod.body"
@@ -11,12 +42,7 @@
       "fin": [
         "cod.fin"
       ]
-    },
-    "reaction": 1,
-    "inertia": 0.5,
-    "speed": 1,
-    "avoidPlayer": 1.0,
-    "swarmSize": 0.75
+    }
   },
   "spawns": [
     {

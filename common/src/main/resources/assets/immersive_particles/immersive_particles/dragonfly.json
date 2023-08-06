@@ -2,18 +2,41 @@
   "textures": [
     "immersive_particles:immersive_particles/dragonfly"
   ],
-  "behavior": {
-    "type": "hovering",
+  "tasks": [
+    {
+      "type": "randomSpawnTarget",
+      "minCooldown": 50,
+      "maxCooldown": 100,
+      "reachDistance": 0.25
+    },
+    {
+      "type": "randomTarget",
+      "minCooldown": 80,
+      "maxCooldown": 100,
+      "rangeXZ": 12,
+      "rangeY": 0
+    },
+    {
+      "type": "fly",
+      "speed": 1.0,
+      "acceleration": 0.5
+    },
+    {
+      "type": "lookTowardsTarget",
+      "inertia": 0.25
+    },
+    {
+      "type": "avoidPlayer",
+      "distance": 1.5
+    }
+  ],
+  "renderer": {
+    "type": "flapping",
     "meshes": {
       "default": [
         "dragonfly.Cube"
       ]
-    },
-    "inertia": 0.8,
-    "speed": 0.3,
-    "hoveringTime": 20,
-    "landingTime": 100,
-    "avoidPlayer": 0.0
+    }
   },
   "spawns": [
     {

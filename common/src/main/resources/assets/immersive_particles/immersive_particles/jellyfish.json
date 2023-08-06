@@ -2,14 +2,25 @@
   "textures": [
     "immersive_particles:immersive_particles/jellyfish_0"
   ],
-  "behavior": {
-    "type": "jellyfish",
+  "tasks": [
+    {
+      "type": "push"
+    },
+    {
+      "type": "bounce",
+      "factor": 1.0
+    },
+    {
+      "type": "avoidAir"
+    }
+  ],
+  "renderer": {
+    "type": "simple",
     "meshes": {
       "default": [
         "jellyfish.Cube"
       ]
-    },
-    "avoidPlayer": 1.0
+    }
   },
   "spawns": [
     {

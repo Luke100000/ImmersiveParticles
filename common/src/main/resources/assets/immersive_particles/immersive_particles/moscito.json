@@ -2,19 +2,34 @@
   "textures": [
     "immersive_particles:immersive_particles/fly"
   ],
-  "behavior": {
-    "type": "randomFly",
+  "tasks": [
+    {
+      "type": "randomTarget",
+      "minCooldown": 20,
+      "maxCooldown": 40,
+      "interruptible": true,
+      "range": 1.0
+    },
+    {
+      "type": "followPlayer"
+    },
+    {
+      "type": "fly",
+      "speed": 0.25,
+      "acceleration": 1.0
+    },
+    {
+      "type": "lookTowardsTarget",
+      "inertia": 0.75
+    }
+  ],
+  "renderer": {
+    "type": "flapping",
     "meshes": {
       "default": [
         "fly.Cube"
       ]
-    },
-    "inertia": 0.9,
-    "speed": 0.25,
-    "acceleration": 0.2,
-    "range": 0.25,
-    "flyingTime": 8,
-    "avoidPlayer": 0.0
+    }
   },
   "spawns": [
     {

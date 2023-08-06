@@ -2,8 +2,35 @@
   "textures": [
     "immersive_particles:immersive_particles/ant"
   ],
-  "behavior": {
-    "type": "crawling",
+  "tasks": [
+    {
+      "type": "roadWalker",
+      "walkingTime": 80,
+      "randomizerRange": 3.0,
+      "initialRange": 10.0,
+      "roadLength": 32
+    },
+    {
+      "type": "stomped"
+    },
+    {
+      "type": "batter"
+    },
+    {
+      "type": "wobble"
+    },
+    {
+      "type": "walk",
+      "speed": 0.5,
+      "acceleration": 0.5
+    },
+    {
+      "type": "lookTowardsTarget",
+      "inertia": 0.75
+    }
+  ],
+  "renderer": {
+    "type": "simple",
     "meshes": {
       "default": [
         "ant.normal"
@@ -11,15 +38,7 @@
       "dead": [
         "ant.dead"
       ]
-    },
-    "speed": 0.5,
-    "avoidPlayer": 0.0,
-    "wobble": 0.25,
-    "wobbleSpeed": 1.0,
-    "walkingTime": 80,
-    "randomizerRange": 3.0,
-    "initialRange": 10.0,
-    "roadLength": 32
+    }
   },
   "spawns": [
     {

@@ -20,8 +20,8 @@ public class RandomTargetTask extends Task {
     }
 
     @Override
-    public void tick(ImmersiveParticle particle) {
-        if (settings.interruptible || particle.hasTarget()) {
+    public void tick() {
+        if (settings.interruptible || !particle.hasTarget() || particle.hasCollided()) {
             cooldown--;
             if (cooldown < 0) {
                 cooldown = settings.minCooldown + (int) ((settings.maxCooldown - settings.minCooldown) * (particle.getRandom().nextFloat() + 0.75f));
@@ -30,9 +30,9 @@ public class RandomTargetTask extends Task {
                         particle.getRandom().nextDouble() - 0.5,
                         particle.getRandom().nextDouble() - 0.5,
                         particle.getRandom().nextDouble() - 0.5
-                ).mul(settings.range).sub(particle.x, particle.y, particle.z).add(origin);
+                ).mul(settings.rangeXZ, settings.rangeY, settings.rangeXZ).sub(particle.x, particle.y, particle.z).add(origin);
 
-                particle.setTarget(direction.mul(1000, 1000, 1000).add(particle.x, particle.y, particle.z));
+                particle.setTarget(direction.add(particle.x, particle.y, particle.z));
             }
         }
     }
@@ -41,13 +41,17 @@ public class RandomTargetTask extends Task {
         int minCooldown;
         int maxCooldown;
         boolean interruptible;
-        double range;
+        double rangeXZ;
+        double rangeY;
+        double reachDistance;
 
         public Settings(JsonObject settings) {
             minCooldown = JsonHelper.getInt(settings, "minCooldown", 10);
             maxCooldown = JsonHelper.getInt(settings, "maxCooldown", 20);
-            interruptible = JsonHelper.getBoolean(settings, "incorruptible", false);
-            range = JsonHelper.getDouble(settings, "range", 5.0);
+            interruptible = JsonHelper.getBoolean(settings, "incorruptible", true);
+            rangeXZ = JsonHelper.getDouble(settings, "rangeXZ", 5.0);
+            rangeY = JsonHelper.getDouble(settings, "rangeY", 3.0);
+            reachDistance = JsonHelper.getDouble(settings, "reachDistance", 0.25);
         }
 
         @Override

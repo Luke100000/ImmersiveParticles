@@ -2,19 +2,35 @@
   "textures": [
     "immersive_particles:immersive_particles/moth"
   ],
-  "behavior": {
-    "type": "randomFly",
+  "tasks": [
+    {
+      "type": "randomTarget",
+      "minCooldown": 5,
+      "maxCooldown": 30,
+      "interruptible": true
+    },
+    {
+      "type": "fly",
+      "speed": 0.5,
+      "acceleration": 1.0
+    },
+    {
+      "type": "lookTowardsTarget",
+      "inertia": 1.0,
+      "_todo": "use velocity for particles like this"
+    },
+    {
+      "type": "avoidPlayer",
+      "distance": 0.25
+    }
+  ],
+  "renderer": {
+    "type": "flapping",
     "meshes": {
       "default": [
         "moth.Cube"
       ]
-    },
-    "inertia": 0.9,
-    "speed": 0.4,
-    "acceleration": 0.3,
-    "range": 1.0,
-    "flyingTime": 4,
-    "avoidPlayer": 0.0
+    }
   },
   "spawns": [
     {

@@ -28,12 +28,15 @@ public class PushTask extends Task {
     }
 
     @Override
-    public void tick(ImmersiveParticle particle) {
+    public void tick() {
         push *= settings.relax;
 
         if (particle.hasCollided()) {
             direction.mul(-1);
         }
+
+        // Rotate towards pushing direction
+        particle.rotateTowards(lastJump, settings.inertia);
 
         // Push
         cooldown--;
@@ -61,12 +64,14 @@ public class PushTask extends Task {
         int maxCooldown;
         double strength;
         double relax;
+        float inertia;
 
         public Settings(JsonObject settings) {
             minCooldown = JsonHelper.getInt(settings, "minCooldown", 10);
             maxCooldown = JsonHelper.getInt(settings, "maxCooldown", 20);
             strength = JsonHelper.getFloat(settings, "strength", 0.1f);
             relax = JsonHelper.getFloat(settings, "relax", 0.99f);
+            inertia = JsonHelper.getFloat(settings, "inertia", 0.1f);
         }
 
         @Override

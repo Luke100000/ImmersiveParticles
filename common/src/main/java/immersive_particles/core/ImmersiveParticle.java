@@ -17,9 +17,7 @@ import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class ImmersiveParticle {
     private static final Box EMPTY_BOUNDING_BOX = new Box(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
@@ -56,10 +54,16 @@ public class ImmersiveParticle {
     int light;
     double glow;
 
+    public Map<String, Object> memory = new HashMap<>();
+
     State state = State.IDLE;
 
     @Nullable
     Vector3d target = null;
+
+    public Vector3d getPosition() {
+        return new Vector3d(x, y, z);
+    }
 
     public enum State {
         IDLE,
@@ -77,6 +81,7 @@ public class ImmersiveParticle {
     float spacingY;
 
     double distanceFallen;
+    double impactY;
 
     final Random random = new Random();
 
@@ -119,8 +124,16 @@ public class ImmersiveParticle {
             this.prevPosZ = this.z;
             this.velocityY -= 0.04 * getGravity();
 
-            for (Task task : tasks) {
-                task.tick(this);
+            if (state == State.DEAD) {
+                velocityX = 0.0;
+                velocityZ = 0.0;
+                setYaw(getYaw());
+                setPitch(0.0);
+                setRoll(0.0);
+            } else {
+                for (Task task : tasks) {
+                    task.tick();
+                }
             }
 
             this.move(this.velocityX, this.velocityY, this.velocityZ);
@@ -213,11 +226,10 @@ public class ImmersiveParticle {
         this.collided = false;
 
         if (onGround) {
-            if (distanceFallen > 0.0) {
-                hitGround(distanceFallen);
-            }
+            impactY = distanceFallen;
             distanceFallen = 0.0;
         } else {
+            impactY = 0.0f;
             this.distanceFallen += dy;
         }
 
@@ -233,10 +245,6 @@ public class ImmersiveParticle {
             this.velocityZ = 0.0;
             this.collided = true;
         }
-    }
-
-    void hitGround(double fallen) {
-
     }
 
     public Box getBoundingBox() {
@@ -356,7 +364,7 @@ public class ImmersiveParticle {
         return MathHelper.lerp(tickDelta, this.prevRoll, this.roll);
     }
 
-    protected void rotateTowards(Vector3d target, float rotReact) {
+    public void rotateTowards(Vector3d target, float rotReact) {
         double l = Math.sqrt(Math.pow(target.x, 2.0) + Math.pow(target.z, 2.0));
         if (l > 0.00001) {
             setYaw(yaw * (1 - rotReact) + Math.atan2(target.x, target.z) * rotReact);
@@ -376,6 +384,10 @@ public class ImmersiveParticle {
 
     public boolean hasLeader() {
         return leader != null;
+    }
+
+    public void setLeader(ImmersiveParticle leader) {
+        this.leader = leader;
     }
 
     public boolean isVisible() {
@@ -470,6 +482,11 @@ public class ImmersiveParticle {
         return distanceFallen;
     }
 
+    public double getImpactY() {
+        return impactY;
+    }
+
+    @Nullable
     public ImmersiveParticle getLeader() {
         return leader;
     }
@@ -525,6 +542,13 @@ public class ImmersiveParticle {
     public boolean isTouchingPlayer() {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         return player != null && player.getBoundingBox().intersects(getBoundingBox());
+    }
+
+    public boolean isMoving() {
+        double dx = x - prevPosX;
+        double dy = y - prevPosY;
+        double dz = z - prevPosZ;
+        return (dx * dx + dy * dy + dz * dz) > 0.0001;
     }
 }
 

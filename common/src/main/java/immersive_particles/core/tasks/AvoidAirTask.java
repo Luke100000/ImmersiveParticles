@@ -15,7 +15,7 @@ public class AvoidAirTask extends Task {
     }
 
     @Override
-    public void tick(ImmersiveParticle particle) {
+    public void tick() {
         // Avoid air
         //todo cache
         BlockState state = ImmersiveParticleManager.getWorld().getBlockState(new BlockPos(particle.x, particle.y, particle.z));

@@ -4,23 +4,27 @@
   ],
   "tasks": [
     {
-      "type": "target",
-      "target": "spawn",
-      "minDistance": 1.0,
-      "maxDistance": 10.0,
-      "minCooldown": 1.5,
-      "maxCooldown": 2.5,
+      "type": "randomSpawnTarget",
+      "minCooldown": 30,
+      "maxCooldown": 60,
+      "interruptible": false,
       "reachDistance": 0.25
     },
     {
-      "type": "move",
-      "inertia": 0.1,
-      "speed": 0.05,
-      "acceleration": 0.02
+      "type": "fly",
+      "speed": 0.75,
+      "acceleration": 0.25,
+      "maxUpwardsSpeed": 0.01
+    },
+    {
+      "type": "bounce"
+    },
+    {
+      "type": "wobble"
     },
     {
       "type": "lookTowardsTarget",
-      "inertia": 0.1
+      "inertia": 0.3
     },
     {
       "type": "avoidPlayer",
