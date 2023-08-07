@@ -12,6 +12,6 @@ public final class Config extends JsonConfig {
 
     public final int particleMaxAge = 1200;
     public final int particleSpawnDistanceInChunks = 4;
-    public final float chunkUpdatesPerMinute = 2.0f;
+    public final float chunkUpdatesPerMinute = 10.0f;
     public final float baseChance = 0.2f;
 }

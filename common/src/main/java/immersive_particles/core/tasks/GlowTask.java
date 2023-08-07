@@ -14,15 +14,15 @@ public class GlowTask  extends  Task {
 
     @Override
     public void tick() {
-        double glow = Math.max(0, Math.cos(particle.getAge() * 0.33) + Math.cos(particle.getAge() * 0.17) + 0.5);
+        double glow = Math.max(0, Math.cos(particle.getAge() * 0.2 * settings.speed) + Math.cos(particle.getAge() * 0.13 * settings.speed) + 0.5);
         particle.setGlow(glow);
     }
 
     public static class Settings extends Task.Settings {
-        double avoidPlayerDistance;
+        double speed;
 
         public Settings(JsonObject settings) {
-            avoidPlayerDistance = JsonHelper.getDouble(settings, "avoidPlayerDistance", 1.0);
+            speed = JsonHelper.getDouble(settings, "speed", 1.0);
         }
 
         @Override

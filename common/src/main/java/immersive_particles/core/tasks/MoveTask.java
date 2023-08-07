@@ -17,11 +17,11 @@ public class MoveTask extends Task {
     public void tick() {
         Vector3d target = particle.getTarget();
         if (target == null) {
-            particle.velocityX *= settings.hoverVelocityMultiplier;
-            particle.velocityY *= settings.hoverVelocityMultiplier;
-            particle.velocityZ *= settings.hoverVelocityMultiplier;
+            particle.multiplyVelocity(settings.hoverVelocityMultiplier);
         } else {
-            particle.moveTo(target, settings.speed, settings.acceleration);
+            if (!particle.moveTo(target, settings.speed, settings.acceleration)) {
+                particle.multiplyVelocity(settings.hoverVelocityMultiplier);
+            }
 
             if (particle.getSquaredDistanceTo(target) < settings.reachDistance * settings.reachDistance && particle.getVelocity().lengthSquared() < 0.0001) {
                 particle.setTarget(null);

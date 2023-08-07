@@ -8,8 +8,9 @@
       "minCooldown": 10,
       "maxCooldown": 40,
       "interruptible": true,
-      "rangeXZ": 10,
-      "rangeY": 1
+      "rangeXZ": 5.0,
+      "rangeY": 1.0,
+      "directional": true
     },
     {
       "type": "fly",
@@ -23,7 +24,10 @@
     {
       "type": "avoidPlayer",
       "distance": 1.0,
-      "strength": 0.01
+      "strength": 0.05
+    },
+    {
+      "type": "bounce"
     },
     {
       "type": "glow"
@@ -54,7 +58,12 @@
         "minTemperature": 0.5,
         "maxTemperature": 1.5
       },
-      "chanceModifier": 0.01
+      "light": {
+        "minDayLight": 5,
+        "maxDayLight": 14,
+        "maxBlockLight": 3
+      },
+      "chanceModifier": 0.025
     }
   ]
 }

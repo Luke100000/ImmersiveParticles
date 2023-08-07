@@ -68,7 +68,7 @@ public class ParticleChunkManager {
                     .ifPresent(l -> {
                         double v = client.world.random.nextDouble();
                         int boost = newChunks.getOrDefault(id, 0);
-                        if (v < l.getTotalChance() * (boost > 0 ? 2.0 : 1.0)) {
+                        if (v < l.getTotalChance() * (boost > 0 ? 4.0 : 1.0)) {
                             if (v >= l.getTotalChance() && boost > 0) {
                                 if (boost > 1) {
                                     newChunks.put(id, boost - 1);

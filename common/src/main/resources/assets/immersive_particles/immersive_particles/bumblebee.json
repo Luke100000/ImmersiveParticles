@@ -5,8 +5,8 @@
   "tasks": [
     {
       "type": "randomSpawnTarget",
-      "minCooldown": 30,
-      "maxCooldown": 60,
+      "minCooldown": 40,
+      "maxCooldown": 100,
       "interruptible": false,
       "reachDistance": 0.25
     },

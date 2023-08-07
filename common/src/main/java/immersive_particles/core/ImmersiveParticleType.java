@@ -1,5 +1,6 @@
 package immersive_particles.core;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import immersive_particles.Main;
@@ -29,11 +30,37 @@ public class ImmersiveParticleType {
     // Some generic particle settings
     float velocityMultiplier;
 
+    static class Color {
+        float red;
+        float green;
+        float blue;
+
+        public Color(float r, float g, float b) {
+            this.red = r;
+            this.green = g;
+            this.blue = b;
+        }
+    }
+
+    List<Color> colors;
+
     public ImmersiveParticleType(JsonObject value) {
         minCount = JsonHelper.getInt(value, "minCount", 1);
         maxCount = JsonHelper.getInt(value, "maxCount", 1);
 
+        // Generic data
         velocityMultiplier = JsonHelper.getFloat(value, "velocityMultiplier", 0.98f);
+
+        // Colors
+        if (value.has("colors")) {
+            colors = new ArrayList<>();
+            for (JsonElement e : value.get("colors").getAsJsonArray()) {
+                JsonArray color = e.getAsJsonArray();
+                colors.add(new Color(color.get(0).getAsFloat(), color.get(1).getAsFloat(), color.get(2).getAsFloat()));
+            }
+        } else {
+            colors = List.of(new Color(1, 1, 1));
+        }
 
         // Load textures
         for (JsonElement e : value.get("textures").getAsJsonArray()) {

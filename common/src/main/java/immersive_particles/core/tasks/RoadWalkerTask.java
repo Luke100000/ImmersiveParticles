@@ -36,7 +36,9 @@ public class RoadWalkerTask extends Task {
     }
 
     private void findTarget() {
-        addTarget();
+        if (getParticle().isMoving()) {
+            addTarget();
+        }
         particle.setTarget(new Vector3d(particle.x + (particle.getRandom().nextDouble() - 0.5) * settings.initialRange, particle.y + (particle.getRandom().nextDouble() - 0.5) * settings.initialRange, particle.z + (particle.getRandom().nextDouble() - 0.5) * settings.initialRange));
     }
 

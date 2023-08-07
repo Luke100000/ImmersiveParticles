@@ -98,6 +98,11 @@ public class ImmersiveParticle {
 
         this.sprite = type.getSprites().get(random.nextInt(type.getSprites().size()));
 
+        ImmersiveParticleType.Color color = type.colors.get(random.nextInt(type.colors.size()));
+        this.red = color.red;
+        this.green = color.green;
+        this.blue = color.blue;
+
         this.age = random.nextInt(20);
         this.maxAge = Config.getInstance().particleMaxAge + random.nextInt(60); //todo
 
@@ -110,6 +115,7 @@ public class ImmersiveParticle {
 
         this.leader = leader;
 
+        // Construct tasks
         tasks = new LinkedList<>();
         for (Task.Settings settings : type.getTaskSettings()) {
             tasks.add(settings.createTask(this));
@@ -143,9 +149,7 @@ public class ImmersiveParticle {
 
             this.move(this.velocityX, this.velocityY, this.velocityZ);
 
-            this.velocityX *= this.velocityMultiplier;
-            this.velocityY *= this.velocityMultiplier;
-            this.velocityZ *= this.velocityMultiplier;
+            multiplyVelocity(this.velocityMultiplier);
 
             if (this.onGround) {
                 this.velocityX *= 0.7f;
@@ -156,6 +160,12 @@ public class ImmersiveParticle {
         }
 
         return age > maxAge;
+    }
+
+    public void multiplyVelocity(double velocityMultiplier) {
+        this.velocityX *= velocityMultiplier;
+        this.velocityY *= velocityMultiplier;
+        this.velocityZ *= velocityMultiplier;
     }
 
     double getGravity() {
@@ -292,11 +302,11 @@ public class ImmersiveParticle {
         return Utils.squaredDistance(x, pos.x, y, pos.y, z, pos.z);
     }
 
-    public void moveTo(Vector3d target, float speed, float acceleration) {
-        moveTo(target, Math.sqrt(getSquaredDistanceTo(target)), speed, acceleration);
+    public boolean moveTo(Vector3d target, float speed, float acceleration) {
+        return moveTo(target, Math.sqrt(getSquaredDistanceTo(target)), speed, acceleration);
     }
 
-    public void moveTo(Vector3d target, double distance, float speed, float acceleration) {
+    public boolean moveTo(Vector3d target, double distance, float speed, float acceleration) {
         float currentSpeed = (float) getVelocity().length();
         speed *= acceleration * Math.max(0.0f, speed - currentSpeed);
 
@@ -308,6 +318,9 @@ public class ImmersiveParticle {
             velocityX = velocityX + (target.x - x) * f;
             velocityY = velocityY + (target.y - y) * f;
             velocityZ = velocityZ + (target.z - z) * f;
+            return true;
+        } else {
+            return false;
         }
     }
 

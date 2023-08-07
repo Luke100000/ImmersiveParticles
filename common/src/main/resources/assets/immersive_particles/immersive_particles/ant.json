@@ -25,7 +25,7 @@
       "acceleration": 0.5
     },
     {
-      "type": "lookTowardsTarget",
+      "type": "lookTowardsVelocity",
       "inertia": 0.75
     }
   ],
@@ -62,7 +62,30 @@
         "minDayLight": 1,
         "maxDayLight": 14
       },
-      "chanceModifier": 0.01
+      "chanceModifier": 0.025
+    },
+    {
+      "type": "onBlock",
+      "inBlock": {
+        "blocks": [
+          "air"
+        ]
+      },
+      "onBlock": {
+        "blocks": [
+          "#minecraft:logs"
+        ]
+      },
+      "side": "sides",
+      "biome": {
+        "minTemperature": 0.15,
+        "maxTemperature": 1.5
+      },
+      "light": {
+        "minDayLight": 1,
+        "maxDayLight": 14
+      },
+      "chanceModifier": 0.1
     }
   ],
   "minCount": 5,

@@ -6,15 +6,15 @@
     {
       "type": "randomTarget",
       "minCooldown": 1,
-      "maxCooldown": 10,
+      "maxCooldown": 7,
       "interruptible": true,
-      "rangeXZ": 2.0,
-      "rangeY": 2.0,
+      "rangeXZ": 1.0,
+      "rangeY": 1.0,
       "directional": true
     },
     {
       "type": "fly",
-      "speed": 0.65,
+      "speed": 0.6,
       "acceleration": 1.0
     },
     {
