@@ -9,22 +9,15 @@ import org.joml.Vector3d;
 
 import java.util.List;
 
-public class RandomSpawnTargetTask extends Task {
-    private final ImmersiveParticle particle;
-    private final RandomSpawnTargetTask.Settings settings;
-
+public class RandomSpawnTargetTask extends TargetTask {
     private final List<SpawnLocation> targets;
-
-    private int cooldown;
 
     Vector3d getRandomPosition(SpawnLocation location) {
         return location.getRandomPosition(particle.getSpacingXZ(), particle.getSpacingY(), particle.getSpacingXZ());
     }
 
     public RandomSpawnTargetTask(ImmersiveParticle particle, RandomSpawnTargetTask.Settings settings) {
-        super(particle);
-        this.particle = particle;
-        this.settings = settings;
+        super(particle, settings);
 
         SpawnLocation location = particle.getSpawnLocation();
         targets = ParticleChunkManager.getClose(particle.getType(), location.x, location.y, location.z, settings.distance, settings.maxTargets);
@@ -33,32 +26,21 @@ public class RandomSpawnTargetTask extends Task {
     }
 
     @Override
-    public void tick() {
-        if (settings.interruptible || particle.getTarget() == null || (particle.getSquaredDistanceTo(particle.getTarget()) < settings.reachDistance * settings.reachDistance) || particle.hasCollided()) {
-            cooldown--;
-            if (cooldown < 0 && !targets.isEmpty()) {
-                cooldown = settings.minCooldown + (int) ((settings.maxCooldown - settings.minCooldown) * (particle.getRandom().nextFloat() + 0.75f));
-
-                particle.setTarget(getRandomPosition(targets.get(particle.getRandom().nextInt(targets.size()))));
-            }
+    protected void searchTarget() {
+        if (!targets.isEmpty()) {
+            particle.setTarget(getRandomPosition(targets.get(particle.getRandom().nextInt(targets.size()))));
         }
     }
 
-    public static class Settings extends Task.Settings {
-        int minCooldown;
-        int maxCooldown;
-        boolean interruptible;
+    public static class Settings extends TargetTask.Settings {
         double distance;
         int maxTargets;
-        double reachDistance;
 
         public Settings(JsonObject settings) {
-            minCooldown = JsonHelper.getInt(settings, "minCooldown", 10);
-            maxCooldown = JsonHelper.getInt(settings, "maxCooldown", 20);
-            interruptible = JsonHelper.getBoolean(settings, "incorruptible", false);
+            super(settings);
+
             distance = JsonHelper.getDouble(settings, "distance", 10);
             maxTargets = JsonHelper.getInt(settings, "maxTargets", 5);
-            reachDistance = JsonHelper.getDouble(settings, "reachDistance", 0.25);
         }
 
         @Override
