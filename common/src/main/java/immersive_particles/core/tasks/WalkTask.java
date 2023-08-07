@@ -16,6 +16,9 @@ public class WalkTask extends MoveTask {
     public void tick() {
         if (particle.hasCollided()) {
             particle.moveTo(particle.getTarget(), settings.speed, settings.acceleration);
+            particle.gravity = 0.0f;
+        } else {
+            particle.gravity = 1.0f;
         }
     }
 

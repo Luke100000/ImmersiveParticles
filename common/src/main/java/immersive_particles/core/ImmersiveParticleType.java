@@ -26,9 +26,14 @@ public class ImmersiveParticleType {
     int minCount;
     int maxCount;
 
+    // Some generic particle settings
+    float velocityMultiplier;
+
     public ImmersiveParticleType(JsonObject value) {
         minCount = JsonHelper.getInt(value, "minCount", 1);
         maxCount = JsonHelper.getInt(value, "maxCount", 1);
+
+        velocityMultiplier = JsonHelper.getFloat(value, "velocityMultiplier", 0.98f);
 
         // Load textures
         for (JsonElement e : value.get("textures").getAsJsonArray()) {
@@ -78,6 +83,10 @@ public class ImmersiveParticleType {
 
     public int getMaxCount() {
         return maxCount;
+    }
+
+    public float getVelocityMultiplier() {
+        return velocityMultiplier;
     }
 
     public ParticleRenderer getRenderer() {

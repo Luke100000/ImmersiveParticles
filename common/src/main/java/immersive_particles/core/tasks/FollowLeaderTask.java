@@ -19,7 +19,8 @@ public class FollowLeaderTask extends Task {
         if (leader != null) {
             double distance = leader.getSquaredDistanceTo(particle.getPosition());
             if (distance > settings.maxDistance * settings.maxDistance) {
-                Vector3d target = leader.getPosition().sub(particle.getPosition()).normalize().mul(settings.minDistance).add(particle.getPosition());
+                Vector3d leaderToParticle = particle.getPosition().sub(leader.getPosition()).normalize();
+                Vector3d target = leaderToParticle.mul(settings.minDistance).add(leader.getPosition());
                 particle.setTarget(target);
             }
         }

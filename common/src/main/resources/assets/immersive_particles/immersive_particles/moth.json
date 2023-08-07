@@ -5,19 +5,21 @@
   "tasks": [
     {
       "type": "randomTarget",
-      "minCooldown": 5,
-      "maxCooldown": 30,
-      "interruptible": true
+      "minCooldown": 1,
+      "maxCooldown": 10,
+      "interruptible": true,
+      "rangeXZ": 2.0,
+      "rangeY": 2.0,
+      "directional": true
     },
     {
       "type": "fly",
-      "speed": 0.5,
+      "speed": 0.65,
       "acceleration": 1.0
     },
     {
-      "type": "lookTowardsTarget",
-      "inertia": 1.0,
-      "_todo": "use velocity for particles like this"
+      "type": "lookTowardsVelocity",
+      "inertia": 1.0
     },
     {
       "type": "avoidPlayer",
@@ -50,7 +52,7 @@
         "minBlockLight": 12,
         "maxBlockLight": 15
       },
-      "chanceModifier": 0.5
+      "chanceModifier": 2.0
     }
   ]
 }

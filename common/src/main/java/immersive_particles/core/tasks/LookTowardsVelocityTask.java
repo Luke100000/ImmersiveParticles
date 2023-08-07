@@ -4,31 +4,29 @@ import com.google.gson.JsonObject;
 import immersive_particles.core.ImmersiveParticle;
 import net.minecraft.util.JsonHelper;
 
-public class BatterTask extends Task {
-    private final BatterTask.Settings settings;
+public class LookTowardsVelocityTask extends Task {
+    private final LookTowardsVelocityTask.Settings settings;
 
-    public BatterTask(ImmersiveParticle particle, BatterTask.Settings settings) {
+    public LookTowardsVelocityTask(ImmersiveParticle particle, LookTowardsVelocityTask.Settings settings) {
         super(particle);
         this.settings = settings;
     }
 
     @Override
     public void tick() {
-        if (particle.getImpactY() > settings.fatalHeight) {
-            particle.setState(ImmersiveParticle.State.DEAD);
-        }
+        particle.rotateTowards(particle.getVelocity(), settings.inertia);
     }
 
     public static class Settings extends Task.Settings {
-        final double fatalHeight;
+        float inertia;
 
         public Settings(JsonObject settings) {
-            fatalHeight = JsonHelper.getDouble(settings, "fatalHeight", 3.0);
+            inertia = JsonHelper.getFloat(settings, "inertia", 0.1f);
         }
 
         @Override
         public Task createTask(ImmersiveParticle particle) {
-            return new BatterTask(particle, this);
+            return new LookTowardsVelocityTask(particle, this);
         }
     }
 }

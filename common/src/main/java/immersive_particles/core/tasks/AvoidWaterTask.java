@@ -6,10 +6,10 @@ import immersive_particles.core.ImmersiveParticleManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 
-public class AvoidAirTask extends Task {
-    private final AvoidAirTask.Settings settings;
+public class AvoidWaterTask extends Task {
+    private final AvoidWaterTask.Settings settings;
 
-    public AvoidAirTask(ImmersiveParticle particle, AvoidAirTask.Settings settings) {
+    public AvoidWaterTask(ImmersiveParticle particle, AvoidWaterTask.Settings settings) {
         super(particle);
         this.settings = settings;
     }
@@ -19,9 +19,8 @@ public class AvoidAirTask extends Task {
         // Avoid air
         //todo cache
         BlockState state = ImmersiveParticleManager.getWorld().getBlockState(new BlockPos(particle.x, particle.y, particle.z));
-        if (state.getFluidState().isEmpty()) {
-            particle.velocityY = -Math.abs(particle.velocityY);
-            particle.collided = true;
+        if (!state.getFluidState().isEmpty()) {
+            particle.velocityY = Math.abs(particle.velocityY);
         }
     }
 
@@ -32,7 +31,8 @@ public class AvoidAirTask extends Task {
 
         @Override
         public Task createTask(ImmersiveParticle particle) {
-            return new AvoidAirTask(particle, this);
+            return new AvoidWaterTask(particle, this);
         }
     }
 }
+

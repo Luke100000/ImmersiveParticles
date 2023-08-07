@@ -28,12 +28,10 @@ public class BounceTask extends Task {
     }
 
     public static class Settings extends Task.Settings {
-        double avoidPlayerDistance;
         double bounce;
 
         public Settings(JsonObject settings) {
-            avoidPlayerDistance = JsonHelper.getDouble(settings, "avoidPlayerDistance", 1.0);
-            bounce = JsonHelper.getDouble(settings, "bounce", 1.0);
+            bounce = JsonHelper.getDouble(settings, "bounce", 0.5);
         }
 
         @Override

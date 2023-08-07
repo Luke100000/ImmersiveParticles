@@ -12,7 +12,9 @@ public class Tasks {
 
     static {
         register("avoidAir", AvoidAirTask.Settings::new);
+        register("avoidPlayerByTarget", AvoidPlayerByTargetTask.Settings::new);
         register("avoidPlayer", AvoidPlayerTask.Settings::new);
+        register("avoidWater", AvoidWaterTask.Settings::new);
         register("batter", BatterTask.Settings::new);
         register("bounce", BounceTask.Settings::new);
         register("fly", FlyTask.Settings::new);
@@ -20,6 +22,7 @@ public class Tasks {
         register("followLeader", FollowLeaderTask.Settings::new);
         register("glow", GlowTask.Settings::new);
         register("lookTowardsTarget", LookTowardsTargetTask.Settings::new);
+        register("lookTowardsVelocity", LookTowardsVelocityTask.Settings::new);
         register("move", MoveTask.Settings::new);
         register("push", PushTask.Settings::new);
         register("randomSpawnTarget", RandomSpawnTargetTask.Settings::new);

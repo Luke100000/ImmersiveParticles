@@ -1,5 +1,6 @@
 package immersive_particles.core;
 
+import immersive_particles.Config;
 import immersive_particles.core.searcher.SpawnLocation;
 import immersive_particles.core.tasks.Task;
 import immersive_particles.util.Utils;
@@ -46,6 +47,8 @@ public class ImmersiveParticle {
     public double scaleY = 1.0;
     public double scaleZ = 1.0;
 
+    public double gravity = 0.0;
+
     int age, maxAge;
     float red = 1.0f;
     float green = 1.0f;
@@ -72,9 +75,9 @@ public class ImmersiveParticle {
     }
 
     boolean onGround;
-    boolean collided;
+    public boolean collided;
 
-    float velocityMultiplier = 0.98f;
+    float velocityMultiplier;
 
     Box boundingBox = EMPTY_BOUNDING_BOX;
     float spacingXZ;
@@ -96,9 +99,11 @@ public class ImmersiveParticle {
         this.sprite = type.getSprites().get(random.nextInt(type.getSprites().size()));
 
         this.age = random.nextInt(20);
-        this.maxAge = 1000; //todo
+        this.maxAge = Config.getInstance().particleMaxAge + random.nextInt(60); //todo
 
         this.yaw = random.nextDouble() * Math.PI * 2.0;
+
+        this.velocityMultiplier = type.getVelocityMultiplier();
 
         this.setBoundingBoxSpacing(0.2f, 0.2f);
         this.setPos(getRandomPosition(location));
@@ -154,7 +159,7 @@ public class ImmersiveParticle {
     }
 
     double getGravity() {
-        return 0.0;
+        return gravity;
     }
 
     protected int getRawBrightness() {

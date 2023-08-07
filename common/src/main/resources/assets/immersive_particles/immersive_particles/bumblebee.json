@@ -20,7 +20,9 @@
       "type": "bounce"
     },
     {
-      "type": "wobble"
+      "type": "wobble",
+      "strength": 0.5,
+      "speed": 1.0
     },
     {
       "type": "lookTowardsTarget",

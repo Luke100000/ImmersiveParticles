@@ -14,7 +14,7 @@ public class WobbleTask extends Task {
 
     @Override
     public void tick() {
-        particle.setRoll(Math.cos(particle.getAge() * settings.wobbleSpeed) * settings.wobble);
+        particle.setRoll(Math.cos(particle.getAge() * settings.speed) * settings.wobble);
 
         if (!particle.hasCollided()) {
             // Wobble
@@ -25,11 +25,11 @@ public class WobbleTask extends Task {
 
     public static class Settings extends Task.Settings {
         final double wobble;
-        final double wobbleSpeed;
+        final double speed;
 
         public Settings(JsonObject settings) {
             wobble = JsonHelper.getDouble(settings, "wobble", 0.1);
-            wobbleSpeed = JsonHelper.getDouble(settings, "wobbleSpeed", 1.0);
+            speed = JsonHelper.getDouble(settings, "speed", 1.0);
         }
 
         @Override

@@ -26,18 +26,26 @@ public class RandomTargetTask extends TargetTask {
                 particle.getRandom().nextDouble() - 0.5
         ).mul(settings.rangeXZ, settings.rangeY, settings.rangeXZ).sub(particle.x, particle.y, particle.z).add(origin);
 
+        // Directional mode just sets a vector rather than the actual endpoint
+        if (settings.directional) {
+            direction.normalize().mul(1000.0);
+        }
+
         particle.setTarget(direction.add(particle.x, particle.y, particle.z));
     }
 
     public static class Settings extends TargetTask.Settings {
         double rangeXZ;
         double rangeY;
+        boolean directional;
 
         public Settings(JsonObject settings) {
             super(settings);
 
             rangeXZ = JsonHelper.getDouble(settings, "rangeXZ", 5.0);
             rangeY = JsonHelper.getDouble(settings, "rangeY", 3.0);
+
+            directional = JsonHelper.getBoolean(settings, "directional", false);
         }
 
         @Override

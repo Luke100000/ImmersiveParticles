@@ -2,11 +2,12 @@
   "textures": [
     "immersive_particles:immersive_particles/cod"
   ],
+  "velocityMultiplier": 0.95,
   "tasks": [
     {
       "type": "randomTarget",
-      "minCooldown": 60,
-      "maxCooldown": 160,
+      "minCooldown": 10,
+      "maxCooldown": 180,
       "interruptible": true,
       "rangeXZ": 5,
       "rangeY": 3
@@ -17,9 +18,12 @@
       "maxDistance": 3.0
     },
     {
+      "type": "avoidPlayerByTarget"
+    },
+    {
       "type": "move",
-      "speed": 0.75,
-      "acceleration": 1.0
+      "speed": 0.6,
+      "acceleration": 0.3
     },
     {
       "type": "bounce",
@@ -69,7 +73,7 @@
         "minDayLight": 2,
         "maxDayLight": 12
       },
-      "chanceModifier": 0.01
+      "chanceModifier": 0.001
     }
   ],
   "minCount": 1,

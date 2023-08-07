@@ -56,7 +56,7 @@ public class PushTask extends Task {
             push = 1.0f;
         }
 
-        particle.scaleY = push;
+        particle.scaleZ = 0.8 + push;
     }
 
     public static class Settings extends Task.Settings {
@@ -68,9 +68,9 @@ public class PushTask extends Task {
 
         public Settings(JsonObject settings) {
             minCooldown = JsonHelper.getInt(settings, "minCooldown", 10);
-            maxCooldown = JsonHelper.getInt(settings, "maxCooldown", 20);
+            maxCooldown = JsonHelper.getInt(settings, "maxCooldown", 60);
             strength = JsonHelper.getFloat(settings, "strength", 0.1f);
-            relax = JsonHelper.getFloat(settings, "relax", 0.99f);
+            relax = JsonHelper.getFloat(settings, "relax", 0.96f);
             inertia = JsonHelper.getFloat(settings, "inertia", 0.1f);
         }
 

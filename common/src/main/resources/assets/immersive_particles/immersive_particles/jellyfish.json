@@ -2,16 +2,17 @@
   "textures": [
     "immersive_particles:immersive_particles/jellyfish_0"
   ],
+  "velocityMultiplier": 0.9,
   "tasks": [
+    {
+      "type": "avoidAir"
+    },
     {
       "type": "push"
     },
     {
       "type": "bounce",
       "factor": 1.0
-    },
-    {
-      "type": "avoidAir"
     }
   ],
   "renderer": {
@@ -32,12 +33,13 @@
       },
       "biome": {
         "biomes": [
+          "ocean",
           "lukewarm_ocean",
           "deep_lukewarm_ocean",
           "lukewarm_ocean"
         ]
       },
-      "chanceModifier": 0.01
+      "chanceModifier": 0.001
     }
   ],
   "minCount": 1,

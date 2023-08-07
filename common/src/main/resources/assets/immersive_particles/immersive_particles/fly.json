@@ -5,15 +5,16 @@
   "tasks": [
     {
       "type": "randomTarget",
-      "minCooldown": 20,
-      "maxCooldown": 60,
+      "minCooldown": 3,
+      "maxCooldown": 20,
       "interruptible": true,
-      "rangeXZ": 1000,
-      "rangeY": 100
+      "rangeXZ": 3.5,
+      "rangeY": 3.0,
+      "directional": true
     },
     {
       "type": "fly",
-      "speed": 0.75,
+      "speed": 0.7,
       "acceleration": 1.0
     },
     {

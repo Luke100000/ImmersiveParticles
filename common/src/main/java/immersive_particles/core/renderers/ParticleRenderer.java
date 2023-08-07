@@ -20,7 +20,7 @@ public abstract class ParticleRenderer {
         double roll = particle.getRoll(tickDelta);
 
         Matrix4d transform = new Matrix4d();
-        transform.rotationXYZ(pitch, yaw, roll);
+        transform.rotationYXZ(yaw, pitch, roll);
         float a = Math.min(particle.getMaxAge(), particle.getAge() + tickDelta);
         float transition = 0.1f;
         transform.scale(Math.min(1.0f, Math.min(a * transition, (particle.getMaxAge() - a) * transition)));

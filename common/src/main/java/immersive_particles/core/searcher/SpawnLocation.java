@@ -20,7 +20,14 @@ public class SpawnLocation {
     }
 
     public Vector3d getRandomPosition(float w, float h, float d) {
-        //todo depends on the offset
-        return new Vector3d(x + (random.nextDouble() - 0.5) * (1.0 - w), y + (random.nextDouble() - 0.5) * (1.0 - h), z + (random.nextDouble() - 0.5) * (1.0 - d));
+        if (true) {
+            return new Vector3d(x, y, z);
+        }
+        Vector3d rand = new Vector3d(
+                offset.getX() == 0.0 ? (random.nextDouble() - 0.5) : -offset.getX() / 2.0,
+                offset.getY() == 0.0 ? (random.nextDouble() - 0.5) : -offset.getY() / 2.0,
+                offset.getZ() == 0.0 ? (random.nextDouble() - 0.5) : -offset.getZ() / 2.0
+        );
+        return new Vector3d(x, y, z).add(rand.mul(1 - w, 1 - h, 1 - d));
     }
 }

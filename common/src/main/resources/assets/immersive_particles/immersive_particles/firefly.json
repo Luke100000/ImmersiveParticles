@@ -5,16 +5,16 @@
   "tasks": [
     {
       "type": "randomTarget",
-      "minCooldown": 20,
-      "maxCooldown": 60,
+      "minCooldown": 10,
+      "maxCooldown": 40,
       "interruptible": true,
       "rangeXZ": 10,
       "rangeY": 1
     },
     {
       "type": "fly",
-      "speed": 0.3,
-      "acceleration": 0.03
+      "speed": 0.7,
+      "acceleration": 0.05
     },
     {
       "type": "lookTowardsTarget",
@@ -24,6 +24,9 @@
       "type": "avoidPlayer",
       "distance": 1.0,
       "strength": 0.01
+    },
+    {
+      "type": "glow"
     }
   ],
   "renderer": {

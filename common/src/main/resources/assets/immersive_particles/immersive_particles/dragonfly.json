@@ -19,15 +19,24 @@
     {
       "type": "fly",
       "speed": 1.0,
-      "acceleration": 0.5
+      "acceleration": 0.5,
+      "hoverVelocityMultiplier": 0.8
     },
     {
       "type": "lookTowardsTarget",
       "inertia": 0.25
     },
     {
-      "type": "avoidPlayer",
+      "type": "wobble",
+      "wobble": 0.075,
+      "speed": 0.3
+    },
+    {
+      "type": "avoidPlayerByTarget",
       "distance": 1.5
+    },
+    {
+      "type": "avoidWater"
     }
   ],
   "renderer": {
