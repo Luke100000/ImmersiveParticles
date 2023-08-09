@@ -1,6 +1,6 @@
 {
   "textures": [
-    "immersive_particles:immersive_particles/cod"
+    "immersive_particles:cod"
   ],
   "velocityMultiplier": 0.95,
   "tasks": [

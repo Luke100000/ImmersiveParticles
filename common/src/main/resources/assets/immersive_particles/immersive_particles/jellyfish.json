@@ -1,6 +1,6 @@
 {
   "textures": [
-    "immersive_particles:immersive_particles/jellyfish_0"
+    "immersive_particles:jellyfish_0"
   ],
   "velocityMultiplier": 0.9,
   "tasks": [

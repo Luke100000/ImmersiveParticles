@@ -4,7 +4,6 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
 import immersive_particles.Shaders;
-import immersive_particles.core.registries.Renderers;
 import immersive_particles.core.searcher.SpawnLocation;
 import immersive_particles.resources.ParticleManagerLoader;
 import net.minecraft.client.MinecraftClient;
