@@ -1,7 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "[35,)"
 issueTrackerURL = "https://github.com/Luke100000/ImmersiveParticles/issues"
-license = "GNU"
+license = "GPL-3.0-only"
 
 [[mods]]
 modId = "immersive_particles"
@@ -9,10 +9,8 @@ version = "${version}"
 displayName = "Immersive Particles"
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/ImmersiveParticles"
 authors = "Luke100000"
-description = '''
-    Client side, performant particles to give your environment some life!
-    '''
-logoFile = "logoFile.png"
+description = "Client side, performant particles to give your environment some life!"
+logoFile = "icon.png"
 
 [[dependencies.immersive_particles]]
 modId = "forge"
