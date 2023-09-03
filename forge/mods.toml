@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[40,)"
+loaderVersion = "[@LOADER_MAJOR@,)"
 issueTrackerURL = "https://github.com/Luke100000/ImmersiveParticles/issues"
 license = "GPL-3.0-only"
 
@@ -15,13 +15,13 @@ logoFile = "icon.png"
 [[dependencies.immersive_particles]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.18.2,)"
+versionRange = "[@MINECRAFT_VERSION@,)"
 ordering = "NONE"
 side = "CLIENT"
 
 [[dependencies.immersive_particles]]
 modId = "forge"
 mandatory = true
-versionRange = "[40,)"
+versionRange = "[@LOADER_MAJOR@,)"
 ordering = "NONE"
 side = "CLIENT"
