@@ -1,0 +1,64 @@
+{
+  "textures": [
+    "immersive_particles:butterfly"
+  ],
+  "tasks": [
+    {
+      "type": "randomSpawnTarget",
+      "minCooldown": 40,
+      "maxCooldown": 120,
+      "interruptible": true,
+      "reachDistance": 0.25
+    },
+    {
+      "type": "fly",
+      "speed": 0.75,
+      "acceleration": 0.25,
+      "maxUpwardsSpeed": 0.01
+    },
+    {
+      "type": "flap",
+      "randomize": 0.5,
+      "strength": 0.1,
+      "minCooldown": 4,
+      "maxCooldown": 6
+    },
+    {
+      "type": "lookTowardsTarget",
+      "inertia": 0.3
+    },
+    {
+      "type": "avoidPlayer",
+      "distance": 1.0
+    }
+  ],
+  "renderer": {
+    "type": "flapping",
+    "speed": 1.0,
+    "strength": 1.25,
+    "meshes": {
+      "default": [
+        "butterfly.Cube"
+      ]
+    }
+  },
+  "spawns": [
+    {
+      "type": "inBlock",
+      "block": {
+        "blocks": [
+          "#flowers"
+        ]
+      },
+      "biome": {
+        "minTemperature": 0.3,
+        "maxTemperature": 1.5
+      },
+      "light": {
+        "minDayLight": 7,
+        "maxDayLight": 15
+      },
+      "chanceModifier": 1.0
+    }
+  ]
+}

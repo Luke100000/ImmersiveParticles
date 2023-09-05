@@ -7,14 +7,14 @@
     {
       "type": "randomTarget",
       "minCooldown": 10,
-      "maxCooldown": 180,
+      "maxCooldown": 160,
       "interruptible": true,
-      "rangeXZ": 5,
+      "rangeXZ": 8,
       "rangeY": 3
     },
     {
       "type": "followLeader",
-      "minDistance": 1.0,
+      "minDistance": 2.0,
       "maxDistance": 3.0
     },
     {
@@ -33,12 +33,15 @@
       "type": "avoidAir"
     },
     {
+      "type": "wave"
+    },
+    {
       "type": "lookTowardsTarget",
-      "inertia": 0.75
+      "inertia": 0.5
     }
   ],
   "renderer": {
-    "type": "fish",
+    "type": "waggle",
     "meshes": {
       "body": [
         "cod.body"

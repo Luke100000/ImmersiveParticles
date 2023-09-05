@@ -8,14 +8,12 @@ import immersive_particles.resources.ObjectLoader;
 import immersive_particles.util.obj.Face;
 import immersive_particles.util.obj.FaceVertex;
 import immersive_particles.util.obj.Mesh;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
-import org.joml.Matrix3f;
-import org.joml.Matrix4d;
-import org.joml.Vector3f;
-import org.joml.Vector4d;
+import org.joml.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +21,10 @@ import java.util.List;
 
 public class MeshRenderer extends ParticleRenderer {
     private static final ArrayList<Mesh> EMPTY = new ArrayList<>();
+    Mesh DEBUG = ObjectLoader.objects.get(Main.locate("cube")).get("Cube");
     private final HashMap<String, ArrayList<Mesh>> meshes = new HashMap<>();
+
+    final double meshScale;
 
     public MeshRenderer(JsonObject particle) {
         // Load all meshes
@@ -36,11 +37,41 @@ public class MeshRenderer extends ParticleRenderer {
             }
             meshes.put(state, meshArray);
         }
+
+        if (particle.has("scale")) {
+            meshScale = JsonHelper.getDouble(particle, "scale");
+        } else {
+            meshScale = 1.0 / 16.0;
+        }
     }
 
     @Override
     void render(ImmersiveParticle particle, VertexConsumer vertexConsumer, float tickDelta, Matrix4d transform, Matrix3f normal, Vector4d position) {
         renderMeshes(particle, getMeshes(getCurrentMeshName(particle)), particle.getSprite(), transform, normal, vertexConsumer, tickDelta);
+    }
+
+    @Override
+    void debugRender(ImmersiveParticle particle, VertexConsumer vertexConsumer, float tickDelta, Vector4d position) {
+        if (particle.getTarget() != null && !MinecraftClient.getInstance().gameRenderer.getCamera().isThirdPerson()) {
+            Vector3d sub = particle.getTarget().sub(particle.getPosition());
+
+            if (sub.lengthSquared() > 100.0) {
+                sub = sub.normalize();
+            }
+
+            Matrix4d transform = new Matrix4d();
+            transform.setColumn(3, position.add(
+                    sub.x,
+                    sub.y,
+                    sub.z,
+                    0.0
+            ));
+            transform.scale(1.0 / meshScale / 16.0);
+
+            Matrix3f normal = new Matrix3f();
+
+            renderMesh(particle, DEBUG, particle.getSprite(), transform, normal, vertexConsumer, tickDelta);
+        }
     }
 
     List<Mesh> getMeshes(String name) {
@@ -57,13 +88,13 @@ public class MeshRenderer extends ParticleRenderer {
         }
         Mesh mesh = ObjectLoader.objects.get(id).get(object);
         if (mesh == null) {
-            throw new RuntimeException(String.format("Mesh %s in %s does not exist!", id, object));
+            throw new RuntimeException(String.format("Mesh %s in %s does not exist!", object, id));
         }
         return mesh;
     }
 
     Vector4d transformVertex(ImmersiveParticle particle, FaceVertex v, float tickDelta) {
-        return new Vector4d(v.v.x / 16.0f * particle.scaleX , v.v.y / 16.0f * particle.scaleY, v.v.z / 16.0f * particle.scaleZ, 1.0f);
+        return new Vector4d(v.v.x * meshScale * particle.scaleX, v.v.y * meshScale * particle.scaleY, v.v.z * meshScale * particle.scaleZ, 1.0f);
     }
 
     void renderMeshes(ImmersiveParticle particle, List<Mesh> meshes, Sprite sprite, Matrix4d transform, Matrix3f normal, VertexConsumer vertexConsumer, float tickDelta) {

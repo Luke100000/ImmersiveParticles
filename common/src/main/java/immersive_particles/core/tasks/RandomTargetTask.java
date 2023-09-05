@@ -15,7 +15,7 @@ public class RandomTargetTask extends TargetTask {
 
         this.settings = settings;
 
-        origin = new Vector3d(particle.getX(), particle.getY(), particle.getZ());
+        origin = new Vector3d(particle.getPosition());
     }
 
     @Override

@@ -19,8 +19,10 @@ public class MoveTask extends Task {
         if (target == null) {
             particle.multiplyVelocity(settings.hoverVelocityMultiplier);
         } else {
+            particle.setState(ImmersiveParticle.State.MOVING);
             if (!particle.moveTo(target, settings.speed, settings.acceleration)) {
                 particle.multiplyVelocity(settings.hoverVelocityMultiplier);
+                particle.setState(ImmersiveParticle.State.IDLE);
             }
 
             if (particle.getSquaredDistanceTo(target) < settings.reachDistance * settings.reachDistance && particle.getVelocity().lengthSquared() < 0.0001) {
@@ -32,16 +34,14 @@ public class MoveTask extends Task {
     public static class Settings extends Task.Settings {
         final float speed;
         final float acceleration;
-        final boolean stopOnTarget;
         final double reachDistance;
         final double hoverVelocityMultiplier;
 
         public Settings(JsonObject settings) {
             speed = JsonHelper.getFloat(settings, "speed", 0.5f);
             acceleration = JsonHelper.getFloat(settings, "acceleration", 0.2f);
-            stopOnTarget = JsonHelper.getBoolean(settings, "stopOnTarget", false);
             reachDistance = JsonHelper.getDouble(settings, "reachDistance", 0.25);
-            hoverVelocityMultiplier = JsonHelper.getDouble(settings, "hoverVelocityMultiplier", 0.95);
+            hoverVelocityMultiplier = JsonHelper.getDouble(settings, "hoverVelocityMultiplier", 0.8);
         }
 
         @Override

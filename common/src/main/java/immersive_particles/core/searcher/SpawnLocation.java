@@ -20,9 +20,6 @@ public class SpawnLocation {
     }
 
     public Vector3d getRandomPosition(float w, float h, float d) {
-        if (true) {
-            return new Vector3d(x, y, z);
-        }
         Vector3d rand = new Vector3d(
                 offset.getX() == 0.0 ? (random.nextDouble() - 0.5) : -offset.getX() / 2.0,
                 offset.getY() == 0.0 ? (random.nextDouble() - 0.5) : -offset.getY() / 2.0,

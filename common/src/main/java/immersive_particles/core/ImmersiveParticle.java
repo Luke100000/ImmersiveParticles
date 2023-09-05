@@ -36,12 +36,12 @@ public class ImmersiveParticle {
     public double velocityY = 0.0;
     public double velocityZ = 0.0;
 
-    double yaw = 0.0;
-    double prevYaw = 0.0;
-    double pitch = 0.0;
-    double prevPitch = 0.0;
-    double roll = 0.0;
-    double prevRoll = 0.0;
+    float yaw = 0.0f;
+    float prevYaw = 0.0f;
+    float pitch = 0.0f;
+    float prevPitch = 0.0f;
+    float roll = 0.0f;
+    float prevRoll = 0.0f;
 
     public double scaleX = 1.0;
     public double scaleY = 1.0;
@@ -59,7 +59,7 @@ public class ImmersiveParticle {
 
     public Map<String, Object> memory = new HashMap<>();
 
-    State state = State.IDLE;
+    State state = State.MOVING;
 
     @Nullable
     Vector3d target = null;
@@ -69,6 +69,7 @@ public class ImmersiveParticle {
     }
 
     public enum State {
+        MOVING,
         IDLE,
         FALLING,
         DEAD
@@ -106,7 +107,7 @@ public class ImmersiveParticle {
         this.age = random.nextInt(20);
         this.maxAge = Config.getInstance().particleMaxAge + random.nextInt(60); //todo
 
-        this.yaw = random.nextDouble() * Math.PI * 2.0;
+        this.yaw = (float) (random.nextFloat() * Math.PI * 2.0f);
 
         this.velocityMultiplier = type.getVelocityMultiplier();
 
@@ -311,7 +312,7 @@ public class ImmersiveParticle {
         speed *= acceleration * Math.max(0.0f, speed - currentSpeed);
 
         // Move to the target
-        double minDistance = 0.0625;
+        double minDistance = 0.25;
         if (distance > minDistance) {
             double length = getVelocity().length();
             double f = Math.min(1.0, distance - minDistance) * Math.max(0.0, speed - length) / distance;
@@ -336,7 +337,10 @@ public class ImmersiveParticle {
     }
 
     public void rotateToTarget(Vector3d target, float rotReact) {
-        rotateTowards(new Vector3d(target).sub(x, y, z), rotReact);
+        Vector3d direction = new Vector3d(target).sub(x, y, z);
+        if (direction.lengthSquared() > 0.125f * 0.125f) {
+            rotateTowards(direction, rotReact);
+        }
     }
 
     public Vector3d getVelocity() {
@@ -344,29 +348,41 @@ public class ImmersiveParticle {
     }
 
     public void setYaw(double yaw) {
+        setYaw((float) yaw);
+    }
+
+    public void setPitch(double yaw) {
+        setPitch((float) yaw);
+    }
+
+    public void setRoll(double yaw) {
+        setRoll((float) yaw);
+    }
+
+    public void setYaw(float yaw) {
         this.prevYaw = this.yaw;
         this.yaw = yaw;
     }
 
-    public void setPitch(double pitch) {
+    public void setPitch(float pitch) {
         this.prevPitch = this.pitch;
         this.pitch = pitch;
     }
 
-    public void setRoll(double roll) {
+    public void setRoll(float roll) {
         this.prevRoll = this.roll;
         this.roll = roll;
     }
 
-    public double getYaw() {
+    public float getYaw() {
         return yaw;
     }
 
-    public double getPitch() {
+    public float getPitch() {
         return pitch;
     }
 
-    public double getRoll() {
+    public float getRoll() {
         return roll;
     }
 
@@ -382,13 +398,13 @@ public class ImmersiveParticle {
         return MathHelper.lerp(tickDelta, this.prevRoll, this.roll);
     }
 
-    public void rotateTowards(Vector3d target, float rotReact) {
-        double l = Math.sqrt(Math.pow(target.x, 2.0) + Math.pow(target.z, 2.0));
-        if (l > 0.00001) {
-            setYaw(yaw * (1 - rotReact) + Math.atan2(target.x, target.z) * rotReact);
-            setPitch(pitch * (1 - rotReact) - Math.atan((target.y) / l) * rotReact);
+    public void rotateTowards(Vector3d direction, float rotReact) {
+        float l = (float) Math.sqrt(Math.pow(direction.x, 2.0) + Math.pow(direction.z, 2.0));
+        if (l > 0.00001f) {
+            setYaw(yaw * (1.0f - rotReact) + Math.atan2(direction.x, direction.z) * rotReact);
+            setPitch(pitch * (1.0f - rotReact) - Math.atan((direction.y) / l) * rotReact);
         } else {
-            if (target.y > 0.0) {
+            if (direction.y > 0.0) {
                 setPitch(-Math.PI / 2);
             } else {
                 setPitch(Math.PI / 2);
@@ -530,7 +546,7 @@ public class ImmersiveParticle {
     }
 
     public @Nullable Vector3d getTarget() {
-        return target;
+        return target == null ? null : new Vector3d(target);
     }
 
     public boolean hasTarget() {

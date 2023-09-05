@@ -2,6 +2,7 @@ package immersive_particles.core.tasks;
 
 import com.google.gson.JsonObject;
 import immersive_particles.core.ImmersiveParticle;
+import immersive_particles.util.Meth;
 import net.minecraft.util.JsonHelper;
 
 public class GlowTask  extends  Task {
@@ -14,15 +15,15 @@ public class GlowTask  extends  Task {
 
     @Override
     public void tick() {
-        double glow = Math.max(0, Math.cos(particle.getAge() * 0.2 * settings.speed) + Math.cos(particle.getAge() * 0.13 * settings.speed) + 0.5);
+        float glow = Math.max(0, Meth.sin(particle.getAge() * 0.2f * settings.speed) + Meth.sin(particle.getAge() * 0.13f * settings.speed) + 0.5f);
         particle.setGlow(glow);
     }
 
     public static class Settings extends Task.Settings {
-        double speed;
+        float speed;
 
         public Settings(JsonObject settings) {
-            speed = JsonHelper.getDouble(settings, "speed", 1.0);
+            speed = JsonHelper.getFloat(settings, "speed", 1.0f);
         }
 
         @Override

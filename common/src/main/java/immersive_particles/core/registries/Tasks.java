@@ -17,6 +17,7 @@ public class Tasks {
         register("avoidWater", AvoidWaterTask.Settings::new);
         register("batter", BatterTask.Settings::new);
         register("bounce", BounceTask.Settings::new);
+        register("flap", FlapTask.Settings::new);
         register("fly", FlyTask.Settings::new);
         register("followPlayer", FollowPlayer.Settings::new);
         register("followLeader", FollowLeaderTask.Settings::new);
@@ -30,6 +31,7 @@ public class Tasks {
         register("roadWalker", RoadWalkerTask.Settings::new);
         register("stomped", StompedTask.Settings::new);
         register("walk", WalkTask.Settings::new);
+        register("wave", WaveTask.Settings::new);
         register("wobble", WobbleTask.Settings::new);
     }
 

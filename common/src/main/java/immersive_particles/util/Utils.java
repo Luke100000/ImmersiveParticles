@@ -5,14 +5,14 @@ public class Utils {
         return Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2) + Math.pow((z1 - z2), 2);
     }
 
-    public static double cosNoise(double time) {
-        return cosNoise(time, 5);
+    public static float sinNoise(float time) {
+        return sinNoise(time, 5);
     }
 
-    public static double cosNoise(double time, int layers) {
-        double value = 0.0f;
+    public static float sinNoise(float time, int layers) {
+        float value = 0.0f;
         for (int i = 0; i < layers; i++) {
-            value += Math.cos(time);
+            value += Meth.sin(time);
             time *= 1.7;
         }
         return value;

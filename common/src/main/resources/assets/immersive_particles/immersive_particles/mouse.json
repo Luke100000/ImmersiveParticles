@@ -1,0 +1,81 @@
+{
+  "textures": [
+    "immersive_particles:mouse"
+  ],
+  "tasks": [
+    {
+      "type": "randomTarget",
+      "minCooldown": 10,
+      "maxCooldown": 100,
+      "interruptible": true,
+      "rangeXZ": 4.0,
+      "rangeY": 3.0,
+      "directional": true
+    },
+    {
+      "type": "stomped"
+    },
+    {
+      "type": "wobble",
+      "wobble": 0.25
+    },
+    {
+      "type": "walk",
+      "speed": 0.5,
+      "acceleration": 0.5
+    },
+    {
+      "type": "lookTowardsTarget",
+      "noY": true,
+      "inertia": 0.75
+    }
+  ],
+  "renderer": {
+    "type": "waggle",
+    "scale": 1.0,
+    "offset": 0.0,
+    "meshes": {
+      "body": [
+        "mouse.body"
+      ],
+      "fin": [
+        "mouse.tail"
+      ]
+    }
+  },
+  "spawns": [
+    {
+      "type": "onBlock",
+      "inBlock": {
+        "blocks": [
+          "minecraft:air"
+        ]
+      },
+      "onBlock": {
+        "blocks": [
+          "minecraft:grass_block",
+          "minecraft:stone"
+        ]
+      },
+      "biome": {
+        "minLight": 4,
+        "maxDayLight": 12
+      },
+      "chanceModifier": 0.25
+    },
+    {
+      "type": "onBlock",
+      "inBlock": {
+        "blocks": [
+          "minecraft:air"
+        ]
+      },
+      "onBlock": {
+        "blocks": [
+          "minecraft:barrel"
+        ]
+      },
+      "chanceModifier": 5.0
+    }
+  ]
+}

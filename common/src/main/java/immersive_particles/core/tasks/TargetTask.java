@@ -20,7 +20,7 @@ public abstract class TargetTask extends Task {
             cooldown = 0;
         }
 
-        if (settings.interruptible || particle.getTarget() == null || (particle.getSquaredDistanceTo(particle.getTarget()) < settings.reachDistance * settings.reachDistance) || particle.hasCollided()) {
+        if (settings.interruptible || particle.getTarget() == null || (particle.getSquaredDistanceTo(particle.getTarget()) < settings.reachDistance * settings.reachDistance) || (particle.hasCollided() && !particle.isOnGround())) {
             cooldown--;
             if (cooldown < 0) {
                 cooldown = settings.minCooldown + (int) ((settings.maxCooldown - settings.minCooldown) * particle.getRandom().nextFloat());
@@ -41,7 +41,7 @@ public abstract class TargetTask extends Task {
         public Settings(JsonObject settings) {
             minCooldown = JsonHelper.getInt(settings, "minCooldown", 10);
             maxCooldown = JsonHelper.getInt(settings, "maxCooldown", 20);
-            interruptible = JsonHelper.getBoolean(settings, "incorruptible", true);
+            interruptible = JsonHelper.getBoolean(settings, "interruptible", true);
             reachDistance = JsonHelper.getDouble(settings, "reachDistance", 0.25);
             researchWhenNoTarget = JsonHelper.getBoolean(settings, "researchWhenNoTarget", false);
         }

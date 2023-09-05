@@ -30,7 +30,10 @@ public abstract class ParticleRenderer {
         normal.rotationXYZ((float) pitch, (float) yaw, (float) roll);
 
         render(particle, vertexConsumer, tickDelta, transform, normal, position);
+        debugRender(particle, vertexConsumer, tickDelta, position);
     }
 
     abstract void render(ImmersiveParticle particle, VertexConsumer vertexConsumer, float tickDelta, Matrix4d transform, Matrix3f normal, Vector4d position);
+
+    abstract void debugRender(ImmersiveParticle particle, VertexConsumer vertexConsumer, float tickDelta, Vector4d position);
 }

@@ -2,6 +2,7 @@ package immersive_particles.core.tasks;
 
 import com.google.gson.JsonObject;
 import immersive_particles.core.ImmersiveParticle;
+import immersive_particles.util.Meth;
 import net.minecraft.util.JsonHelper;
 
 public class WobbleTask extends Task {
@@ -14,22 +15,22 @@ public class WobbleTask extends Task {
 
     @Override
     public void tick() {
-        particle.setRoll(Math.cos(particle.getAge() * settings.speed) * settings.wobble);
+        particle.setRoll(Meth.sin(particle.getAge() * settings.speed) * settings.wobble);
 
         if (!particle.hasCollided()) {
             // Wobble
-            particle.velocityX += Math.cos(particle.getYaw()) * particle.getRoll() * settings.wobble * 0.025;
-            particle.velocityZ += Math.sin(particle.getYaw()) * particle.getRoll() * settings.wobble * 0.025;
+            particle.velocityX += Meth.cos(particle.getYaw()) * particle.getRoll() * settings.wobble * 0.025;
+            particle.velocityZ += Meth.sin(particle.getYaw()) * particle.getRoll() * settings.wobble * 0.025;
         }
     }
 
     public static class Settings extends Task.Settings {
-        final double wobble;
-        final double speed;
+        final float wobble;
+        final float speed;
 
         public Settings(JsonObject settings) {
-            wobble = JsonHelper.getDouble(settings, "wobble", 0.1);
-            speed = JsonHelper.getDouble(settings, "speed", 1.0);
+            wobble = JsonHelper.getFloat(settings, "wobble", 0.1f);
+            speed = JsonHelper.getFloat(settings, "speed", 1.0f);
         }
 
         @Override

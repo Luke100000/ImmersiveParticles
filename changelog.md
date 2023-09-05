@@ -1,5 +1,9 @@
 # TODO
 
+## Object loader
+
+* Double check if objects with the same name are merged
+
 ## Particles
 
 * Bugs

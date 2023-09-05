@@ -202,6 +202,6 @@ public class Builder {
 
     public void addObjectName(String name) {
         this.objectName = name;
-        objects.put(objectName, new Mesh());
+        objects.computeIfAbsent(objectName, (n) -> new Mesh());
     }
 }

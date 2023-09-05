@@ -17,15 +17,21 @@ public class LookTowardsTargetTask extends Task {
     public void tick() {
         Vector3d target = particle.getTarget();
         if (target != null) {
-            particle.rotateToTarget(target, settings.inertia);
+            if (settings.noY) {
+                particle.rotateToTarget(new Vector3d(target.x, particle.y, target.z), settings.inertia);
+            } else {
+                particle.rotateToTarget(target, settings.inertia);
+            }
         }
     }
 
     public static class Settings extends Task.Settings {
         float inertia;
+        boolean noY;
 
         public Settings(JsonObject settings) {
             inertia = JsonHelper.getFloat(settings, "inertia", 0.1f);
+            noY = JsonHelper.getBoolean(settings, "noY", false);
         }
 
         @Override

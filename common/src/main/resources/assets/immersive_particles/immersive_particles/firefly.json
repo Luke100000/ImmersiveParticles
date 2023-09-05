@@ -8,8 +8,8 @@
       "minCooldown": 10,
       "maxCooldown": 40,
       "interruptible": true,
-      "rangeXZ": 5.0,
-      "rangeY": 1.0,
+      "rangeXZ": 8.0,
+      "rangeY": 2.0,
       "directional": true
     },
     {
